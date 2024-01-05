@@ -32,6 +32,17 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Content Include="external\bulma\bulma*.sass" Link="Resources\Sass\bulma\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma\sass\**" Link="Resources\Sass\bulma\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-o-steps\index*.sass" Link="Resources\Sass\bulma-o-steps\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-tooltip\src\sass\**" Link="Resources\Sass\bulma-tooltip\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-calendar\src\sass\**" Link="Resources\Sass\bulma-calendar\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-checkradio\src\sass\**" Link="Resources\Sass\bulma-checkradio\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-switch\src\sass\**" Link="Resources\Sass\bulma-switch\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-jumbo-tiny\sass\**" Link="Resources\Sass\bulma-jumbo-tiny\%(RecursiveDir)\%(Filename)%(Extension)" />
+	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="[6.0.0,9)" />
   </ItemGroup>
@@ -55,8 +66,6 @@
 	  <Folder Include="Bulma\Components\" />
 	  <Folder Include="Bulma\Elements\" />
 	  <Folder Include="Bulma\Form\" />
-	  <Folder Include="Resources\Fonts\" />
-	  <Folder Include="Resources\Sass\" />
 	  <Folder Include="wwwroot\" />
 	</ItemGroup>
 
