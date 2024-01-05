@@ -1,0 +1,35 @@
+﻿@namespace easy_blazor_bulma
+@using System.Globalization
+
+@if (Value)
+{
+    <span class='@FullCssClass("has-text-success")'>check_circle</span>
+}
+else
+{
+    <span class='@FullCssClass("has-text-danger")'>cancel</span>
+}
+
+@code {
+    [Parameter]
+    public bool Value { get; set; }
+
+    /// <summary>
+    /// Any additional attributes applied directly to the component
+    /// </summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? Attributes { get; set; }
+
+    private string FullCssClass(string text) => CssClass == null ? $"material-icons {text}" : string.Join(' ', $"material-icons {text}", CssClass);
+
+    private string? CssClass
+    {
+        get
+        {
+            if (Attributes != null && Attributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
+                return css.ToString();
+
+            return null;
+        }
+    }
+}

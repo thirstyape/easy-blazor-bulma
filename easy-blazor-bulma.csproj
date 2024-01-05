@@ -33,17 +33,33 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Content Include="external\bulma\bulma*.sass" Link="Resources\Sass\bulma\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<Content Include="external\bulma\sass\**" Link="Resources\Sass\bulma\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<Content Include="external\bulma-o-steps\index*.sass" Link="Resources\Sass\bulma-o-steps\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<Content Include="external\bulma-tooltip\src\sass\**" Link="Resources\Sass\bulma-tooltip\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<Content Include="external\bulma-calendar\src\sass\**" Link="Resources\Sass\bulma-calendar\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<Content Include="external\bulma-checkradio\src\sass\**" Link="Resources\Sass\bulma-checkradio\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<Content Include="external\bulma-switch\src\sass\**" Link="Resources\Sass\bulma-switch\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<Content Include="external\bulma-jumbo-tiny\sass\**" Link="Resources\Sass\bulma-jumbo-tiny\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma\bulma*.sass" Link="Sass\bulma\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma\sass\**" Link="Sass\bulma\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-o-steps\index*.sass" Link="Sass\bulma-o-steps\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-tooltip\src\sass\**" Link="Sass\bulma-tooltip\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-calendar\src\sass\**" Link="Sass\bulma-calendar\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-checkradio\src\sass\**" Link="Sass\bulma-checkradio\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-switch\src\sass\**" Link="Sass\bulma-switch\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<Content Include="external\bulma-jumbo-tiny\sass\**" Link="Sass\bulma-jumbo-tiny\%(RecursiveDir)\%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Resources\Fonts\**" />
+	  <Content Remove="Resources\Fonts\**" />
+	  <EmbeddedResource Remove="Resources\Fonts\**" />
+	  <None Remove="Resources\Fonts\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Sass\easy-blazor-bulma-dark.sass" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Include="Sass\easy-blazor-bulma-dark.sass" />
 	</ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BuildWebCompiler2022" Version="1.14.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="[6.0.0,9)" />
   </ItemGroup>
 
@@ -60,13 +76,16 @@
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
+		<None Include="wwwroot\fonts\iconfont\materialicons-regular-webfont.svg" />
+		<None Include="wwwroot\fonts\iconfont\materialicons-regular-webfont.ttf" />
+		<None Include="wwwroot\fonts\iconfont\materialicons-regular-webfont.woff" />
+		<None Include="wwwroot\fonts\iconfont\materialicons-regular-webfont.woff2" />
+		<None Include="wwwroot\fonts\iconfont\materialicons-regular.codepoints.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Bulma\Components\" />
-	  <Folder Include="Bulma\Elements\" />
 	  <Folder Include="Bulma\Form\" />
-	  <Folder Include="wwwroot\" />
 	</ItemGroup>
 
 </Project>

@@ -1,0 +1,12 @@
+[
+    {
+        "includeInProject": false,
+        "inputFile": "Sass/easy-blazor-bulma.sass",
+        "outputFile": "wwwroot/css/easy-blazor-bulma.css"
+    },
+    {
+        "includeInProject": false,
+        "inputFile": "Sass/easy-blazor-bulma-dark.sass",
+        "outputFile": "wwwroot/css/easy-blazor-bulma-dark.css"
+    }
+]
