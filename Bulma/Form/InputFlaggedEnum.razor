@@ -1,0 +1,13 @@
+﻿@namespace easy_blazor_bulma
+@typeparam TEnum
+@inherits InputBase<TEnum>
+
+@using System.ComponentModel.DataAnnotations
+
+@foreach (var value in Enum.GetValues(UnderlyingType).Cast<TEnum>().Where(x => HideZeroOption == false || (int)(object)x > 0))
+{
+    <div class="@FullCssClass">
+        <input type="checkbox" class="switch" checked='@(Value?.HasFlag(value))' @onclick="() => OnValueChanged(value)" id='@GetEnumSwitchId(value)' @attributes='AdditionalAttributes?.Where(x => x.Key != "class")' />
+        <label class="no-select" for='@GetEnumSwitchId(value)'>@(value.GetValueAttribute<TEnum, DisplayAttribute>()?.GetName())</label>
+    </div>
+}
