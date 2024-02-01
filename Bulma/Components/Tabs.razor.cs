@@ -60,13 +60,12 @@ public partial class Tabs : ComponentBase
 	public RenderFragment? ChildContent { get; set; }
 
 	/// <summary>
-	/// Any additional attributes applied directly to the component
+	/// Any additional attributes applied directly to the component.
 	/// </summary>
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
 	private readonly List<Tab> Children = new();
-	private readonly Dictionary<string, int> IndexMap = new();
 
 	private string FullCssClass 
 	{
@@ -114,8 +113,9 @@ public partial class Tabs : ComponentBase
 		else if (Children.Any(x => x.Name == tab.Name))
 			throw new ArgumentException("Tabs must have a unique name.", nameof(tab));
 
+		tab.Index = Children.Any() ? Children.Max(x => x.Index) + 1 : 0;
+
 		Children.Add(tab);
-		IndexMap.Add(tab.Name, IndexMap.Any() ? IndexMap.Max(x => x.Value) + 1 : 0);
 
 		if (string.IsNullOrWhiteSpace(Active))
 			Active = tab.Name;
@@ -123,18 +123,17 @@ public partial class Tabs : ComponentBase
 
 	internal void RemoveChild(Tab tab)
 	{
-		var child = Children.FirstOrDefault(x => x.Name == tab.Name);
+		var child = Children.FirstOrDefault(x => x.Index == tab.Index);
 
 		if (child == null)
 			throw new ArgumentException("Could not find tab to remove.", nameof(tab));
 
 		Children.Remove(child);
-		IndexMap.Remove(child.Name!);
 
 		var i = 0;
 
-		foreach (var index in IndexMap.OrderBy(x => x.Value).Select(x => x.Key))
-			IndexMap[index] = i++;
+		foreach (var item in Children.OrderBy(x => x.Index))
+			item.Index = i++;
 
 		if (Active == child.Name && Children.Any())
 			Active = Children.First().Name;
@@ -157,18 +156,18 @@ public partial class Tabs : ComponentBase
 		}
 	}
 
-	private string? GetChildCssClass(string tab)
+	private string? GetChildCssClass(Tab tab)
 	{
 		string css;
 
-		if (IndexMap[tab] == 0)
+		if (tab.Index == 0)
 			css = "mr-1 ";
-		else if (IndexMap[tab] == Children.Count - 1)
+		else if (tab.Index == Children.Count - 1)
 			css = "ml-1 ";
 		else
 			css = "mx-1 ";
 
-		if (Active == tab)
+		if (Active == tab.Name)
 			css += "is-active";
 
 		return css.TrimEnd();

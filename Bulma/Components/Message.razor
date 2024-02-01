@@ -1,0 +1,17 @@
+﻿@namespace easy_blazor_bulma
+
+<article class='@FullCssClass'>
+    @if (Title != null)
+    {
+        <div class="message-header">
+            <p>@Title</p>
+            @if (ShowDeleteButton)
+            {
+                <button type="button" class="delete" aria-label="delete" @onclick="Delete"></button>
+            }
+        </div>
+    }
+    <div class="message-body">        
+        @ChildContent
+    </div>
+</article>

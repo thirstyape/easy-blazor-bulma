@@ -23,7 +23,20 @@ public partial class BooleanIcon : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private string FullCssClass(string text) => CssClass == null ? $"material-icons {text}" : string.Join(' ', $"material-icons {text}", CssClass);
+	private string FullCssClass
+	{
+		get
+		{
+			var css = "material-icons";
+
+			if (Value)
+				css += " has-text-success";
+			else
+				css += " has-text-danger";
+
+			return string.Join(' ', css, CssClass);
+		}
+	}
 
 	private string? CssClass
 	{
@@ -35,4 +48,6 @@ public partial class BooleanIcon : ComponentBase
 			return null;
 		}
 	}
+
+	private string Icon => Value ? "check_circle" : "cancel";
 }

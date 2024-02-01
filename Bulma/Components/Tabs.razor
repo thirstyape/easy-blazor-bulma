@@ -4,7 +4,7 @@
     <ul>
         @foreach (var tab in Children)
         {
-            <li class="@GetChildCssClass(tab.Name!)" @onclick="() => OnSelectionChanged(tab)" disabled='@(tab.IsEnabled == false)'>
+            <li class="@GetChildCssClass(tab)" @onclick="() => OnSelectionChanged(tab)" disabled='@(tab.IsEnabled == false)'>
                 <a>
                     @if (string.IsNullOrWhiteSpace(tab.Icon) == false)
                     {

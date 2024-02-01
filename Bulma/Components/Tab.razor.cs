@@ -37,7 +37,8 @@ public partial class Tab : ComponentBase, IDisposable
 	[CascadingParameter]
 	private Tabs Parent { get; set; }
 
-	private bool IsActive => Name != null && Parent.Active == Name;
+    internal bool IsActive => Name != null && Parent.Active == Name;
+	internal int Index;
 
 	/// <inheritdoc/>
 	protected override void OnInitialized()

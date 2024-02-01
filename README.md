@@ -15,12 +15,24 @@ Finally, you can use any of the pre-built components here to simplify use of the
 
 To use this library either clone a copy of the repository or check out the [NuGet package](https://www.nuget.org/packages/Easy.Blazor.Bulma/)
 
+### Features
+
+* Pre-compiled CSS bundle containing Bulma, several extensions, and a dark theme
+* Interactive Blazor components for Bulma framework elements
+* Bundled with Google Material Symbols icon font
+* No additional dependencies (Microsoft.AspNetCore.Components.Web is already required by Blazor)
+* No JavaScript required (except for `<ThemeSelector />`)
+
 ### Component List
 
 The following components are currently available for use. All of them are documented and you can hover over them in Visual Studio to get details for the components and their parameters.
 
 **Components**
 
+* `<Message />`, creates a styled block containing a note to display
+* `<Modal />`, creates an overlay that can display additional content
+* `<Panel />`, creates a styled block containing content to display
+* `<Steps />` and `<Step />`, creates a progress tracker with visual indicators
 * `<Tabs />` and `<Tab />`, creates a tab bar and content panels
 
 **Elements**
@@ -31,6 +43,11 @@ The following components are currently available for use. All of them are docume
 
 * `<InputFlaggedEnum />`, creates a series of checkboxes for bitmasked enum values
 
+**Helpers**
+
+* `<ThemeSelector />`, toggles between dark and light CSS themes (requires JavaScript file and both CSS stylesheets in index.html)
+* `<TitleBlock />`, displays a banner accross the top of the screen with some text
+
 ### Usage
 
 **Basic Example**
@@ -40,7 +57,7 @@ The following example provides a complete use case. This example makes use of th
 In your index.html file add the following line. You must do this even if you just want to use the components, they need this too.
 
 ```
-<link rel="stylesheet" href="_content/Easy.Blazor.Bulma/css/easy-blazor-bulma.css" />
+<link rel="stylesheet" href="_content/Easy.Blazor.Bulma/css/easy-blazor-bulma.min.css" />
 ```
 
 This will link the CSS style pack and Google Material Symbols icon font.
@@ -57,6 +74,33 @@ Next, add one of the components or use some of the styles in your own components
 	private bool Test { get; set; } = true;
 }
 ```
+
+**Dark Theme Example**
+
+To use the dark theme, just add a secondary stylesheet reference in your index.html. The theme can automatically be selected based on the preference of the user. Changing between the styles can be done easily with an `IJSRuntime`.
+
+```
+<head>
+    <!-- Your head content -->
+    <link rel="stylesheet" href="_content/Easy.Blazor.Bulma/css/easy-blazor-bulma.min.css" id="easy-blazor-bulma" media="(prefers-color-scheme: light)" />
+    <link rel="stylesheet" href="_content/Easy.Blazor.Bulma/css/easy-blazor-bulma-dark.min.css" id="easy-blazor-bulma-dark" media="(prefers-color-scheme: dark)" />
+</head>
+
+<body>
+    <!-- Your body content -->
+    <script src="_content/Easy.Blazor.Bulma/js/easy-blazor-bulma.js" type="text/javascript"></script>
+</body>
+```
+
+There are 5 helper methods in the bundled JavaScript file.
+
+* easyBlazorBulma.IsOsDarkMode, checks to see if dark mode is currently enabled
+* easyBlazorBulma.ToggleStyleSheet, enables or disables the element with the matching id
+* easyBlazorBulma.HasStorage, tests to see if browser storage is available
+* easyBlazorBulma.WriteStorage, saves the provided value to browser storage
+* easyBlazorBulma.ReadStorage, retrieves the specified value from browser storage
+
+Additionally, you can use the `<ThemeSelector />` component to display a button that will toggle between themes. By default it applies the `.navbar-item` CSS class, if you provide another class this will override it. Simply including this component anywhere in your display will automatically load the correct theme when your app starts.
 
 ## Build Details
 
