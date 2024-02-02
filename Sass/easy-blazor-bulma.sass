@@ -6,6 +6,10 @@
 @import "../external/bulma-checkradio/src/sass/index"
 @import "../external/bulma-jumbo-tiny/sass/index"
 
+///////////
+// Fonts //
+///////////
+
 @font-face 
   font-family: 'Material Icons'
   font-style: normal
@@ -15,3 +19,61 @@
 .material-icons
   font-family: Material Icons
   vertical-align: text-bottom
+
+///////////////
+// Variables //
+///////////////
+
+$columns-hover-background-color: $scheme-main-bis !default
+$columns-striped-even-background-color: $scheme-main-bis !default
+$columns-striped-even-hover-background-color: $scheme-main-ter !default
+
+///////////////
+// Overrides //
+///////////////
+
+// Panel consistency
+
+.panel
+  margin-bottom: $panel-margin
+
+// Drop-down menu mobile behaviour
+
++until($navbar-breakpoint)
+  .navbar-dropdown
+    display: none
+    &.is-active
+      display: block
+
+// Checkboxes in modal
+
+.modal-card-body
+  input[type=checkbox]
+    margin-right: .75em
+
+// Input textarea height
+
+textarea.input
+  height: auto
+
+// Column styling
+
+.columns
+  &.is-hoverable
+    &:hover
+      background-color: $columns-hover-background-color
+    &.is-striped
+      &:hover
+        background-color: $columns-hover-background-color
+        &:nth-child(even)
+          background-color: $columns-striped-even-hover-background-color
+  &.is-striped
+    &:nth-child(even)
+      background-color: $columns-striped-even-background-color
+
+// Icons in grouped controls with label
+
+.is-grouped
+  .label + .input + .icon,
+  .label + div + .icon
+    top: calc($size-normal + 0.5em + $control-padding-vertical)

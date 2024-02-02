@@ -5702,10 +5702,10 @@ a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-i
     box-shadow: 0 -8px 8px rgba(255, 255, 255, 0.1);
     top: auto;
   }
-  .navbar-item.is-active .navbar-dropdown, .navbar-item.is-hoverable:focus .navbar-dropdown, .navbar-item.is-hoverable:hover .navbar-dropdown {
+  .navbar-item.is-active .navbar-dropdown, .navbar-item.is-hoverable:focus .navbar-dropdown, .navbar-item.is-hoverable:focus-within .navbar-dropdown, .navbar-item.is-hoverable:hover .navbar-dropdown {
     display: block;
   }
-  .navbar.is-spaced .navbar-item.is-active .navbar-dropdown, .navbar-item.is-active .navbar-dropdown.is-boxed, .navbar.is-spaced .navbar-item.is-hoverable:focus .navbar-dropdown, .navbar-item.is-hoverable:focus .navbar-dropdown.is-boxed, .navbar.is-spaced .navbar-item.is-hoverable:hover .navbar-dropdown, .navbar-item.is-hoverable:hover .navbar-dropdown.is-boxed {
+  .navbar.is-spaced .navbar-item.is-active .navbar-dropdown, .navbar-item.is-active .navbar-dropdown.is-boxed, .navbar.is-spaced .navbar-item.is-hoverable:focus .navbar-dropdown, .navbar-item.is-hoverable:focus .navbar-dropdown.is-boxed, .navbar.is-spaced .navbar-item.is-hoverable:focus-within .navbar-dropdown, .navbar-item.is-hoverable:focus-within .navbar-dropdown.is-boxed, .navbar.is-spaced .navbar-item.is-hoverable:hover .navbar-dropdown, .navbar-item.is-hoverable:hover .navbar-dropdown.is-boxed {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
@@ -5992,6 +5992,8 @@ a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover, a.navbar-i
   border-radius: 6px;
   box-shadow: 0 0.5em 1em -0.125em rgba(255, 255, 255, 0.1), 0 0px 0 1px rgba(255, 255, 255, 0.02);
   font-size: 1rem;
+}
+.panel:not(:last-child) {
   margin-bottom: 1.5rem;
 }
 .panel.is-white .panel-heading {
@@ -10888,40 +10890,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 .footer {
   background-color: hsl(0deg, 0%, 7%);
   padding: 3rem 1.5rem 6rem;
-}
-
-@media screen and (max-width: 1023.999px) {
-  .navbar-dropdown {
-    display: none;
-  }
-  .navbar-dropdown.is-active {
-    display: block;
-  }
-}
-.modal-card-body input[type=checkbox] {
-  margin-right: 0.75em;
-}
-
-textarea.input {
-  height: auto;
-}
-
-.columns.is-hoverable:hover {
-  background-color: hsl(0deg, 0%, 7%);
-}
-.columns.is-hoverable.is-striped:hover {
-  background-color: hsl(0deg, 0%, 7%);
-}
-.columns.is-hoverable.is-striped:hover:nth-child(even) {
-  background-color: hsl(0deg, 0%, 14%);
-}
-.columns.is-striped:nth-child(even) {
-  background-color: hsl(0deg, 0%, 7%);
-}
-
-.is-grouped .label + .input + .icon,
-.is-grouped .label + div + .icon {
-  top: calc(1rem + 0.5em + (0.5em - 1px));
 }
 
 .steps:not(:last-child) {
@@ -17167,13 +17135,13 @@ span[data-tooltip].has-tooltip-danger {
 .is-checkradio[type=radio],
 .is-checkradio[type=checkbox] {
   outline: 0;
-  display: none;
-  position: absolute;
-  opacity: 0;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  display: none;
+  position: absolute;
+  opacity: 0;
 }
 .is-checkradio[type=radio] + label,
 .is-checkradio[type=checkbox] + label {
@@ -19159,4 +19127,42 @@ span[data-tooltip].has-tooltip-danger {
 .material-icons {
   font-family: Material Icons;
   vertical-align: text-bottom;
+}
+
+.panel {
+  margin-bottom: 1.5rem;
+}
+
+@media screen and (max-width: 1023.999px) {
+  .navbar-dropdown {
+    display: none;
+  }
+  .navbar-dropdown.is-active {
+    display: block;
+  }
+}
+.modal-card-body input[type=checkbox] {
+  margin-right: 0.75em;
+}
+
+textarea.input {
+  height: auto;
+}
+
+.columns.is-hoverable:hover {
+  background-color: hsl(0deg, 0%, 7%);
+}
+.columns.is-hoverable.is-striped:hover {
+  background-color: hsl(0deg, 0%, 7%);
+}
+.columns.is-hoverable.is-striped:hover:nth-child(even) {
+  background-color: hsl(0deg, 0%, 14%);
+}
+.columns.is-striped:nth-child(even) {
+  background-color: hsl(0deg, 0%, 7%);
+}
+
+.is-grouped .label + .input + .icon,
+.is-grouped .label + div + .icon {
+  top: calc(1rem + 0.5em + (0.5em - 1px));
 }
