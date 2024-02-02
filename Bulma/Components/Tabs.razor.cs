@@ -113,7 +113,7 @@ public partial class Tabs : ComponentBase
 		else if (Children.Any(x => x.Name == tab.Name))
 			throw new ArgumentException("Tabs must have a unique name.", nameof(tab));
 
-		tab.Index = Children.Any() ? Children.Max(x => x.Index) + 1 : 0;
+		tab.Index = Children.Count != 0 ? Children.Max(x => x.Index) + 1 : 0;
 
 		Children.Add(tab);
 
@@ -123,10 +123,7 @@ public partial class Tabs : ComponentBase
 
 	internal void RemoveChild(Tab tab)
 	{
-		var child = Children.FirstOrDefault(x => x.Index == tab.Index);
-
-		if (child == null)
-			throw new ArgumentException("Could not find tab to remove.", nameof(tab));
+		var child = Children.FirstOrDefault(x => x.Index == tab.Index) ?? throw new ArgumentException("Could not find tab to remove.", nameof(tab));
 
 		Children.Remove(child);
 
@@ -135,7 +132,7 @@ public partial class Tabs : ComponentBase
 		foreach (var item in Children.OrderBy(x => x.Index))
 			item.Index = i++;
 
-		if (Active == child.Name && Children.Any())
+		if (Active == child.Name && Children.Count != 0)
 			Active = Children.First().Name;
 	}
 

@@ -16166,9 +16166,11 @@ span[data-tooltip].has-tooltip-danger {
 .datetimepicker .timepicker .timepicker-start .timepicker-days,
 .datetimepicker .timepicker .timepicker-start .timepicker-hours,
 .datetimepicker .timepicker .timepicker-start .timepicker-minutes,
+.datetimepicker .timepicker .timepicker-start .timepicker-seconds,
 .datetimepicker .timepicker .timepicker-end .timepicker-days,
 .datetimepicker .timepicker .timepicker-end .timepicker-hours,
-.datetimepicker .timepicker .timepicker-end .timepicker-minutes {
+.datetimepicker .timepicker .timepicker-end .timepicker-minutes,
+.datetimepicker .timepicker .timepicker-end .timepicker-seconds {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16176,9 +16178,11 @@ span[data-tooltip].has-tooltip-danger {
 .datetimepicker .timepicker .timepicker-start .timepicker-days .timepicker-input,
 .datetimepicker .timepicker .timepicker-start .timepicker-hours .timepicker-input,
 .datetimepicker .timepicker .timepicker-start .timepicker-minutes .timepicker-input,
+.datetimepicker .timepicker .timepicker-start .timepicker-seconds .timepicker-input,
 .datetimepicker .timepicker .timepicker-end .timepicker-days .timepicker-input,
 .datetimepicker .timepicker .timepicker-end .timepicker-hours .timepicker-input,
-.datetimepicker .timepicker .timepicker-end .timepicker-minutes .timepicker-input {
+.datetimepicker .timepicker .timepicker-end .timepicker-minutes .timepicker-input,
+.datetimepicker .timepicker .timepicker-end .timepicker-seconds .timepicker-input {
   position: relative;
   color: hsl(171deg, 100%, 41%);
   text-align: center;
@@ -16189,27 +16193,33 @@ span[data-tooltip].has-tooltip-danger {
 .datetimepicker .timepicker .timepicker-start .timepicker-days .timepicker-input.is-input .timepicker-input-number,
 .datetimepicker .timepicker .timepicker-start .timepicker-hours .timepicker-input.is-input .timepicker-input-number,
 .datetimepicker .timepicker .timepicker-start .timepicker-minutes .timepicker-input.is-input .timepicker-input-number,
+.datetimepicker .timepicker .timepicker-start .timepicker-seconds .timepicker-input.is-input .timepicker-input-number,
 .datetimepicker .timepicker .timepicker-end .timepicker-days .timepicker-input.is-input .timepicker-input-number,
 .datetimepicker .timepicker .timepicker-end .timepicker-hours .timepicker-input.is-input .timepicker-input-number,
-.datetimepicker .timepicker .timepicker-end .timepicker-minutes .timepicker-input.is-input .timepicker-input-number {
+.datetimepicker .timepicker .timepicker-end .timepicker-minutes .timepicker-input.is-input .timepicker-input-number,
+.datetimepicker .timepicker .timepicker-end .timepicker-seconds .timepicker-input.is-input .timepicker-input-number {
   visibility: hidden;
   opacity: 0;
 }
 .datetimepicker .timepicker .timepicker-start .timepicker-days .timepicker-input.is-input input,
 .datetimepicker .timepicker .timepicker-start .timepicker-hours .timepicker-input.is-input input,
 .datetimepicker .timepicker .timepicker-start .timepicker-minutes .timepicker-input.is-input input,
+.datetimepicker .timepicker .timepicker-start .timepicker-seconds .timepicker-input.is-input input,
 .datetimepicker .timepicker .timepicker-end .timepicker-days .timepicker-input.is-input input,
 .datetimepicker .timepicker .timepicker-end .timepicker-hours .timepicker-input.is-input input,
-.datetimepicker .timepicker .timepicker-end .timepicker-minutes .timepicker-input.is-input input {
+.datetimepicker .timepicker .timepicker-end .timepicker-minutes .timepicker-input.is-input input,
+.datetimepicker .timepicker .timepicker-end .timepicker-seconds .timepicker-input.is-input input {
   visibility: visible;
   opacity: 1;
 }
 .datetimepicker .timepicker .timepicker-start .timepicker-days .timepicker-input input,
 .datetimepicker .timepicker .timepicker-start .timepicker-hours .timepicker-input input,
 .datetimepicker .timepicker .timepicker-start .timepicker-minutes .timepicker-input input,
+.datetimepicker .timepicker .timepicker-start .timepicker-seconds .timepicker-input input,
 .datetimepicker .timepicker .timepicker-end .timepicker-days .timepicker-input input,
 .datetimepicker .timepicker .timepicker-end .timepicker-hours .timepicker-input input,
-.datetimepicker .timepicker .timepicker-end .timepicker-minutes .timepicker-input input {
+.datetimepicker .timepicker .timepicker-end .timepicker-minutes .timepicker-input input,
+.datetimepicker .timepicker .timepicker-end .timepicker-seconds .timepicker-input input {
   width: 4rem;
   margin: 0;
   padding: 0;
@@ -17130,6 +17140,14 @@ span[data-tooltip].has-tooltip-danger {
   width: 22rem;
   max-width: 95vw;
   overflow-y: auto;
+}
+
+.datetimepicker-background {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .is-checkradio[type=radio],

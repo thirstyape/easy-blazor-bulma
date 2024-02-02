@@ -111,7 +111,7 @@ public partial class Steps : ComponentBase
         else if (Children.Any(x => x.Name == step.Name))
             throw new ArgumentException("Steps must have a unique name.", nameof(step));
 
-        step.Index = Children.Any() ? Children.Max(x => x.Index) + 1 : 0;
+        step.Index = Children.Count != 0 ? Children.Max(x => x.Index) + 1 : 0;
 
         Children.Add(step);
 
@@ -121,19 +121,16 @@ public partial class Steps : ComponentBase
 
     internal void RemoveChild(Step step)
     {
-        var child = Children.FirstOrDefault(x => x.Index == step.Index);
+        var child = Children.FirstOrDefault(x => x.Index == step.Index) ?? throw new ArgumentException("Could not find step to remove.", nameof(step));
 
-        if (child == null)
-            throw new ArgumentException("Could not find step to remove.", nameof(step));
-
-        Children.Remove(child);
+		Children.Remove(child);
 
         var i = 0;
 
         foreach (var item in Children.OrderBy(x => x.Index))
             item.Index = i++;
 
-        if (Active == child.Name && Children.Any())
+        if (Active == child.Name && Children.Count != 0)
             Active = Children.First().Name;
     }
 
