@@ -17148,6 +17148,7 @@ span[data-tooltip].has-tooltip-danger {
   position: absolute;
   right: 0;
   top: 0;
+  position: fixed;
 }
 
 .is-checkradio[type=radio],

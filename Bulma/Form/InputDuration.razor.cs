@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -12,169 +13,501 @@ namespace easy_blazor_bulma;
 /// <typeparam name="TValue"></typeparam>
 public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TValue> : InputBase<TValue>
 {
-	/// <summary>
-	/// The number of minutes or seconds to adjust by when the up or down arrows are clicked.
-	/// </summary>
-	[Parameter]
-	[Range(1, 60)]
-	public int Step { get; set; } = 5;
+    /// <summary>
+    /// The number of days to adjust by when the up or down arrows are clicked.
+    /// </summary>
+    [Parameter]
+    [Range(1, 365)]
+    public int StepDays { get; set; } = 1;
 
-	/// <summary>
-	/// An icon to display within the input.
-	/// </summary>
-	[Parameter]
-	public string? Icon { get; set; }
+    /// <summary>
+    /// The number of hours to adjust by when the up or down arrows are clicked.
+    /// </summary>
+    [Parameter]
+    [Range(1, 24)]
+    public int StepHours { get; set; } = 1;
 
-	/// <summary>
-	/// Applies styles to the input according to the selected options. Will automatically update 
-	/// </summary>
-	[Parameter]
-	public InputStatus DisplayStatus { get; set; }
+    /// <summary>
+    /// The number of minutes to adjust by when the up or down arrows are clicked.
+    /// </summary>
+    [Parameter]
+    [Range(1, 60)]
+    public int StepMinutes { get; set; } = 5;
 
-	/// <summary>
-	/// The configuration options to apply to the component.
-	/// </summary>
-	[Parameter]
-	public InputDurationOptions Options { get; set; } = InputDurationOptions.ClickPopout | InputDurationOptions.PopoutBottom | InputDurationOptions.PopoutLeft | InputDurationOptions.ShowResetButton | InputDurationOptions.UpdateOnPopoutChange | InputDurationOptions.UseAutomaticStatusColors;
+    /// <summary>
+    /// The number of seconds to adjust by when the up or down arrows are clicked.
+    /// </summary>
+    [Parameter]
+    [Range(1, 60)]
+    public int StepSeconds { get; set; } = 15;
 
-	private TimeSpan PopoutValue;
-	private bool IsPopoutDisplayed;
+    /// <summary>
+    /// An icon to display within the input.
+    /// </summary>
+    [Parameter]
+    public string? Icon { get; set; }
 
-	private readonly bool IsNullable;
-	private readonly Type UnderlyingType;
+    /// <summary>
+    /// Applies styles to the input according to the selected options.
+    /// </summary>
+    [Parameter]
+    public InputStatus DisplayStatus { get; set; }
 
-	private string FullCssClass
-	{
-		get
-		{
-			var css = "input";
+    /// <summary>
+    /// The configuration options to apply to the component.
+    /// </summary>
+    [Parameter]
+    public InputDurationOptions Options { get; set; } =
+        InputDurationOptions.ClickPopout |
+        InputDurationOptions.PopoutBottom |
+        InputDurationOptions.PopoutLeft |
+        InputDurationOptions.ShowResetButton |
+        InputDurationOptions.UpdateOnPopoutChange |
+        InputDurationOptions.UseAutomaticStatusColors |
+        InputDurationOptions.ShowHours |
+        InputDurationOptions.ShowMinutes |
+        InputDurationOptions.ShowSeconds;
 
-			if (DisplayStatus.HasFlag(InputStatus.BackgroundDanger))
-				css += " is-danger";
-			else if (DisplayStatus.HasFlag(InputStatus.BackgroundWarning))
-				css += " is-warning";
-			else if (DisplayStatus.HasFlag(InputStatus.BackgroundSuccess))
-				css += " is-success";
+    private TimeSpan PopoutValue;
+    private bool IsPopoutDisplayed;
 
-			return string.Join(' ', css, CssClass);
-		}
-	}
+    private readonly bool IsNullable;
+    private readonly Type UnderlyingType;
 
-	private string TimePickerCssClass
-	{
-		get
-		{
-			var css = "datetimepicker";
+    private string FullCssClass
+    {
+        get
+        {
+            var css = "input";
 
-			if (Options.HasFlag(InputDurationOptions.HoverPopout))
-				css += " is-hoverable";
-			else if (IsPopoutDisplayed && AdditionalAttributes?.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true"))) == false)
-				css += " is-active";
+            if (DisplayStatus.HasFlag(InputStatus.BackgroundDanger))
+                css += " is-danger";
+            else if (DisplayStatus.HasFlag(InputStatus.BackgroundWarning))
+                css += " is-warning";
+            else if (DisplayStatus.HasFlag(InputStatus.BackgroundSuccess))
+                css += " is-success";
 
-			if (Options.HasFlag(InputDurationOptions.PopoutBottom))
-				css += " datetimepicker-below";
-			else if (Options.HasFlag(InputDurationOptions.PopoutTop))
-				css += " datetimepicker-above";
+            return string.Join(' ', css, CssClass);
+        }
+    }
 
-			if (Options.HasFlag(InputDurationOptions.PopoutLeft))
-				css += " datetimepicker-left";
-			else if (Options.HasFlag(InputDurationOptions.PopoutRight))
-				css += " datetimepicker-right";
+    private string TimePickerCssClass
+    {
+        get
+        {
+            var css = "datetimepicker";
 
-			return css;
-		}
-	}
+            if (Options.HasFlag(InputDurationOptions.HoverPopout))
+                css += " is-hoverable";
 
-	private string IconCssClass
-	{
-		get
-		{
-			var css = "material-icons icon is-left";
+            if (IsPopoutDisplayed && (AdditionalAttributes == null || AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true"))) == false))
+                css += " is-active";
 
-			if (FullCssClass.Contains("is-small"))
-				css += " is-small";
+            if (Options.HasFlag(InputDurationOptions.PopoutBottom))
+                css += " datetimepicker-below";
+            else if (Options.HasFlag(InputDurationOptions.PopoutTop))
+                css += " datetimepicker-above";
 
-			if (DisplayStatus.HasFlag(InputStatus.IconDanger))
-				css += " has-text-danger";
-			else if (DisplayStatus.HasFlag(InputStatus.IconWarning))
-				css += " has-text-warning";
-			else if (DisplayStatus.HasFlag(InputStatus.IconSuccess))
-				css += " has-text-success";
+            if (Options.HasFlag(InputDurationOptions.PopoutLeft))
+                css += " datetimepicker-left";
+            else if (Options.HasFlag(InputDurationOptions.PopoutRight))
+                css += " datetimepicker-right";
 
-			return css;
-		}
-	}
+            return css;
+        }
+    }
 
-	public InputDuration()
-	{
-		var nullable = Nullable.GetUnderlyingType(typeof(TValue));
+    private string IconCssClass
+    {
+        get
+        {
+            var css = "material-icons icon is-left";
 
-		UnderlyingType = nullable ?? typeof(TValue);
-		IsNullable = nullable != null;
+            if (FullCssClass.Contains("is-small"))
+                css += " is-small";
 
-		if (UnderlyingType != typeof(TimeSpan) && UnderlyingType != typeof(TimeOnly))
-			throw new InvalidOperationException($"Unsupported type param '{UnderlyingType.Name}'. Must be of type {nameof(TimeSpan)} or {nameof(TimeOnly)}.");
-	}
+            if (DisplayStatus.HasFlag(InputStatus.IconDanger))
+                css += " has-text-danger";
+            else if (DisplayStatus.HasFlag(InputStatus.IconWarning))
+                css += " has-text-warning";
+            else if (DisplayStatus.HasFlag(InputStatus.IconSuccess))
+                css += " has-text-success";
 
-	/// <inheritdoc />
-	protected override void OnInitialized()
-	{
-		if (IsNullable && Value == null)
-			PopoutValue = TimeSpan.Zero;
-		else if (UnderlyingType == typeof(TimeSpan))
-			PopoutValue = (TimeSpan)Convert.ChangeType(Value!, typeof(TimeSpan));
-		else
-			PopoutValue = ((TimeOnly)(object)Value!).ToTimeSpan();
-	}
+            return css;
+        }
+    }
 
-	/// <inheritdoc/>
-	protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
-	{
-		throw new NotImplementedException();
-	}
+    public InputDuration()
+    {
+        var nullable = Nullable.GetUnderlyingType(typeof(TValue));
 
-	/// <inheritdoc />
-	protected override string FormatValueAsString(TValue? value)
-	{
-		return "";
-	}
+        UnderlyingType = nullable ?? typeof(TValue);
+        IsNullable = nullable != null;
 
-	private async Task CheckKeyPress(KeyboardEventArgs args)
-	{
-		if (args.Key == "Escape" || args.Key == "Tab")
-			await ClosePopup();
-	}
+        if (UnderlyingType != typeof(TimeSpan) && UnderlyingType != typeof(TimeOnly))
+            throw new InvalidOperationException($"Unsupported type param '{UnderlyingType.Name}'. Must be of type {nameof(TimeSpan)} or {nameof(TimeOnly)}.");
+    }
 
-	private void OpenPopup()
-	{
-		if (IsPopoutDisplayed || Options.HasFlag(InputDurationOptions.NoPopout))
-			return;
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        // Validation
+        if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours) && Options.HasFlag(InputDurationOptions.ShowDays))
+            throw new ArgumentException("Cannot set both DisplayDaysAsHours and ShowDays.", nameof(Options));
 
-		IsPopoutDisplayed = true;
+        if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes) && Options.HasFlag(InputDurationOptions.ShowHours))
+            throw new ArgumentException("Cannot set both DisplayHoursAsMinutes and ShowHours.", nameof(Options));
 
-		if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
-			ResetStatus();
-	}
+        if (Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds) && Options.HasFlag(InputDurationOptions.ShowMinutes))
+            throw new ArgumentException("Cannot set both DisplayMinutesAsSeconds and ShowMinutes.", nameof(Options));
 
-	private async Task ClosePopup(bool save = false, bool reset = false)
-	{
+        if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours) && Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes))
+            throw new ArgumentException("Cannot set both DisplayDaysAsHours and DisplayHoursAsMinutes.", nameof(Options));
+        
+        if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours) && Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds))
+            throw new ArgumentException("Cannot set both DisplayDaysAsHours and DisplayMinutesAsSeconds.", nameof(Options));
+        
+        if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes) && Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds))
+            throw new ArgumentException("Cannot set both DisplayHoursAsMinutes and DisplayMinutesAsSeconds.", nameof(Options));
 
-	}
+        if (UnderlyingType == typeof(TimeOnly) && Options.HasFlag(InputDurationOptions.AllowNegative))
+            throw new ArgumentException($"Cannot set AllowNegative with a {nameof(TimeOnly)}.", nameof(Options));
 
-	private async Task OnChange(ChangeEventArgs args)
-	{
+        if (UnderlyingType == typeof(TimeOnly) && Options.HasFlag(InputDurationOptions.AllowGreaterThan24Hours))
+            throw new ArgumentException($"Cannot set AllowGreaterThan24Hours with a {nameof(TimeOnly)}.", nameof(Options));
 
-	}
+        // Set popout value
+        UpdatePopoutValue();
+    }
 
-	private void UpdatePopupValue(TimeSpan adjustment)
-	{
+    /// <inheritdoc/>
+    protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
+    {
+        // Prevent null reference
+        if (IsNullable == false && string.IsNullOrWhiteSpace(value))
+            value = "00:00:00";
 
-	}
+        // Validate
+        var valid = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', ':' };
 
-	private void ResetStatus()
-	{
-		DisplayStatus &= ~InputStatus.BackgroundDanger;
-		DisplayStatus &= ~InputStatus.BackgroundWarning;
-		DisplayStatus &= ~InputStatus.BackgroundSuccess;
-	}
+        if (string.IsNullOrWhiteSpace(value) == false)
+        {
+            if (value.Any(x => valid.Contains(x) == false))
+            {
+                result = default;
+
+                if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+                    DisplayStatus |= InputStatus.BackgroundDanger;
+
+                validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The {0} field must contain only digits, '-', '.', and ':'.", DisplayName ?? FieldIdentifier.FieldName);
+                return false;
+            }
+
+            if (Options.HasFlag(InputDurationOptions.AllowNegative) == false && value.Contains('-'))
+            {
+                result = default;
+
+                if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+                    DisplayStatus |= InputStatus.BackgroundDanger;
+
+                validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The {0} field does not have the AllowNegative option enabled.", DisplayName ?? FieldIdentifier.FieldName);
+                return false;
+            }
+
+            if (value.Count(x => x == '-') > 1 || value.Count(x => x == '.') > 1 || value.Count(x => x == ':') > 2)
+            {
+                result = default;
+
+                if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+                    DisplayStatus |= InputStatus.BackgroundDanger;
+
+                validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The '-' and '.' characters may only appear once in the {0} field, the ':' character may appear twice.", DisplayName ?? FieldIdentifier.FieldName);
+                return false;
+            }
+
+            if (value.Contains('-') && value.StartsWith('-') == false)
+            {
+                result = default;
+
+                if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+                    DisplayStatus |= InputStatus.BackgroundDanger;
+
+                validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The negative sign may only appear at the start of the {0} field.", DisplayName ?? FieldIdentifier.FieldName);
+                return false;
+            }
+            
+            if (Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds) && value.Contains('.'))
+            {
+                result = default;
+
+                if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+                    DisplayStatus |= InputStatus.BackgroundDanger;
+
+                validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "Cannot enter decimal values when DisplayMinutesAsSeconds is active in the {0} field.", DisplayName ?? FieldIdentifier.FieldName);
+                return false;
+            }
+        }
+
+        // Fix formatting
+        if (string.IsNullOrWhiteSpace(value) == false)
+            value = FixStringFormatting(value);
+
+        // Try parse
+        try
+        {
+            if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+                ResetStatus();
+
+            if (BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out result))
+            {
+                if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+                    DisplayStatus |= InputStatus.BackgroundSuccess;
+
+                validationErrorMessage = null;
+                return true;
+            }
+            else
+            {
+                if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+                    DisplayStatus |= InputStatus.BackgroundDanger;
+
+                validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The {0} field must be a time.", DisplayName ?? FieldIdentifier.FieldName);
+                return false;
+            }
+        }
+        catch (Exception e) when (e is FormatException || e is OverflowException)
+        {
+            result = default;
+
+            if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+                DisplayStatus |= InputStatus.BackgroundDanger;
+
+            validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The {0} could not be parsed as a time. Example: 1.03:15:43 = 1 day, 3 hours, 15 minutes, 43 seconds", DisplayName ?? FieldIdentifier.FieldName);
+            return false;
+        }
+    }
+
+    private string FixStringFormatting(string value)
+    {
+        // Invalid start
+        var negative = value.StartsWith('-');
+
+        if (negative)
+            value = value.TrimStart('-');
+
+        if (value.StartsWith('.') || value.StartsWith(':'))
+            value = $"0{value}";
+
+        // Invalid end
+        if (value.EndsWith('.') || value.EndsWith(':'))
+            value = $"{value}00";
+
+        // Decimal values
+        if (value.Contains('.') && value.Contains(':') == false)
+        {
+            if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours))
+            {
+                var start = value.Split('.')[0];
+                var partial = decimal.Parse($"0.{value.Split('.')[1]}") * 60;
+                var end = partial.ToString().Split('.')[0].PadLeft(2, '0');
+
+                value = $"{start}:{end}:00";
+            }
+            else if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes))
+            {
+                var start = value.Split('.')[0];
+                var partial = decimal.Parse($"0.{value.Split('.')[1]}") * 60;
+                var end = partial.ToString().Split('.')[0].PadLeft(2, '0');
+
+                value = $"{start}:{end}";
+            }
+            else
+            {
+                value = $"{value}:00:00";
+            }
+        }
+
+        // Integral values
+        if (value.Contains('.') == false && value.Contains(':') == false)
+        {
+            if (Options.HasFlag(InputDurationOptions.ShowDays))
+                value = $"{value}.00:00:00";
+            else if (Options.HasFlag(InputDurationOptions.ShowHours))
+                value = $"{value}:00:00";
+            else if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes))
+                value = $"{value}:00";
+            else if (Options.HasFlag(InputDurationOptions.ShowMinutes))
+                value = $"00:{value}:00";
+            else if (Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds) == false && Options.HasFlag(InputDurationOptions.ShowSeconds))
+                value = $"00:00:{value}";
+        }
+
+        // Custom display parsing
+        if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours))
+        {
+            var totalHours = Math.Abs(int.Parse(value.Split(':')[0]));
+            var rest = value.Split(':').Skip(1);
+
+            var days = (int)Math.Floor(totalHours / 24.0M);
+            var hours = (totalHours % 24).ToString();
+
+            value = $"{days}.{hours.PadLeft(2, '0')}:{string.Join(':', rest)}";
+        }
+        else if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes))
+        {
+            var totalMinutes = Math.Abs(int.Parse(value.Split(':')[0]));
+            var seconds = value.Split(':').Skip(1);
+
+            var days = (int)Math.Floor(totalMinutes / 1_440.0M);
+            var hours = (int)Math.Floor((totalMinutes - (days * 1_440)) / 60.0M);
+            var minutes = ((totalMinutes - (days * 1_440)) % 60).ToString();
+
+            value = $"{days}.{hours.ToString().PadLeft(2, '0')}:{minutes.PadLeft(2, '0')}:" + seconds.First();
+        }
+        else if (Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds))
+        {
+            var totalSeconds = Math.Abs(int.Parse(value));
+
+            var days = (int)Math.Floor(totalSeconds / 86_400.0M);
+            var hours = (int)Math.Floor((totalSeconds - (days * 86_400)) / 3_600.0M);
+            var minutes = (int)Math.Floor((totalSeconds - (days * 86_400) - (hours * 3_600)) / 60.0M);
+            var seconds = ((totalSeconds - (days * 86_400) - (hours * 3_600)) % 60).ToString();
+
+            value = $"{days}.{hours.ToString().PadLeft(2, '0')}:{minutes.ToString().PadLeft(2, '0')}:{seconds.PadLeft(2, '0')}";
+        }
+
+        if (negative)
+            return '-' + value;
+        else
+            return value;
+    }
+
+    /// <inheritdoc />
+    protected override string FormatValueAsString(TValue? value) => value switch
+    {
+        TimeSpan timeSpanValue => FormatTimeSpan(timeSpanValue),
+        TimeOnly timeOnlyValue => FormatTimeOnly(timeOnlyValue),
+        _ => string.Empty
+    };
+
+    private string FormatTimeSpan(TimeSpan value)
+    {
+        if (Options.HasFlag(InputDurationOptions.AllowNegative) == false && value < TimeSpan.Zero)
+            value = TimeSpan.Zero;
+
+        if (Options.HasFlag(InputDurationOptions.AllowGreaterThan24Hours) == false && value >= TimeSpan.FromDays(1))
+            value = TimeSpan.FromDays(1).Add(TimeSpan.FromSeconds(-1));
+
+        var formatted = "";
+        var negative = value < TimeSpan.Zero;
+
+        if (negative)
+            formatted += '-';
+
+        if (Options.HasFlag(InputDurationOptions.ShowDays))
+            formatted += value.ToString("%d") + '.';
+
+        if (Options.HasFlag(InputDurationOptions.ShowHours))
+        {
+            if (Options.HasFlag(InputDurationOptions.ShowDays))
+                formatted += value.ToString("hh") + ':';
+            else if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours))
+                formatted += (negative ? Math.Abs((int)Math.Ceiling(value.TotalHours)) : (int)Math.Floor(value.TotalHours)).ToString() + ':';
+            else
+                formatted += value.ToString("%h") + ':';
+        }
+
+        if (Options.HasFlag(InputDurationOptions.ShowMinutes))
+        {
+            if (Options.HasFlag(InputDurationOptions.ShowHours))
+                formatted += value.ToString("mm") + ':';
+            else if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes))
+                formatted += (negative ? Math.Abs((int)Math.Ceiling(value.TotalMinutes)) : (int)Math.Floor(value.TotalMinutes)).ToString() + ':';
+            else
+                formatted += value.ToString("%m") + ':';
+        }
+
+        if (Options.HasFlag(InputDurationOptions.ShowSeconds))
+        {
+            if (Options.HasFlag(InputDurationOptions.ShowMinutes))
+                formatted += value.ToString("ss");
+            else if (Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds))
+                formatted += (negative ? Math.Abs((int)Math.Ceiling(value.TotalSeconds)) : (int)Math.Floor(value.TotalSeconds)).ToString();
+            else
+                formatted += value.ToString("%s");
+        }
+
+        return formatted.TrimEnd('.', ':');
+    }
+
+    private string FormatTimeOnly(TimeOnly value) => FormatTimeSpan(value.ToTimeSpan());
+
+    private void CheckKeyPress(KeyboardEventArgs args)
+    {
+        if (args.Key == "Escape" || args.Key == "Tab")
+            ClosePopout();
+    }
+
+    private void OpenPopout()
+    {
+        if (IsPopoutDisplayed || Options.HasFlag(InputDurationOptions.NoPopout))
+            return;
+
+        IsPopoutDisplayed = true;
+
+        if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+            ResetStatus();
+    }
+
+    private void ClosePopout(bool save = false, bool reset = false)
+    {
+        if (IsPopoutDisplayed == false || Options.HasFlag(InputDurationOptions.NoPopout))
+            return;
+
+        IsPopoutDisplayed = false;
+
+        if (reset)
+            PopoutValue = TimeSpan.Zero;
+
+        if (save || reset)
+            CurrentValueAsString = FormatTimeSpan(PopoutValue);
+    }
+
+    private void OnChange(ChangeEventArgs args)
+    {
+        CurrentValueAsString = args.Value?.ToString();
+        UpdatePopoutValue();
+    }
+
+    private void UpdatePopoutValue()
+    {
+        if (IsNullable && Value == null)
+            PopoutValue = TimeSpan.Zero;
+        else if (UnderlyingType == typeof(TimeSpan))
+            PopoutValue = (TimeSpan)Convert.ChangeType(Value!, typeof(TimeSpan));
+        else
+            PopoutValue = ((TimeOnly)(object)Value!).ToTimeSpan();
+    }
+
+    private void UpdatePopoutValue(TimeSpan adjustment)
+    {
+        var adjusted = PopoutValue.Add(adjustment);
+
+        if (Options.HasFlag(InputDurationOptions.AllowNegative) == false && adjusted < TimeSpan.Zero)
+            PopoutValue = TimeSpan.Zero;
+        else if (Options.HasFlag(InputDurationOptions.AllowGreaterThan24Hours) == false && adjusted >= TimeSpan.FromDays(1))
+            PopoutValue = TimeSpan.FromDays(1).Add(TimeSpan.FromSeconds(-1));
+        else
+            PopoutValue = adjusted;
+
+        if (Options.HasFlag(InputDurationOptions.UpdateOnPopoutChange))
+            CurrentValueAsString = FormatTimeSpan(PopoutValue);
+    }
+
+    private void ResetStatus()
+    {
+        DisplayStatus &= ~InputStatus.BackgroundDanger;
+        DisplayStatus &= ~InputStatus.BackgroundWarning;
+        DisplayStatus &= ~InputStatus.BackgroundSuccess;
+    }
 }

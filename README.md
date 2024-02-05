@@ -41,6 +41,7 @@ The following components are currently available for use. All of them are docume
 
 **Form**
 
+* `<InputDuration />`, creates an input with a popout for binding time values
 * `<InputFlaggedEnum />`, creates a series of checkboxes for bitmasked enum values
 
 **Helpers**
