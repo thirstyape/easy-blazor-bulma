@@ -1,0 +1,129 @@
+﻿@namespace easy_blazor_bulma
+@typeparam TValue
+@inherits InputBase<TValue>
+
+<div class="datetimepicker-parent">
+	<input type="text" class="@FullCssClass" value='@CurrentValueAsString' @onchange='OnChange' @onclick='OpenPopout' @onfocus='OpenPopout' @onkeydown='CheckKeyPress' @attributes='AdditionalAttributes?.Where(x => x.Key != "class")' />
+
+    @if (string.IsNullOrWhiteSpace(Icon) == false)
+    {
+        <span class="@IconCssClass">@Icon</span>
+    }
+
+    <div class='@TimePickerCssClass'>
+        @if (Options.HasFlag(InputDateTimeOptions.ClickPopout))
+        {
+            <div class="datetimepicker-background" @onclick='() => ClosePopout()'></div>
+        }
+
+        @if (Options.HasFlag(InputDateTimeOptions.ShowDate))
+        {
+            <div class="datetimepicker-container">
+            </div>
+        }
+
+        @if (Options.HasFlag(InputDateTimeOptions.ShowHours) || Options.HasFlag(InputDateTimeOptions.ShowMinutes) || Options.HasFlag(InputDateTimeOptions.ShowSeconds))
+        {
+            <div class="columns has-background-primary has-text-white m-0 px-0 py-1">
+                @if (Options.HasFlag(InputDateTimeOptions.ShowHours))
+                {
+                    <span class="column p-0 has-text-centered">Hours</span>
+                }
+                @if (Options.HasFlag(InputDateTimeOptions.ShowMinutes))
+                {
+                    <span class="column p-0 has-text-centered">Minutes</span>
+                }
+                @if (Options.HasFlag(InputDateTimeOptions.ShowSeconds))
+                {
+                    <span class="column p-0 has-text-centered">Seconds</span>
+                }
+            </div>
+
+            <div class="timepicker">
+                <div class="timepicker-start">
+                    @if (Options.HasFlag(InputDateTimeOptions.ShowHours))
+                    {
+                        <div class="timepicker-hours">
+                            <span class="timepicker-next material-icons" @onclick='() => UpdatePopoutValue(TimeSpan.FromHours(StepHours))'>arrow_upward</span>
+                            <div class="timepicker-input">
+                                <input type="number">
+                                <div class="timepicker-input-number">
+                                    <span>@PopoutValue.ToString("HH")</span>
+                                </div>
+                            </div>
+                            <span class="timepicker-previous material-icons" @onclick='() => UpdatePopoutValue(TimeSpan.FromHours(-StepHours))'>arrow_downward</span>
+                        </div>
+                        @if (Options.HasFlag(InputDateTimeOptions.ShowMinutes))
+                        {
+                            <div class="timepicker-time-divider">:</div>
+                        }
+                    }
+                    @if (Options.HasFlag(InputDateTimeOptions.ShowMinutes))
+                    {
+                        <div class="timepicker-minutes">
+                            <span class="timepicker-next material-icons" @onclick='() => UpdatePopoutValue(TimeSpan.FromMinutes(StepMinutes))'>arrow_upward</span>
+                            <div class="timepicker-input">
+                                <input type="number">
+                                <div class="timepicker-input-number">
+                                    <span>@PopoutValue.ToString("mm")</span>
+                                </div>
+                            </div>
+                            <span class="timepicker-previous material-icons" @onclick='() => UpdatePopoutValue(TimeSpan.FromMinutes(-StepMinutes))'>arrow_downward</span>
+                        </div>
+                        @if (Options.HasFlag(InputDateTimeOptions.ShowSeconds))
+                        {
+                            <div class="timepicker-time-divider">:</div>
+                        }
+                    }
+                    @if (Options.HasFlag(InputDateTimeOptions.ShowSeconds))
+                    {
+                        <div class="timepicker-seconds">
+                            <span class="timepicker-next material-icons" @onclick='() => UpdatePopoutValue(TimeSpan.FromSeconds(StepSeconds))'>arrow_upward</span>
+                            <div class="timepicker-input">
+                                <input type="number">
+                                <div class="timepicker-input-number">
+                                    <span>@PopoutValue.ToString("ss")</span>
+                                </div>
+                            </div>
+                            <span class="timepicker-previous material-icons" @onclick='() => UpdatePopoutValue(TimeSpan.FromSeconds(-StepSeconds))'>arrow_downward</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="datetimepicker-footer">
+            @if (Options.HasFlag(InputDateTimeOptions.ShowAcceptButton) || Options.HasFlag(InputDateTimeOptions.UpdateOnPopoutChange) == false)
+            {
+                <button type="button" class="button is-small is-fullwidth is-success" @onclick='() => ClosePopout(true)'>
+                    Accept
+                </button>
+            }
+            @if (Options.HasFlag(InputDateTimeOptions.ShowNowButton))
+            {
+                <button type="button" class="button is-small is-fullwidth is-warning" @onclick='() => ClosePopout(true)'>
+                    @if (Options.HasFlag(InputDateTimeOptions.ShowHours) || Options.HasFlag(InputDateTimeOptions.ShowMinutes) || Options.HasFlag(InputDateTimeOptions.ShowSeconds))
+                    {
+                        @:Now
+                    }
+                    else
+                    {
+                        @:Today
+                    }
+                </button>
+            }
+            @if (Options.HasFlag(InputDateTimeOptions.ShowResetButton))
+            {
+                <button type="button" class="button is-small is-fullwidth is-danger" @onclick='() => ClosePopout(reset: true)'>
+                    Reset
+                </button>
+            }
+            @if (Options.HasFlag(InputDateTimeOptions.ShowCancelButton))
+            {
+                <button type="button" class="button is-small is-fullwidth" @onclick='() => ClosePopout()'>
+                    Cancel
+                </button>
+            }
+        </div>
+    </div>
+</div>
