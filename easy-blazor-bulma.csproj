@@ -16,8 +16,11 @@
     <Description>This project was created to provide a standard implementation of Bulma with Blazor components.</Description>
     <RepositoryUrl>https://github.com/thirstyape/Easy-Blazor-Bulma</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <PackageReleaseNotes>
+		1.0.4
+		Add InputDuration and InputDateTime
+		
 		1.0.3
 		Add more new components
 		
