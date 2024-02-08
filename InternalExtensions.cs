@@ -53,4 +53,11 @@ internal static class InternalExtensions
 
         return display.TrimEnd();
     }
+
+    /// <summary>
+    /// Returns the previous occurrence of the specified day of week or the current date if already on the specified day of week.
+    /// </summary>
+    /// <param name="date">The date to use as a base.</param>
+    /// <param name="day">The day of the week requested.</param>
+    internal static DateTime GetPreviousWeekday(this DateTime date, DayOfWeek day) => date.AddDays(-((date.DayOfWeek - day + 7) % 7));
 }

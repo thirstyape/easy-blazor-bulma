@@ -15648,7 +15648,7 @@ span[data-tooltip].has-tooltip-danger {
 
 .datetimepicker {
   display: none;
-  background: hsl(0deg, 0%, 100%);
+  background-color: hsl(0deg, 0%, 4%);
   border-radius: 2px;
   width: 320px;
   position: absolute;
@@ -15679,6 +15679,8 @@ span[data-tooltip].has-tooltip-danger {
   padding: 0.5rem 1rem;
   font-size: 1rem;
   box-shadow: 0 0.2rem 0.2rem -0.2rem rgba(10, 10, 10, 0.1);
+  background-color: hsl(0deg, 0%, 14%);
+  color: hsl(0deg, 0%, 71%);
 }
 .datetimepicker .datetimepicker-header.is-date-only {
   flex-direction: row;
@@ -15801,6 +15803,16 @@ span[data-tooltip].has-tooltip-danger {
   padding: 0.5em;
   flex-direction: row;
 }
+.datetimepicker .datepicker-nav .button {
+  background-color: hsl(0deg, 0%, 14%);
+  color: hsl(0deg, 0%, 71%);
+  border-color: hsl(0deg, 0%, 4%);
+}
+.datetimepicker .datepicker-nav .button:hover {
+  background: hsl(0deg, 0%, 4%);
+  border-color: hsl(0deg, 0%, 14%);
+  color: #fff;
+}
 .datetimepicker .datepicker-nav .datepicker-nav-month-year {
   flex-direction: row;
   display: flex;
@@ -15873,7 +15885,7 @@ span[data-tooltip].has-tooltip-danger {
   color: hsl(0deg, 0%, 48%);
 }
 .datetimepicker .datepicker-body .datepicker-dates .datepicker-days .datepicker-date {
-  background: hsl(0deg, 0%, 96%);
+  background: hsl(0deg, 0%, 14%);
   display: flex;
   justify-content: center;
   flex: 14.28571%;
@@ -15904,9 +15916,9 @@ span[data-tooltip].has-tooltip-danger {
   color: hsl(171deg, 100%, 41%);
 }
 .datetimepicker .datepicker-body .datepicker-dates .datepicker-days .datepicker-date .date-item:focus {
-  background: hsl(0deg, 0%, 100%);
-  border-color: hsl(0deg, 0%, 100%);
-  color: rgba(0, 0, 0, 0.7);
+  background: hsl(0deg, 0%, 4%);
+  border-color: hsl(0deg, 0%, 4%);
+  color: #fff;
   text-decoration: none;
 }
 .datetimepicker .datepicker-body .datepicker-dates .datepicker-days .datepicker-date .date-item.is-active {
@@ -15923,9 +15935,9 @@ span[data-tooltip].has-tooltip-danger {
   border: 0.1rem solid hsl(171deg, 100%, 41%);
 }
 .datetimepicker .datepicker-body .datepicker-dates .datepicker-days .datepicker-date .date-item:hover {
-  background: hsl(0deg, 0%, 100%);
+  background: hsl(0deg, 0%, 4%);
   border: 0.1rem solid hsl(171deg, 100%, 41%);
-  color: rgba(0, 0, 0, 0.7);
+  color: #fff;
   text-decoration: none;
 }
 .datetimepicker .datepicker-body .datepicker-dates .datepicker-days .datepicker-date.is-current-month {
@@ -16010,9 +16022,9 @@ span[data-tooltip].has-tooltip-danger {
 .datetimepicker .datepicker-body .datepicker-years .datepicker-month:hover,
 .datetimepicker .datepicker-body .datepicker-years .datepicker-year:hover {
   cursor: pointer;
-  background: hsl(0deg, 0%, 100%);
+  background: hsl(0deg, 0%, 4%);
   border: 0.1rem solid hsl(171deg, 100%, 41%);
-  color: rgba(0, 0, 0, 0.7);
+  color: #fff;
 }
 .datetimepicker .datetimepicker-footer {
   display: flex;
@@ -16154,6 +16166,7 @@ span[data-tooltip].has-tooltip-danger {
   flex-direction: row;
   justify-content: center;
   margin: auto;
+  background-color: hsl(0deg, 0%, 4%);
 }
 .datetimepicker .timepicker .timepicker-start,
 .datetimepicker .timepicker .timepicker-end {
@@ -16275,7 +16288,7 @@ span[data-tooltip].has-tooltip-danger {
 .datetimepicker .timepicker .timepicker-previous:hover,
 .datetimepicker .timepicker .timepicker-next:hover {
   cursor: pointer;
-  background-color: hsl(0deg, 0%, 96%);
+  background-color: hsl(0deg, 0%, 14%);
 }
 .datetimepicker .timepicker .timepicker-previous {
   margin: 0 0 1rem;
@@ -17149,6 +17162,7 @@ span[data-tooltip].has-tooltip-danger {
   right: 0;
   top: 0;
   position: fixed;
+  z-index: -1;
 }
 
 .is-checkradio[type=radio],

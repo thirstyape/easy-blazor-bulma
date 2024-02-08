@@ -66,13 +66,17 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         InputDurationOptions.UseAutomaticStatusColors |
         InputDurationOptions.ShowHours |
         InputDurationOptions.ShowMinutes |
-        InputDurationOptions.ShowSeconds;
+        InputDurationOptions.ShowSeconds |
+        InputDurationOptions.ValidateTextInput;
 
+    private TimeSpan InitialValue;
     private TimeSpan PopoutValue;
     private bool IsPopoutDisplayed;
 
     private readonly bool IsNullable;
     private readonly Type UnderlyingType;
+
+    private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
 
     private string FullCssClass
     {
@@ -100,7 +104,7 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
             if (Options.HasFlag(InputDurationOptions.HoverPopout))
                 css += " is-hoverable";
 
-            if (IsPopoutDisplayed && (AdditionalAttributes == null || AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true"))) == false))
+            if (IsPopoutDisplayed && Inactive == false)
                 css += " is-active";
 
             if (Options.HasFlag(InputDurationOptions.PopoutBottom))
@@ -112,6 +116,9 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
                 css += " datetimepicker-left";
             else if (Options.HasFlag(InputDurationOptions.PopoutRight))
                 css += " datetimepicker-right";
+
+            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("datetimepicker-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
+                css += $" {additional}";
 
             return css;
         }
@@ -133,7 +140,23 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
             else if (DisplayStatus.HasFlag(InputStatus.IconSuccess))
                 css += " has-text-success";
 
+            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("icon-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
+                css += $" {additional}";
+
             return css;
+        }
+    }
+
+    private TimeSpan ValueAsTimeSpan
+    {
+        get
+        {
+            if (IsNullable && Value == null)
+                return TimeSpan.Zero;
+            else if (UnderlyingType == typeof(TimeSpan))
+                return (TimeSpan)Convert.ChangeType(Value!, typeof(TimeSpan));
+            else
+                return ((TimeOnly)(object)Value!).ToTimeSpan();
         }
     }
 
@@ -170,14 +193,16 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes) && Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds))
             throw new ArgumentException("Cannot set both DisplayHoursAsMinutes and DisplayMinutesAsSeconds.", nameof(Options));
 
-        if (UnderlyingType == typeof(TimeOnly) && Options.HasFlag(InputDurationOptions.AllowNegative))
-            throw new ArgumentException($"Cannot set AllowNegative with a {nameof(TimeOnly)}.", nameof(Options));
+        // Unset invalid options
+        if (UnderlyingType == typeof(TimeOnly))
+        {
+            Options &= ~InputDurationOptions.AllowNegative;
+            Options &= ~InputDurationOptions.AllowGreaterThan24Hours;
+        }
 
-        if (UnderlyingType == typeof(TimeOnly) && Options.HasFlag(InputDurationOptions.AllowGreaterThan24Hours))
-            throw new ArgumentException($"Cannot set AllowGreaterThan24Hours with a {nameof(TimeOnly)}.", nameof(Options));
-
-        // Set popout value
-        UpdatePopoutValue();
+        // Set starting values
+        InitialValue = ValueAsTimeSpan;
+        PopoutValue = ValueAsTimeSpan;
     }
 
     /// <inheritdoc/>
@@ -190,7 +215,7 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         // Validate
         var valid = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', ':' };
 
-        if (string.IsNullOrWhiteSpace(value) == false)
+        if (string.IsNullOrWhiteSpace(value) == false && Options.HasFlag(InputDurationOptions.ValidateTextInput))
         {
             if (value.Any(x => valid.Contains(x) == false))
             {
@@ -467,7 +492,7 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         IsPopoutDisplayed = false;
 
         if (reset)
-            PopoutValue = TimeSpan.Zero;
+            PopoutValue = InitialValue;
 
         if (save || reset)
             CurrentValueAsString = FormatTimeSpan(PopoutValue);
@@ -476,17 +501,7 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
     private void OnChange(ChangeEventArgs args)
     {
         CurrentValueAsString = args.Value?.ToString();
-        UpdatePopoutValue();
-    }
-
-    private void UpdatePopoutValue()
-    {
-        if (IsNullable && Value == null)
-            PopoutValue = TimeSpan.Zero;
-        else if (UnderlyingType == typeof(TimeSpan))
-            PopoutValue = (TimeSpan)Convert.ChangeType(Value!, typeof(TimeSpan));
-        else
-            PopoutValue = ((TimeOnly)(object)Value!).ToTimeSpan();
+        PopoutValue = ValueAsTimeSpan;
     }
 
     private void UpdatePopoutValue(TimeSpan adjustment)

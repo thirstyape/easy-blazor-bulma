@@ -10,6 +10,13 @@
         <span class="@IconCssClass">@Icon</span>
     }
 
+    @if (Options.HasFlag(InputDateTimeOptions.ShowResetButton) && Inactive == false)
+    {
+        <span class="material-icons icon is-right is-clickable" @onclick='() => ClosePopout(reset: true)' @onclick:stopPropagation="true">
+            close
+        </span>
+    }
+
     <div class='@TimePickerCssClass'>
         @if (Options.HasFlag(InputDateTimeOptions.ClickPopout))
         {
@@ -19,6 +26,89 @@
         @if (Options.HasFlag(InputDateTimeOptions.ShowDate))
         {
             <div class="datetimepicker-container">
+                <div class="datetimepicker-header">
+                    <div class="datetimepicker-selection-start is-centered">
+                        <div class="datetimepicker-selection-wrapper">
+                            @if (IsNullable && Value == null)
+                            {
+                                <div class="datetimepicker-selection-day">-</div>
+                                <div class="datetimepicker-selection-date">-</div>
+                            }
+                            else
+                            {
+                                <div class="datetimepicker-selection-day">@ValueAsDateTime.ToString("dd")</div>
+                                <div class="datetimepicker-selection-date">
+                                    <span>@ValueAsDateTime.ToString("MMMM yyyy")</span>
+                                    <span>@ValueAsDateTime.ToString("dddd")</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="datetimepicker-selection-time">
+                            <div class="datetimepicker-selection-time-icon">
+                                <span class="material-icons">schedule</span>
+                            </div>
+                            <div class="datetimepicker-selection-hour">
+                                @if (IsNullable && Value == null)
+                                {
+                                    <span>-</span>
+                                }
+                                else
+                                {
+                                    <span>@ValueAsDateTime.ToString("t")</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="datepicker-nav">
+                    <button type="button" class="button is-small is-rounded" @onclick='() => UpdatePopoutValue(false)' disabled='@(DisplayMode != PopoutDisplayMode.Calendar)'>
+                        <span class="material-icons icon">arrow_back</span>
+                    </button>
+                    <div>
+                        <span class="is-clickable" @onclick='() => UpdateDisplayMode(PopoutDisplayMode.Months)' @onclick:stopPropagation="true">@PopoutValue.ToString("MMMM")</span>
+                        <span class="is-clickable has-text-weight-bold" @onclick='() => UpdateDisplayMode(PopoutDisplayMode.Years)' @onclick:stopPropagation="true">@PopoutValue.ToString("yyyy")</span>
+                    </div>
+                    <button type="button" class="button is-small is-rounded" @onclick='() => UpdatePopoutValue(true)' disabled='@(DisplayMode != PopoutDisplayMode.Calendar)'>
+                        <span class="material-icons icon">arrow_forward</span>
+                    </button>
+                </div>
+                <div class="datepicker-body">
+                    <div class='@(DisplayMode == PopoutDisplayMode.Calendar ? "datepicker-dates is-active" : "datepicker-dates")'>
+                        <div class="datepicker-weekdays">
+                            @for (var date = DateTime.Today.GetPreviousWeekday(StartOfWeek); date < DateTime.Today.GetPreviousWeekday(StartOfWeek).AddDays(7); date = date.AddDays(1))
+                            {
+                                <div class="datepicker-date">@date.ToString("ddd")</div>
+                            }
+                        </div>
+                        <div class="datepicker-days">
+                            @foreach (var date in GetCalendarDates())
+                            {
+                                <div class='@(PopoutValue.Month == date.Month ? "datepicker-date is-current-month" : "datepicker-date")'>
+                                    @if (Options.HasFlag(InputDateTimeOptions.CloseOnDateClicked))
+                                    {
+                                        <button type="button" class='@(PopoutValue.Date == date.Date ? "date-item is-active" : "date-item")' @onclick='() => ClosePopout(true, value: date.Add(PopoutValue.TimeOfDay))'>@date.ToString("dd")</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class='@(PopoutValue.Date == date.Date ? "date-item is-active" : "date-item")' @onclick='() => UpdatePopoutValue(date.Year, date.Month, date.Day)'>@date.ToString("dd")</button>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class='@(DisplayMode == PopoutDisplayMode.Months ? "datepicker-months is-active" : "datepicker-months")'>
+                        @foreach (var month in GetCalendarMonths())
+                        {
+                            <div class='@(PopoutValue.Month == month.Month ? "datepicker-month is-active" : "datepicker-month")' @onclick='() => OnMonthSelected(month.Month)'>@month.ToString("MMM")</div>
+                        }
+                    </div>
+                    <div class='@(DisplayMode == PopoutDisplayMode.Years ? "datepicker-years is-active" : "datepicker-years")'>
+                        @foreach (var year in Enumerable.Range(DateTime.Today.Year - PopoutYearRange, PopoutYearRange * 2).OrderByDescending(x => x))
+                        {
+                            <div class='@(PopoutValue.Year == year ? "datepicker-year is-active" : "datepicker-year")' @onclick='() => OnYearSelected(year)'>@year</div>
+                        }
+                    </div>
+                </div>
             </div>
         }
 
@@ -101,16 +191,18 @@
             }
             @if (Options.HasFlag(InputDateTimeOptions.ShowNowButton))
             {
-                <button type="button" class="button is-small is-fullwidth is-warning" @onclick='() => ClosePopout(true)'>
-                    @if (Options.HasFlag(InputDateTimeOptions.ShowHours) || Options.HasFlag(InputDateTimeOptions.ShowMinutes) || Options.HasFlag(InputDateTimeOptions.ShowSeconds))
-                    {
-                        @:Now
-                    }
-                    else
-                    {
-                        @:Today
-                    }
-                </button>
+                if (Options.HasFlag(InputDateTimeOptions.ShowHours) || Options.HasFlag(InputDateTimeOptions.ShowMinutes) || Options.HasFlag(InputDateTimeOptions.ShowSeconds))
+                {
+                    <button type="button" class="button is-small is-fullwidth is-warning" @onclick='() => ClosePopout(true, value: DateTime.Now)'>
+                        Now
+                    </button>
+                }
+                else
+                {
+                    <button type="button" class="button is-small is-fullwidth is-warning" @onclick='() => ClosePopout(true, value: DateTime.Today)'>
+                        Today
+                    </button>
+                }
             }
             @if (Options.HasFlag(InputDateTimeOptions.ShowResetButton))
             {

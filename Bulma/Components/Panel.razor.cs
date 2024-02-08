@@ -102,6 +102,9 @@ public partial class Panel : ComponentBase
             if (OnTitleClicked.HasDelegate || ShowCollapseIcons)
                 css += " is-clickable";
 
+            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("header-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
+                css += $" {additional}";
+
             return css;
         }
     }
@@ -123,6 +126,9 @@ public partial class Panel : ComponentBase
 
             if (Color != BulmaColors.Default)
                 css += ' ' + BulmaColorHelper.GetBackgroundCss(Color, "light");
+
+            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("content-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
+                css += $" {additional}";
 
             return css;
         }

@@ -94,5 +94,15 @@ public enum InputDateTimeOptions
 	/// <summary>
 	/// Specifies whether the popout will display the seconds column.
 	/// </summary>
-	ShowSeconds = 0b_00000000_00000001_00000000_00000000
+	ShowSeconds = 0b_00000000_00000001_00000000_00000000,
+
+	/// <summary>
+	/// Closes the popout when a date value is clicked.
+	/// </summary>
+	CloseOnDateClicked = 0b_00000000_00000010_00000000_00000000,
+
+	/// <summary>
+	/// Checks for common input errors when the text field is used.
+	/// </summary>
+    ValidateTextInput = 0b_00000000_00000100_00000000_00000000
 }

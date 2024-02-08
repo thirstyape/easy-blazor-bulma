@@ -114,5 +114,10 @@ public enum InputDurationOptions
     /// <summary>
     /// Will format values greater than 60 seconds to show the total number of seconds instead of days, hours, minutes, and seconds.
     /// </summary>
-    DisplayMinutesAsSeconds = 0b_00000000_00010000_00000000_00000000
+    DisplayMinutesAsSeconds = 0b_00000000_00010000_00000000_00000000,
+
+    /// <summary>
+    /// Checks for common input errors when the text field is used.
+    /// </summary>
+    ValidateTextInput = 0b_00000000_00100000_00000000_00000000
 }
