@@ -11,6 +11,9 @@ namespace easy_blazor_bulma;
 /// An input component for editing date and time values. Supported types are <see cref="char"/>.
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
+/// <remarks>
+/// There are 3 additional attributes that can be used: columns-class, column-class, and button-class. Each of which apply CSS classes to the resulting elements as per their names.
+/// </remarks>
 public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TValue> : InputBase<TValue>
 {
 	/// <summary>
@@ -54,12 +57,13 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 	private readonly Type UnderlyingType;
 
 	private bool IsUpperCase = true;
+	private bool OnKeyDownPreventDefault;
 
 	private string ColumnsCssClass
 	{
 		get
 		{
-			var css = "columns";
+			var css = "columns mb-0";
 
 			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("columns-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
 				css += $" {additional}";
@@ -72,7 +76,7 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 	{
 		get
 		{
-			var css = "column";
+			var css = "column pb-0";
 
 			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("column-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
 				css += $" {additional}";
@@ -106,7 +110,7 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 	{
 		// Prevent null reference
 		if (IsNullable == false && string.IsNullOrWhiteSpace(value))
-			value = string.Empty;
+			value = "\0";
 
 		// Try parse
 		if (BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out result))
@@ -146,7 +150,9 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 
 	private void OnKeyDown(KeyboardEventArgs args)
 	{
-		if (args.Key != "ArrowDown" && args.Key != "ArrowUp" && args.Key != "ArrowLeft" && args.Key != "ArrowRight")
+		OnKeyDownPreventDefault = args.Code != "Escape" && args.Code != "Tab" && args.Code != "Enter" && args.Code != "NumpadEnter";
+
+		if (args.Code != "ArrowDown" && args.Code != "ArrowUp" && args.Code != "ArrowLeft" && args.Code != "ArrowRight")
 			return;
 
 		var current = CurrentValueAsString?.FirstOrDefault();
@@ -166,21 +172,21 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 
 		var row = column.Options.Single(x => char.ToUpper(x.Value) == char.ToUpper(current.Value));
 
-		if (args.Key == "ArrowUp" && column.Options.Count > 1)
+		if (args.Code == "ArrowUp" && column.Options.Count > 1)
 		{
 			if (row.IndexR == 0)
 				CurrentValueAsString = column.Options[^1].Value.ToString();
 			else
 				CurrentValueAsString = column.Options[row.IndexR - 1].Value.ToString();
 		}
-		else if (args.Key == "ArrowDown" && column.Options.Count > 1)
+		else if (args.Code == "ArrowDown" && column.Options.Count > 1)
 		{
 			if (row.IndexR == column.Options.Count - 1)
 				CurrentValueAsString = column.Options[0].Value.ToString();
 			else
 				CurrentValueAsString = column.Options[row.IndexR + 1].Value.ToString();
 		}
-		else if (args.Key == "ArrowLeft" && columns.Count > 1)
+		else if (args.Code == "ArrowLeft" && columns.Count > 1)
 		{
 			if (column.IndexC == 0 && columns[^1].Options.Count - 1 >= row.IndexR)
 				CurrentValueAsString = columns[^1].Options[row.IndexR].Value.ToString();
@@ -191,7 +197,7 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 			else
 				CurrentValueAsString = columns[column.IndexC - 1].Options.Last().Value.ToString();
 		}
-		else if (args.Key == "ArrowRight" && columns.Count > 1)
+		else if (args.Code == "ArrowRight" && columns.Count > 1)
 		{
 			if (column.IndexC == columns.Count - 1 && columns[0].Options.Count - 1 >= row.IndexR)
 				CurrentValueAsString = columns[0].Options[row.IndexR].Value.ToString();
@@ -223,7 +229,7 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 			CurrentValueAsString = char.ToLower(current.Value).ToString();
 	}
 
-	private string GetButtonCss(char character)
+	private string GetButtonCssClass(char character)
 	{
 		var current = CurrentValueAsString?.FirstOrDefault();
 		var css = "button is-fullwidth mb-3";

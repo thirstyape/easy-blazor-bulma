@@ -1,0 +1,54 @@
+﻿@namespace easy_blazor_bulma
+@typeparam TValue
+@inherits InputBase<TValue>
+
+@if (DisplayInput)
+{
+	<input type="text" class="@FullCssClass" value='@DisplayValueAsString' @onkeydown='OnKeyDown' @onkeydown:preventDefault="OnKeyDownPreventDefault" @attributes='AdditionalAttributes?.Where(x => x.Key != "class")' />
+}
+
+<div class='@ColumnsCssClass'>
+	<div class='@ColumnCssClass'>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(7)">7</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(4)">4</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(1)">1</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnResetClicked()">
+			@if (IsNullable)
+			{
+				@:Clear
+			}
+			else
+			{
+				@:Reset
+			}
+		</button>
+	</div>
+	<div class='@ColumnCssClass'>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(8)">8</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(5)">5</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(2)">2</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(0)">0</button>
+	</div>
+	<div class='@ColumnCssClass'>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(9)">9</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(6)">6</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(3)">3</button>
+		@if (SupportsDecimals)
+		{
+			<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDecimalClicked()">.</button>
+		}
+		else
+		{
+			<button type="button" class='@ButtonCssClass' @onclick="() => OnBackspaceClicked()">
+				<span class="material-icons icon">backspace</span>
+			</button>
+		}
+	</div>
+</div>
+
+<div>
+	@if (OnCustomButtonClicked != null)
+	{
+		<button type="button" class='@ButtonCssClass' @onclick="() => OnCustomButtonClicked.Invoke()">@CustomButtonText</button>
+	}
+</div>

@@ -7,6 +7,7 @@ namespace easy_blazor_bulma;
 /// A composable panel, for compact controls.
 /// </summary>
 /// <remarks>
+/// There are 2 additional attributes that can be used: header-class and content-class. Each of which apply CSS classes to the resulting elements as per their names.
 /// <see href="https://bulma.io/documentation/components/panel/">Bulma Documentation</see>
 /// </remarks>
 public partial class Panel : ComponentBase

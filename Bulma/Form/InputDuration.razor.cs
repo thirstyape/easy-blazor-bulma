@@ -11,6 +11,9 @@ namespace easy_blazor_bulma;
 /// An input component for editing duration values. Supported types are <see cref="TimeSpan"/> and <see cref="TimeOnly"/>.
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
+/// <remarks>
+/// There are 2 additional attributes that can be used: datetimepicker-class and icon-class. Each of which apply CSS classes to the resulting elements as per their names.
+/// </remarks>
 public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TValue> : InputBase<TValue>
 {
     /// <summary>
