@@ -1,0 +1,41 @@
+﻿@namespace easy_blazor_bulma
+@typeparam TValue
+@inherits InputBase<TValue>
+
+<div class='@ColumnsCssClass'>
+	@foreach (var column in Characters.Split(Columns))
+	{
+		<div class='@ColumnCssClass'>
+			@foreach (var character in column)
+			{
+				<button type="button" class="@GetButtonCss(character)" @onkeydown="OnKeyDown" @onclick="() => OnCharacterClicked(character)">@GetCharacterDisplay(character)</button>
+			}
+		</div>
+	}
+</div>
+
+<div class="columns">
+	@if (ShowCaseChange)
+	{
+		<div class="column">
+			<button type="button" class="@GetButtonCss('\0')" @onclick="() => OnCaseChanged()">
+				@if (IsUpperCase)
+				{
+					<span class="material-icons icon">text_rotate_up</span>
+				}
+				else
+				{
+					<span class="material-icons icon">text_rotation_down</span>
+				}
+			</button>
+		</div>
+	}
+	@if (IsNullable)
+	{
+		<div class="column">
+			<button type="button" class="@GetButtonCss('\0')" @onclick="() => OnCharacterClicked('\0')">
+				<span class="material-icons icon">backspace</span>
+			</button>
+		</div>
+	}
+</div>
