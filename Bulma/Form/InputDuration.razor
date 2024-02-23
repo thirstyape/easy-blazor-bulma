@@ -3,7 +3,7 @@
 @inherits InputBase<TValue>
 
 <div class="datetimepicker-parent">
-	<input type="text" class="@FullCssClass" value='@CurrentValueAsString' @onchange='OnChange' @onclick='OpenPopout' @onfocus='OpenPopout' @onkeydown='CheckKeyPress' @attributes='AdditionalAttributes?.Where(x => x.Key != "class")' />
+    <input type="text" class="@FullCssClass" value='@CurrentValueAsString' @onchange='OnChange' @onclick='OpenPopout' @onfocus='OpenPopout' @onkeydown='CheckKeyPress' @ref=Element @attributes='FilteredAttributes' />
 
     @if (string.IsNullOrWhiteSpace(Icon) == false)
     {

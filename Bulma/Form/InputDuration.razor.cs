@@ -48,7 +48,7 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
     /// An icon to display within the input.
     /// </summary>
     [Parameter]
-    public string? Icon { get; set; }
+    public string? Icon { get; set; } = "timer";
 
     /// <summary>
     /// Applies styles to the input according to the selected options.
@@ -78,6 +78,7 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
 
     private readonly bool IsNullable;
     private readonly Type UnderlyingType;
+    private ElementReference? Element;
 
     private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
 
@@ -150,6 +151,9 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         }
     }
 
+    private readonly string[] Filter = new string[] { "class", "datetimepicker-class", "icon-class" };
+    private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
+
     private TimeSpan ValueAsTimeSpan
     {
         get
@@ -208,14 +212,21 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         PopoutValue = ValueAsTimeSpan;
     }
 
+    /// <inheritdoc />
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            if (Element != null && AdditionalAttributes != null && AdditionalAttributes.TryGetValue("autofocus", out var _))
+                await Element.Value.FocusAsync();
+    }
+
     /// <inheritdoc/>
     protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
     {
-        // Prevent null reference
-        if (IsNullable == false && string.IsNullOrWhiteSpace(value))
-            value = "00:00:00";
-
         // Validate
+        if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+            ResetStatus();
+
         var valid = new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '.', ':' };
 
         if (string.IsNullOrWhiteSpace(value) == false && Options.HasFlag(InputDurationOptions.ValidateTextInput))
@@ -283,10 +294,17 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         // Try parse
         try
         {
-            if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
-                ResetStatus();
+            if (IsNullable == false && string.IsNullOrWhiteSpace(value))
+            {
+                result = default!;
 
-            if (BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out result))
+                if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
+                    DisplayStatus |= InputStatus.BackgroundSuccess;
+
+                validationErrorMessage = null;
+                return true;
+            }
+            else if (BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out result))
             {
                 if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
                     DisplayStatus |= InputStatus.BackgroundSuccess;
@@ -296,6 +314,8 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
             }
             else
             {
+                result = default;
+
                 if (Options.HasFlag(InputDurationOptions.UseAutomaticStatusColors))
                     DisplayStatus |= InputStatus.BackgroundDanger;
 
@@ -472,7 +492,7 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
 
     private void CheckKeyPress(KeyboardEventArgs args)
     {
-        if (args.Key == "Escape" || args.Key == "Tab")
+        if (args.Code == "Escape" || args.Code == "Tab")
             ClosePopout();
     }
 

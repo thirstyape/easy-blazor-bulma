@@ -86,8 +86,9 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 
 	private readonly bool IsNullable;
 	private readonly Type UnderlyingType;
+	private ElementReference? Element;
 
-    private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
+	private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
 
     private string FullCssClass
 	{
@@ -158,7 +159,10 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 		}
 	}
 
-    private DateTime ValueAsDateTime
+	private readonly string[] Filter = new string[] { "class", "datetimepicker-class", "icon-class" };
+	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
+
+	private DateTime ValueAsDateTime
     {
         get
         {
@@ -220,23 +224,21 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
         PopoutValue = ValueAsDateTime;
 	}
 
-	/// <inheritdoc />
-	protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
-	{
-        // Prevent null reference
-        if (IsNullable == false && string.IsNullOrWhiteSpace(value))
-		{
-            if (UnderlyingType == typeof(DateTime))
-                value = DateTime.UnixEpoch.ToString();
-            else if (UnderlyingType == typeof(DateOnly))
-                value = DateOnly.FromDateTime(DateTime.UnixEpoch).ToString();
-            else if (UnderlyingType == typeof(TimeSpan))
-                value = TimeSpan.Zero.ToString();
-            else
-                value = TimeOnly.MinValue.ToString();
-        }
+    /// <inheritdoc />
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            if (Element != null && AdditionalAttributes != null && AdditionalAttributes.TryGetValue("autofocus", out var _))
+                await Element.Value.FocusAsync();
+    }
 
+    /// <inheritdoc />
+    protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
+	{
         // Validate
+        if (Options.HasFlag(InputDateTimeOptions.UseAutomaticStatusColors))
+            ResetStatus();
+
         if (string.IsNullOrWhiteSpace(value) == false && Options.HasFlag(InputDateTimeOptions.ValidateTextInput))
 		{
             if (value.Count(x => x == '-') > 2 || value.Count(x => x == '/') > 2 || value.Count(x => x == ':') > 2)
@@ -267,10 +269,17 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
         // Try parse
         try
 		{
-            if (Options.HasFlag(InputDateTimeOptions.UseAutomaticStatusColors))
-                ResetStatus();
+            if (IsNullable == false && string.IsNullOrWhiteSpace(value))
+            {
+                result = default!;
 
-            if (BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out result))
+                if (Options.HasFlag(InputDateTimeOptions.UseAutomaticStatusColors))
+                    DisplayStatus |= InputStatus.BackgroundSuccess;
+
+                validationErrorMessage = null;
+                return true;
+            }
+            else if (BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out result))
 			{
                 if (Options.HasFlag(InputDateTimeOptions.UseAutomaticStatusColors))
                     DisplayStatus |= InputStatus.BackgroundSuccess;
@@ -280,6 +289,8 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
             }
 			else
 			{
+                result = default;
+
                 if (Options.HasFlag(InputDateTimeOptions.UseAutomaticStatusColors))
                     DisplayStatus |= InputStatus.BackgroundDanger;
 
@@ -335,7 +346,7 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 
 	private void CheckKeyPress(KeyboardEventArgs args)
 	{
-		if (args.Key == "Escape" || args.Key == "Tab")
+		if (args.Code == "Escape" || args.Code == "Tab")
 			ClosePopout();
 	}
 

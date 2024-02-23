@@ -6,7 +6,7 @@ using System.Globalization;
 namespace easy_blazor_bulma;
 
 /// <summary>
-/// Creates a checkbox list with the values of the provided flagged enum.
+/// Creates a checkbox list with the values of the provided flagged enum. Supported types must inherit <see cref="Enum"/>, but not <see cref="ulong"/>.
 /// </summary>
 /// <typeparam name="TEnum">The type of enum to use.</typeparam>
 /// <remarks>
@@ -60,20 +60,24 @@ public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAcc
     protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TEnum result, [NotNullWhen(false)] out string? validationErrorMessage)
     {
         if (IsNullable == false && string.IsNullOrWhiteSpace(value))
-            value = "0";
+        {
+            result = default!;
 
-        if (Enum.TryParse(UnderlyingType, value, true, out object? parsed))
+            validationErrorMessage = null;
+            return true;
+        }
+        else if (Enum.TryParse(UnderlyingType, value, true, out object? parsed))
         {
             result = (TEnum)parsed!;
-            validationErrorMessage = null;
 
+            validationErrorMessage = null;
             return true;
         }
         else
         {
             result = default;
-            validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The {0} field could not be parsed.", DisplayName ?? FieldIdentifier.FieldName);
 
+            validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The {0} field could not be parsed.", DisplayName ?? FieldIdentifier.FieldName);
             return false;
         }
     }
@@ -85,30 +89,22 @@ public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAcc
         _ => string.Empty
     };
 
-    private void OnValueChanged(TEnum e)
+    private void OnValueChanged(TEnum flag)
     {
-        var current = (Enum)Enum.Parse(UnderlyingType, (Value ?? default)?.ToString() ?? string.Empty);
-        var flag = (Enum)Enum.Parse(UnderlyingType, e?.ToString() ?? string.Empty);
+        var current = Value != null ? Convert.ToInt64(Value) : 0L;
+        var update = Convert.ToInt64(flag);
 
-        if (Value == null)
-            current = flag;
-        else if (current.HasFlag(flag))
-            current = (Enum)Enum.ToObject(typeof(TEnum), Convert.ToInt64(Value) & ~Convert.ToInt64(e));
+        if ((current & update) != 0)
+            current &= ~update;
         else
-            current = (Enum)Enum.ToObject(typeof(TEnum), Convert.ToInt64(Value) | Convert.ToInt64(e));
+            current |= update;
 
-        CurrentValueAsString = current?.ToString();
+        CurrentValueAsString = Enum.Parse(UnderlyingType, current.ToString()).ToString();
     }
 
-    private bool IsFlagChecked(TEnum value)
+    private bool IsFlagChecked(TEnum flag)
     {
-        var current = (Enum)Enum.Parse(UnderlyingType, (Value ?? default)?.ToString() ?? string.Empty);
-        var flag = (Enum)Enum.Parse(UnderlyingType, value?.ToString() ?? string.Empty);
-
-        if (Value == null)
-            return false;
-        else
-            return current.HasFlag(flag);
+        return Value != null && (Convert.ToInt64(Value) & Convert.ToInt64(flag)) != 0;
     }
 
     private string GetEnumSwitchId(TEnum value) => $"switch-InputFlaggedEnum-{PropertyName}-{value}";

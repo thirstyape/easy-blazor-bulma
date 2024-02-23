@@ -15,10 +15,16 @@ namespace easy_blazor_bulma;
 /// </remarks>
 public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TValue> : InputBase<TValue>
 {
-	/// <summary>
-	/// Specifies whether to show a text input along with the number pad.
-	/// </summary>
-	[Parameter]
+    /// <summary>
+    /// An icon to display within the input.
+    /// </summary>
+    [Parameter]
+    public string? Icon { get; set; } = "numbers";
+
+    /// <summary>
+    /// Specifies whether to show a text input along with the number pad.
+    /// </summary>
+    [Parameter]
 	public bool DisplayInput { get; set; }
 
 	/// <summary>
@@ -39,10 +45,14 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 	[Parameter]
 	public InputStatus DisplayStatus { get; set; }
 
-	/// <summary>
-	/// Sets the text to display on a button below the number pad. Requires a value in <see cref="OnCustomButtonClicked"/>.
-	/// </summary>
-	[Parameter]
+    /// <inheritdoc cref="InputDateTimeOptions.UseAutomaticStatusColors"/>
+    [Parameter]
+    public bool UseAutomaticStatusColors { get; set; } = true;
+
+    /// <summary>
+    /// Sets the text to display on a button below the number pad. Requires a value in <see cref="OnCustomButtonClicked"/>.
+    /// </summary>
+    [Parameter]
 	public string? CustomButtonText { get; set; }
 
 	/// <summary>
@@ -53,6 +63,7 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 
 	private readonly bool IsNullable;
 	private readonly Type UnderlyingType;
+	private ElementReference? Element;
 
 	private readonly bool SupportsDecimals;
 	private bool OnKeyDownPreventDefault;
@@ -121,6 +132,9 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 		}
 	}
 
+	private readonly string[] Filter = new string[] { "class", "columns-class", "column-class", "button-class" };
+	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
+
 	public InputNumberPad()
 	{
 		var nullable = Nullable.GetUnderlyingType(typeof(TValue));
@@ -144,21 +158,45 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 	}
 
 	/// <inheritdoc />
+	protected async override Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+			if (Element != null && AdditionalAttributes != null && AdditionalAttributes.TryGetValue("autofocus", out var _))
+				await Element.Value.FocusAsync();
+	}
+
+	/// <inheritdoc />
 	protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
 	{
-		// Prevent null reference
-		if (IsNullable == false && string.IsNullOrWhiteSpace(value))
-			value = "0";
+        if (UseAutomaticStatusColors)
+            ResetStatus();
 
-		// Try parse
-		if (BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out result))
+        if (IsNullable == false && string.IsNullOrWhiteSpace(value))
+        {
+            result = default!;
+
+            if (UseAutomaticStatusColors)
+                DisplayStatus |= InputStatus.BackgroundSuccess;
+
+            validationErrorMessage = null;
+            return true;
+        }
+        else if (BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out result))
 		{
-			validationErrorMessage = null;
+            if (UseAutomaticStatusColors)
+                DisplayStatus |= InputStatus.BackgroundSuccess;
+
+            validationErrorMessage = null;
 			return true;
 		}
 		else
 		{
-			validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The {0} field must be a char.", DisplayName ?? FieldIdentifier.FieldName);
+			result = default;
+
+            if (UseAutomaticStatusColors)
+                DisplayStatus |= InputStatus.BackgroundDanger;
+
+            validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The {0} field must be a char.", DisplayName ?? FieldIdentifier.FieldName);
 			return false;
 		}
 	}
@@ -244,7 +282,14 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 			OnDecimalClicked();
 	}
 
-	private static readonly Dictionary<string, int> NumberKeys = new()
+    private void ResetStatus()
+    {
+        DisplayStatus &= ~InputStatus.BackgroundDanger;
+        DisplayStatus &= ~InputStatus.BackgroundWarning;
+        DisplayStatus &= ~InputStatus.BackgroundSuccess;
+    }
+
+    private static readonly Dictionary<string, int> NumberKeys = new()
 	{
 		["Digit0"] = 0,
 		["Digit1"] = 1,

@@ -4,13 +4,19 @@
 
 @using System.ComponentModel.DataAnnotations
 
-<select class='@FullCssClass' @onchange=OnSelectionChanged @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
-    @if (IsNullable)
-    {
-        <option value="" selected='@(Value == null)'>@NullText</option>
-    }
-    @foreach (var value in Enum.GetValues(UnderlyingType).Cast<TEnum>().Where(x => HideZeroOption == false || (int)(object)x! > 0))
-    {
-        <option value="@value" selected='@(EqualityComparer<TEnum>.Default.Equals(value, Value))'>@(value.GetValueAttribute<TEnum, DisplayAttribute>()?.GetName() ?? value!.ToString())</option>
-    }
-</select>
+<div class='@FullCssClass'>
+    <select class='input' @onchange=OnSelectionChanged @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
+        @if (IsNullable)
+        {
+            <option value="" selected='@(Value == null)'>@NullText</option>
+        }
+        @foreach (var value in Enum.GetValues(UnderlyingType).Cast<TEnum>().Where(x => HideZeroOption == false || (int)(object)x! > 0))
+        {
+            <option value="@value" selected='@(EqualityComparer<TEnum>.Default.Equals(value, Value))'>@(value.GetValueAttribute<TEnum, DisplayAttribute>()?.GetName() ?? value!.ToString())</option>
+        }
+    </select>
+</div>
+@if (string.IsNullOrWhiteSpace(Icon) == false)
+{
+    <span class="material-icons icon is-left">@Icon</span>
+}

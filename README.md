@@ -41,6 +41,7 @@ The following components are currently available for use. All of them are docume
 
 **Form**
 
+* `<InputAutocomplete />`, creates a drop-down list of options to select from
 * `<InputCharacter />`, creates a series of buttons to select a single character
 * `<InputDateTime />`, creates an input with a popout for binding date and time values
 * `<InputDuration />`, creates an input with a popout for binding duration values

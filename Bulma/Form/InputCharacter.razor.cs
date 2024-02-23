@@ -108,19 +108,23 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 	/// <inheritdoc />
 	protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
 	{
-		// Prevent null reference
-		if (IsNullable == false && string.IsNullOrWhiteSpace(value))
-			value = "\0";
+        if (IsNullable == false && string.IsNullOrWhiteSpace(value))
+		{
+			result = default!;
 
-		// Try parse
-		if (BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out result))
+            validationErrorMessage = null;
+            return true;
+        }
+        else if (BindConverter.TryConvertTo(value, CultureInfo.InvariantCulture, out result))
 		{
 			validationErrorMessage = null;
 			return true;
 		}
 		else
 		{
-			validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The {0} field must be a char.", DisplayName ?? FieldIdentifier.FieldName);
+            result = default;
+
+            validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "The {0} field must be a char.", DisplayName ?? FieldIdentifier.FieldName);
 			return false;
 		}
 	}
