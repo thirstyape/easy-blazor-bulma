@@ -69,8 +69,8 @@ internal static class InternalExtensions
 	/// <param name="count">The number of collections to split the source into.</param>
 	internal static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> source, int count)
 	{
-		return source.Select((item, index) => new { index, item })
-			.GroupBy(x => x.index % count)
-			.Select(x => x.Select(y => y.item));
+		return source.Select((Item, Index) => new { Index, Item })
+			.GroupBy(x => x.Index % count)
+			.Select(x => x.Select(y => y.Item));
 	}
 }

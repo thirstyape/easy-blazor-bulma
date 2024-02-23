@@ -19162,6 +19162,13 @@ span[data-tooltip].has-tooltip-danger {
   vertical-align: text-bottom;
 }
 
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .panel {
   margin-bottom: 1.5rem;
 }

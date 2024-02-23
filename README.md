@@ -44,8 +44,9 @@ The following components are currently available for use. All of them are docume
 * `<InputCharacter />`, creates a series of buttons to select a single character
 * `<InputDateTime />`, creates an input with a popout for binding date and time values
 * `<InputDuration />`, creates an input with a popout for binding duration values
-* `<InputFlaggedEnum />`, creates a series of checkboxes for bitmasked enum values
+* `<InputFlaggedEnum />`, creates a series of checkboxes for bitmasked enum types
 * `<InputNumberPad />`, creates a keyboard style number pad for numeric values
+* `<InputSelectEnum />`, creates a select list for enum types
 
 **Helpers**
 
@@ -83,7 +84,7 @@ Next, add one of the components or use some of the styles in your own components
 
 To use the dark theme, just add a secondary stylesheet reference in your index.html. The theme can automatically be selected based on the preference of the user. Changing between the styles can be done easily with an `IJSRuntime`.
 
-```razor
+```html
 <head>
     <!-- Your head content -->
     <link rel="stylesheet" href="_content/Easy.Blazor.Bulma/css/easy-blazor-bulma.min.css" id="easy-blazor-bulma" media="(prefers-color-scheme: light)" />

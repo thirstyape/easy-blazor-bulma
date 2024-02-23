@@ -4,10 +4,10 @@
 
 @using System.ComponentModel.DataAnnotations
 
-@foreach (var value in Enum.GetValues(UnderlyingType).Cast<TEnum>().Where(x => HideZeroOption == false || (int)(object)x > 0))
+@foreach (var value in Enum.GetValues(UnderlyingType).Cast<TEnum>().Where(x => HideZeroOption == false || (int)(object)x! > 0))
 {
     <div class="@FullCssClass">
-        <input type="checkbox" class="switch" checked='@(Value?.HasFlag(value))' @onclick="() => OnValueChanged(value)" id='@GetEnumSwitchId(value)' @attributes='AdditionalAttributes?.Where(x => x.Key != "class")' />
-        <label class="no-select" for='@GetEnumSwitchId(value)'>@(value.GetValueAttribute<TEnum, DisplayAttribute>()?.GetName())</label>
+        <input type="checkbox" class="switch" checked='@IsFlagChecked(value)' @onclick="() => OnValueChanged(value)" id='@GetEnumSwitchId(value)' @attributes='AdditionalAttributes?.Where(x => x.Key != "class")' />
+        <label class="no-select" for='@GetEnumSwitchId(value)'>@(value.GetValueAttribute<TEnum, DisplayAttribute>()?.GetName() ?? value!.ToString())</label>
     </div>
 }

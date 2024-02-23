@@ -12,7 +12,7 @@ namespace easy_blazor_bulma;
 /// <remarks>
 /// <see href="https://bulma.io/documentation/form/checkbox/">Bulma Documentation</see>
 /// </remarks>
-public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEnum> : InputBase<TEnum> where TEnum : Enum
+public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEnum> : InputBase<TEnum>
 {
     /// <summary>
     /// Wraps each item in the .box CSS class when true.
@@ -49,6 +49,11 @@ public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAcc
 
         UnderlyingType = nullable ?? typeof(TEnum);
         IsNullable = nullable != null;
+
+        if (typeof(Enum).IsAssignableFrom(UnderlyingType) == false)
+            throw new InvalidOperationException($"Unsupported type param '{UnderlyingType.Name}'. Must inherit {nameof(Enum)}.");
+        else if (Enum.GetUnderlyingType(typeof(TEnum)) == typeof(ulong))
+            throw new InvalidOperationException($"Unsupported type param '{UnderlyingType.Name}'. Does not support enums based on ulong.");
     }
 
     /// <inheritdoc/>
@@ -76,22 +81,34 @@ public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAcc
     /// <inheritdoc />
     protected override string FormatValueAsString(TEnum? value) => value switch
     {
-        TEnum enumValue => enumValue.GetFlaggedEnumDisplay(),
+        TEnum enumValue => enumValue.ToString() ?? string.Empty,
         _ => string.Empty
     };
 
     private void OnValueChanged(TEnum e)
     {
-        var value = Value ?? default;
+        var current = (Enum)Enum.Parse(UnderlyingType, (Value ?? default)?.ToString() ?? string.Empty);
+        var flag = (Enum)Enum.Parse(UnderlyingType, e?.ToString() ?? string.Empty);
 
         if (Value == null)
-            value = e;
-        else if (Value.HasFlag(e))
-            value &= ~(dynamic)e;
+            current = flag;
+        else if (current.HasFlag(flag))
+            current = (Enum)Enum.ToObject(typeof(TEnum), Convert.ToInt64(Value) & ~Convert.ToInt64(e));
         else
-            value |= (dynamic)e;
+            current = (Enum)Enum.ToObject(typeof(TEnum), Convert.ToInt64(Value) | Convert.ToInt64(e));
 
-        CurrentValueAsString = value?.ToString();
+        CurrentValueAsString = current?.ToString();
+    }
+
+    private bool IsFlagChecked(TEnum value)
+    {
+        var current = (Enum)Enum.Parse(UnderlyingType, (Value ?? default)?.ToString() ?? string.Empty);
+        var flag = (Enum)Enum.Parse(UnderlyingType, value?.ToString() ?? string.Empty);
+
+        if (Value == null)
+            return false;
+        else
+            return current.HasFlag(flag);
     }
 
     private string GetEnumSwitchId(TEnum value) => $"switch-InputFlaggedEnum-{PropertyName}-{value}";
