@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Globalization;
 
 namespace easy_blazor_bulma;
@@ -65,7 +67,11 @@ public partial class Tabs : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
+	[Inject]
+	private IServiceProvider ServiceProvider { get; init; }
+
 	private readonly List<Tab> Children = new();
+	private ILogger<Tabs>? Logger;
 
 	private string FullCssClass 
 	{
@@ -102,6 +108,8 @@ public partial class Tabs : ComponentBase
 	/// <inheritdoc/>
 	protected override void OnInitialized()
 	{
+		Logger = ServiceProvider.GetService<ILogger<Tabs>>();
+
 		if (string.IsNullOrWhiteSpace(Active) && Children.Count > 0)
 			Active = Children.First().Name;
 	}
@@ -109,9 +117,15 @@ public partial class Tabs : ComponentBase
 	internal void AddChild(Tab tab)
 	{
 		if (tab.Name == null)
-			throw new ArgumentException("Tabs must have a name assigned.", nameof(tab));
+		{
+			Logger?.LogError("Tabs must have a name assigned.");
+			return;
+		}
 		else if (Children.Any(x => x.Name == tab.Name))
-			throw new ArgumentException("Tabs must have a unique name.", nameof(tab));
+		{
+			Logger?.LogError("Tabs must have a unique name. Duplicate is {name}.", tab.Name);
+			return;
+		}
 
 		tab.Index = Children.Count != 0 ? Children.Max(x => x.Index) + 1 : 0;
 
@@ -123,7 +137,13 @@ public partial class Tabs : ComponentBase
 
 	internal void RemoveChild(Tab tab)
 	{
-		var child = Children.FirstOrDefault(x => x.Index == tab.Index) ?? throw new ArgumentException("Could not find tab to remove.", nameof(tab));
+		var child = Children.FirstOrDefault(x => x.Index == tab.Index);
+
+		if (child == null)
+		{
+			Logger?.LogError("Could not find tab to remove with name {name}.", tab.Name);
+			return;
+		}
 
 		Children.Remove(child);
 

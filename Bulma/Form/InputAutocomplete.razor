@@ -4,7 +4,7 @@
 
 <div class='@DropDownCssClass'>
 	<div class='@DropDownTriggerCssClass'>
-		<input type="search" class='@FullCssClass' placeholder="Search..." autocomplete="off" value='@CurrentValueAsString' @oninput='OnInput' @onclick='OpenPopout' @onfocus='OpenPopout' @onkeydown='CheckKeyPress' @onkeydown:preventDefault="OnKeyDownPreventDefault" @ref=Element @attributes='FilteredAttributes' />
+		<input type="search" class='@FullCssClass' placeholder="Search..." autocomplete="off" value='@InputValue' @oninput='OnInput' @onclick='OnClick' @onfocus='OnFocus' @onblur='OnBlur' @onkeydown='OnKeyDown' @onkeydown:preventDefault="OnKeyDownPreventDefault" @onkeyup='OnKeyUp' @ref=Element @attributes='FilteredAttributes' />
 
 		@if (string.IsNullOrWhiteSpace(Icon) == false)
 		{
@@ -15,7 +15,7 @@
 		<div class="dropdown-content">
 			@foreach (var item in Items.Take(DisplayCount ?? int.MaxValue))
 			{
-				<a class='@GetDropDownItemCssClass(item)' @onclick='x => OnSelectionChanged(item)'>@DisplayValue(item)</a>
+				<a class='@GetDropDownItemCssClass(item)' @onclick='x => OnItemSelected(item)'>@DisplayValue(item)</a>
 			}
 		</div>
 	</div>

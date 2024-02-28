@@ -29,7 +29,7 @@
                 <div class="datetimepicker-header">
                     <div class="datetimepicker-selection-start is-centered">
                         <div class="datetimepicker-selection-wrapper">
-                            @if (IsNullable && Value == null)
+                            @if (IsNullable && CurrentValue == null)
                             {
                                 <div class="datetimepicker-selection-day">-</div>
                                 <div class="datetimepicker-selection-date">-</div>
@@ -48,7 +48,7 @@
                                 <span class="material-icons">schedule</span>
                             </div>
                             <div class="datetimepicker-selection-hour">
-                                @if (IsNullable && Value == null)
+                                @if (IsNullable && CurrentValue == null)
                                 {
                                     <span>-</span>
                                 }
@@ -112,7 +112,7 @@
             </div>
         }
 
-        @if (Options.HasFlag(InputDateTimeOptions.ShowHours) || Options.HasFlag(InputDateTimeOptions.ShowMinutes) || Options.HasFlag(InputDateTimeOptions.ShowSeconds))
+        @if (Options.HasAnyFlag(InputDateTimeOptions.ShowHours | InputDateTimeOptions.ShowMinutes | InputDateTimeOptions.ShowSeconds))
         {
             <div class="columns has-background-primary has-text-white m-0 px-0 py-1">
                 @if (Options.HasFlag(InputDateTimeOptions.ShowHours))
@@ -191,7 +191,7 @@
             }
             @if (Options.HasFlag(InputDateTimeOptions.ShowNowButton))
             {
-                if (Options.HasFlag(InputDateTimeOptions.ShowHours) || Options.HasFlag(InputDateTimeOptions.ShowMinutes) || Options.HasFlag(InputDateTimeOptions.ShowSeconds))
+                if (Options.HasAnyFlag(InputDateTimeOptions.ShowHours | InputDateTimeOptions.ShowMinutes | InputDateTimeOptions.ShowSeconds))
                 {
                     <button type="button" class="button is-small is-fullwidth is-warning" @onclick='() => ClosePopout(true, value: DateTime.Now)'>
                         Now

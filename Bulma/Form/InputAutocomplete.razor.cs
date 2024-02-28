@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -20,8 +22,8 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	/// <summary>
 	/// The collection of items to search when typing in the input.
 	/// </summary>
-    [Parameter]
-    public IEnumerable<TValue> Items { get; set; }
+	[Parameter]
+	public IEnumerable<TValue> Items { get; set; }
 
 	/// <summary>
 	/// Limits the number of items displayed in the drop-down list when set.
@@ -32,13 +34,13 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	/// <summary>
 	/// A function to return the values to display in the drop-down list.
 	/// </summary>
-    [Parameter] 
+	[Parameter]
 	public Func<TValue, string> DisplayValue { get; set; }
 
-    /// <summary>
-    /// An icon to display within the input.
-    /// </summary>
-    [Parameter]
+	/// <summary>
+	/// An icon to display within the input.
+	/// </summary>
+	[Parameter]
 	public string? Icon { get; set; } = "search";
 
 	/// <summary>
@@ -51,21 +53,35 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	/// The configuration options to apply to the component.
 	/// </summary>
 	[Parameter]
-    public InputAutocompleteOptions Options { get; set; } = 
+	public InputAutocompleteOptions Options { get; set; } =
 		InputAutocompleteOptions.TypePopout |
+		InputAutocompleteOptions.ClickPopout |
 		InputAutocompleteOptions.PopoutBottom |
 		InputAutocompleteOptions.PopoutLeft |
 		InputAutocompleteOptions.UseAutomaticStatusColors |
-		InputAutocompleteOptions.AutoSelectMatch |
+		InputAutocompleteOptions.AutoSelectOnExit |
+		InputAutocompleteOptions.AutoSelectOnInput |
 		InputAutocompleteOptions.AutoSelectExact;
 
-    private bool IsPopoutDisplayed;
+	/// <summary>
+	/// Fires with the oninput event just before updating the value of the input.
+	/// </summary>
+	[Parameter]
+	public Func<string?, Task>? OnItemsRequested { get; set; }
 
-    private readonly bool IsNullable;
+	[Inject]
+	private IServiceProvider ServiceProvider { get; init; }
+
+	private bool IsPopoutDisplayed;
+	private TValue? HighlightedValue;
+	private string? InputValue;
+
+	private readonly bool IsNullable;
 	private readonly Type UnderlyingType;
-    private ElementReference? Element;
+	private ElementReference? Element;
+	private ILogger<InputAutocomplete<TValue>>? Logger;
 
-    private bool OnKeyDownPreventDefault;
+	private bool OnKeyDownPreventDefault;
 
 	private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
 
@@ -128,7 +144,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	{
 		get
 		{
-			var css = "dropdown-menu";
+			var css = "dropdown-menu p-0";
 
 			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("dropdown-menu-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
 				css += $" {additional}";
@@ -137,7 +153,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 		}
 	}
 
-	private readonly string[] Filter = new string[] { "class", "dropdown-class", "dropdown-trigger-class", "dropdown-menu-class", "dropdown-item-class" };
+	private readonly string[] Filter = new[] { "class", "dropdown-class", "dropdown-trigger-class", "dropdown-menu-class", "dropdown-item-class" };
 	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
 
 	public InputAutocomplete()
@@ -154,48 +170,58 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	/// <inheritdoc />
 	protected override void OnInitialized()
 	{
+		// Get services
+		Logger = ServiceProvider.GetService<ILogger<InputAutocomplete<TValue>>>();
+
 		// Validation
-		if (Options.HasFlag(InputAutocompleteOptions.ClickPopout | InputAutocompleteOptions.TypePopout | InputAutocompleteOptions.HoverPopout) == false)
-			throw new ArgumentException("Must set at least one of ClickPopout, TypePopout, or HoverPopout.", nameof(Options));
+		if (Options.HasAnyFlag(InputAutocompleteOptions.ClickPopout | InputAutocompleteOptions.TypePopout | InputAutocompleteOptions.HoverPopout) == false)
+			Logger?.LogWarning("Must set at least one of ClickPopout, TypePopout, or HoverPopout for InputAutocomplete to work correctly.");
 
 		// Set required options
-		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectMatch) == false && Options.HasFlag(InputAutocompleteOptions.AutoSelectCurrent | InputAutocompleteOptions.AutoSelectExact | InputAutocompleteOptions.AutoSelectClosest))
-			Options |= InputAutocompleteOptions.AutoSelectMatch;
+		if (Options.HasAnyFlag(InputAutocompleteOptions.AutoSelectOnExit | InputAutocompleteOptions.AutoSelectOnInput) == false && Options.HasAnyFlag(InputAutocompleteOptions.AutoSelectCurrent | InputAutocompleteOptions.AutoSelectExact | InputAutocompleteOptions.AutoSelectClosest))
+			Options |= InputAutocompleteOptions.AutoSelectOnExit;
 
 		// Unset invalid options
-		if (Options.HasFlag(InputAutocompleteOptions.PopoutLeft) && Options.HasFlag(InputAutocompleteOptions.PopoutRight))
+		if (Options.HasFlag(InputAutocompleteOptions.PopoutLeft | InputAutocompleteOptions.PopoutRight))
 			Options &= ~InputAutocompleteOptions.PopoutRight;
 
-		if (Options.HasFlag(InputAutocompleteOptions.PopoutTop) && Options.HasFlag(InputAutocompleteOptions.PopoutBottom))
+		if (Options.HasFlag(InputAutocompleteOptions.PopoutTop | InputAutocompleteOptions.PopoutBottom))
 			Options &= ~InputAutocompleteOptions.PopoutTop;
 
-		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectCurrent) && Options.HasFlag(InputAutocompleteOptions.AutoSelectExact))
+		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectCurrent | InputAutocompleteOptions.AutoSelectExact))
 			Options &= ~InputAutocompleteOptions.AutoSelectCurrent;
 
-		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectCurrent) && Options.HasFlag(InputAutocompleteOptions.AutoSelectClosest))
+		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectCurrent | InputAutocompleteOptions.AutoSelectClosest))
 			Options &= ~InputAutocompleteOptions.AutoSelectClosest;
 
-		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectExact) && Options.HasFlag(InputAutocompleteOptions.AutoSelectClosest))
+		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectExact | InputAutocompleteOptions.AutoSelectClosest))
 			Options &= ~InputAutocompleteOptions.AutoSelectClosest;
+
+		// Set starting values
+		HighlightedValue = CurrentValue;
+		InputValue = CurrentValueAsString;
 	}
 
 	/// <inheritdoc />
 	protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-            if (Element != null && AdditionalAttributes != null && AdditionalAttributes.TryGetValue("autofocus", out var _))
-                await Element.Value.FocusAsync();
-    }
+	{
+		if (firstRender)
+			if (Element != null && AdditionalAttributes != null && AdditionalAttributes.TryGetValue("autofocus", out var _))
+				await Element.Value.FocusAsync();
+	}
 
-    /// <inheritdoc />
-    protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
+	/// <inheritdoc />
+	protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
 	{
 		if (Options.HasFlag(InputAutocompleteOptions.UseAutomaticStatusColors))
 			ResetStatus();
 
-		if (IsNullable == false && string.IsNullOrWhiteSpace(value))
+		var match = Options.HasAnyFlag(InputAutocompleteOptions.AutoSelectExact | InputAutocompleteOptions.AutoSelectClosest) ? GetMatch(value) : GetMatch(value, InputAutocompleteOptions.AutoSelectExact);
+
+		if (match.success)
 		{
-			result = default!;
+			result = match.match!;
+			HighlightedValue = result;
 
 			if (Options.HasFlag(InputAutocompleteOptions.UseAutomaticStatusColors))
 				DisplayStatus |= InputStatus.BackgroundSuccess;
@@ -203,8 +229,17 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 			validationErrorMessage = null;
 			return true;
 		}
+		else
+		{
+			result = default;
+			HighlightedValue = default;
 
-		throw new NotImplementedException();
+			if (Options.HasFlag(InputAutocompleteOptions.UseAutomaticStatusColors))
+				DisplayStatus |= InputStatus.BackgroundDanger;
+
+			validationErrorMessage = string.Format(CultureInfo.InvariantCulture, "No match could be found in the {0} field.", DisplayName ?? FieldIdentifier.FieldName);
+			return false;
+		}
 	}
 
 	/// <inheritdoc />
@@ -214,24 +249,165 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 		_ => string.Empty
 	};
 
-	private void OnInput(ChangeEventArgs args)
+	private (bool success, TValue? match) GetMatch(string? value, InputAutocompleteOptions? matchType = null)
 	{
+		if (matchType == null)
+		{
+			if (Options.HasFlag(InputAutocompleteOptions.AutoSelectCurrent))
+				matchType = InputAutocompleteOptions.AutoSelectCurrent;
+			else if (Options.HasFlag(InputAutocompleteOptions.AutoSelectExact))
+				matchType = InputAutocompleteOptions.AutoSelectExact;
+			else if (Options.HasFlag(InputAutocompleteOptions.AutoSelectClosest))
+				matchType = InputAutocompleteOptions.AutoSelectClosest;
+		}
 
+		if (matchType == InputAutocompleteOptions.AutoSelectCurrent && HighlightedValue != null)
+		{
+			return (true, HighlightedValue);
+		}
+		else if (matchType == InputAutocompleteOptions.AutoSelectExact)
+		{
+			var match = Items.FirstOrDefault(x => string.Equals(DisplayValue(x), value, StringComparison.OrdinalIgnoreCase));
+			return (match != null || (IsNullable && string.IsNullOrWhiteSpace(value)), match);
+		}
+		else if (matchType == InputAutocompleteOptions.AutoSelectClosest)
+		{
+			return (true, Items.OrderBy(x => string.Compare(DisplayValue(x), value, StringComparison.OrdinalIgnoreCase)).FirstOrDefault());
+		}
+		else
+		{
+			return (false, default);
+		}
 	}
 
-	private void OpenPopout()
+	private void OnFocus(FocusEventArgs args)
 	{
-
+		if (Options.HasFlag(InputAutocompleteOptions.ClickPopout) && Items.Any())
+			IsPopoutDisplayed = true;
 	}
 
-	private void CheckKeyPress(KeyboardEventArgs args)
+	private void OnBlur(FocusEventArgs args)
 	{
+		IsPopoutDisplayed = false;
 
+		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectOnExit))
+		{
+			var match = GetMatch(InputValue);
+			OnItemSelected(match.match, false, match.success);
+		}
 	}
 
-	private void OnSelectionChanged(TValue value)
+	private void OnClick(MouseEventArgs args)
 	{
+		if (Options.HasFlag(InputAutocompleteOptions.ClickPopout) && Items.Any())
+			IsPopoutDisplayed = true;
+	}
 
+	private async Task OnInput(ChangeEventArgs args)
+	{
+		if (Options.HasFlag(InputAutocompleteOptions.TypePopout) && Items.Any())
+			IsPopoutDisplayed = true;
+
+		var changed = args.Value?.ToString();
+
+		if (OnItemsRequested != null)
+			await OnItemsRequested.Invoke(changed);
+
+		InputValue = changed;
+
+		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectOnInput))
+			CurrentValueAsString = changed;
+	}
+
+	private void OnKeyUp(KeyboardEventArgs args)
+	{
+		if (args.Code == "Enter")
+		{
+			var match = GetMatch(InputValue, InputAutocompleteOptions.AutoSelectCurrent);
+			OnItemSelected(match.match, success: match.success);
+		}
+
+		if (args.Code == "Enter" || args.Code == "Escape")
+			IsPopoutDisplayed = false;
+	}
+
+	private void OnKeyDown(KeyboardEventArgs args)
+	{
+		OnKeyDownPreventDefault = args.Code == "ArrowDown" || args.Code == "ArrowUp" || args.Code == "Escape";
+
+		if (Options.HasFlag(InputAutocompleteOptions.TypePopout) && Items.Any() && (args.Code == "ArrowDown" || args.Code == "ArrowUp"))
+			IsPopoutDisplayed = true;
+
+		if (IsPopoutDisplayed && args.Code == "ArrowDown")
+			HighlightNext();
+		else if (IsPopoutDisplayed && args.Code == "ArrowUp")
+			HighlightPrevious();
+	}
+
+	private void HighlightNext()
+	{
+		if (HighlightedValue == null)
+		{
+			HighlightedValue = Items.FirstOrDefault();
+			return;
+		}
+
+		TValue? next = default;
+		TValue? first = default;
+		bool takeNext = false;
+
+		foreach (var item in Items)
+		{
+			first ??= item;
+
+			if (takeNext)
+			{
+				next = item;
+				break;
+			}
+
+			if (EqualityComparer<TValue>.Default.Equals(HighlightedValue, item))
+				takeNext = true;
+		}
+
+		next ??= first;
+		HighlightedValue = next;
+	}
+
+	private void HighlightPrevious()
+	{
+		if (HighlightedValue == null)
+		{
+			HighlightedValue = Items.LastOrDefault();
+			return;
+		}
+
+		TValue? previous = default;
+
+		foreach (var item in Items)
+		{
+			if (previous != null && EqualityComparer<TValue>.Default.Equals(HighlightedValue, item))
+				break;
+
+			previous = item;
+		}
+
+		HighlightedValue = previous;
+	}
+
+	private void OnItemSelected(TValue? value, bool close = true, bool success = true)
+	{
+		CurrentValueAsString = value != null ? DisplayValue(value) : string.Empty;
+		InputValue = CurrentValueAsString;
+
+		if (close)
+			IsPopoutDisplayed = false;
+
+		if (Options.HasFlag(InputAutocompleteOptions.UseAutomaticStatusColors))
+		{
+			ResetStatus();
+			DisplayStatus |= success ? InputStatus.BackgroundSuccess : InputStatus.BackgroundDanger;
+		}
 	}
 
 	private void ResetStatus()
@@ -245,8 +421,11 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	{
 		var css = "dropdown-item";
 
-		if (Value != null && EqualityComparer<TValue>.Default.Equals(Value, item))
+		if (HighlightedValue != null && EqualityComparer<TValue>.Default.Equals(HighlightedValue, item))
 			css += " has-background-default";
+
+		if (CurrentValue != null && EqualityComparer<TValue>.Default.Equals(CurrentValue, item))
+			css += " has-text-success";
 
 		if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("dropdown-item-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
 			css += $" {additional}";

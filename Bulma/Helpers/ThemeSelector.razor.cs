@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
 using System.Globalization;
 
@@ -40,7 +41,9 @@ public partial class ThemeSelector : ComponentBase
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
 	[Inject]
-	private IJSRuntime JsRuntime { get; init; }
+	private IServiceProvider ServiceProvider { get; init; }
+
+	private IJSRuntime? JsRuntime;
 
 	private string FullCssClass => string.IsNullOrWhiteSpace(CssClass) == false ? CssClass : "navbar-item";
 
@@ -61,6 +64,13 @@ public partial class ThemeSelector : ComponentBase
 	/// <inheritdoc />
 	protected async override Task OnInitializedAsync()
 	{
+		// Get services
+		JsRuntime = ServiceProvider.GetService<IJSRuntime>();
+
+		if (JsRuntime == null)
+			return;
+
+		// Determine current mode
 		var isOsDarkMode = await JsRuntime.InvokeAsync<bool>("easyBlazorBulma.IsOsDarkMode");
 
 		if (LoadUserPreference == false)
@@ -77,6 +87,7 @@ public partial class ThemeSelector : ComponentBase
 			return;
 		}
 
+		// Set mode
 		var isDarkMode = isUserDarkMode.Equals("true", StringComparison.OrdinalIgnoreCase);
 
 		if (isDarkMode != isOsDarkMode)
@@ -98,12 +109,17 @@ public partial class ThemeSelector : ComponentBase
 			await SetActiveTheme(DarkThemeId, LightThemeId);
 
 		IsDarkMode = !IsDarkMode;
-		await JsRuntime.InvokeAsync<bool>("easyBlazorBulma.WriteStorage", DarkModeKeyName, IsDarkMode.ToString());
+
+		if (JsRuntime != null)
+			await JsRuntime.InvokeAsync<bool>("easyBlazorBulma.WriteStorage", DarkModeKeyName, IsDarkMode.ToString());
 	}
 
 	private async Task SetActiveTheme(string activate, string deactivate)
 	{
-		await JsRuntime.InvokeAsync<bool>("easyBlazorBulma.ToggleStyleSheet", activate, true, true);
-		await JsRuntime.InvokeAsync<bool>("easyBlazorBulma.ToggleStyleSheet", deactivate, false);
+		if (JsRuntime != null)
+		{
+			await JsRuntime.InvokeAsync<bool>("easyBlazorBulma.ToggleStyleSheet", activate, true, true);
+			await JsRuntime.InvokeAsync<bool>("easyBlazorBulma.ToggleStyleSheet", deactivate, false);
+		}
 	}
 }

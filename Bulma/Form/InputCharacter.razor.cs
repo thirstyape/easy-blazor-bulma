@@ -229,7 +229,7 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 			return;
 		else if (IsUpperCase && char.IsLower(current.Value))
 			CurrentValueAsString = char.ToUpper(current.Value).ToString();
-		else if (Value != null && IsUpperCase == false && char.IsUpper(current.Value))
+		else if (IsUpperCase == false && char.IsUpper(current.Value))
 			CurrentValueAsString = char.ToLower(current.Value).ToString();
 	}
 

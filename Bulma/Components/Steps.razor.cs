@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Globalization;
 
 namespace easy_blazor_bulma;
@@ -65,9 +67,13 @@ public partial class Steps : ComponentBase
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    private readonly List<Step> Children = new();
+	[Inject]
+	private IServiceProvider ServiceProvider { get; init; }
 
-    private string FullCssClass
+	private readonly List<Step> Children = new();
+	private ILogger<Steps>? Logger;
+
+	private string FullCssClass
     {
         get
         {
@@ -100,16 +106,26 @@ public partial class Steps : ComponentBase
     /// <inheritdoc/>
 	protected override void OnInitialized()
     {
-        if (string.IsNullOrWhiteSpace(Active) && Children.Count > 0)
+		Logger = ServiceProvider.GetService<ILogger<Steps>>();
+
+		if (string.IsNullOrWhiteSpace(Active) && Children.Count > 0)
             Active = Children.First().Name;
     }
 
     internal void AddChild(Step step)
     {
         if (step.Name == null)
-            throw new ArgumentException("Steps must have a name assigned.", nameof(step));
+        {
+            Logger?.LogError("Steps must have a name assigned.");
+            return;
+        }
+            
         else if (Children.Any(x => x.Name == step.Name))
-            throw new ArgumentException("Steps must have a unique name.", nameof(step));
+        {
+            Logger?.LogError("Steps must have a unique name. Duplicate is {name}.", step.Name);
+            return;
+        }
+            
 
         step.Index = Children.Count != 0 ? Children.Max(x => x.Index) + 1 : 0;
 
@@ -121,7 +137,13 @@ public partial class Steps : ComponentBase
 
     internal void RemoveChild(Step step)
     {
-        var child = Children.FirstOrDefault(x => x.Index == step.Index) ?? throw new ArgumentException("Could not find step to remove.", nameof(step));
+        var child = Children.FirstOrDefault(x => x.Index == step.Index);
+
+        if (child == null) 
+        {
+            Logger?.LogError("Could not find step to remove with name {name}.", step.Name);
+            return;
+        }
 
 		Children.Remove(child);
 

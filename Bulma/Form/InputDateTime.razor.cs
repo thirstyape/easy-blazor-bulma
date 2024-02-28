@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -79,6 +81,9 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
         InputDateTimeOptions.CloseOnDateClicked |
         InputDateTimeOptions.ValidateTextInput;
 
+	[Inject]
+	private IServiceProvider ServiceProvider { get; init; }
+
 	private DateTime InitialValue;
 	private DateTime PopoutValue;
 	private bool IsPopoutDisplayed;
@@ -87,6 +92,7 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 	private readonly bool IsNullable;
 	private readonly Type UnderlyingType;
 	private ElementReference? Element;
+	private ILogger<InputDateTime<TValue>>? Logger;
 
 	private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
 
@@ -166,16 +172,16 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
     {
         get
         {
-            if (IsNullable && Value == null)
+            if (IsNullable && CurrentValue == null)
                 return DateTime.Now;
             else if (UnderlyingType == typeof(DateTime))
-                return (DateTime)Convert.ChangeType(Value!, typeof(DateTime));
+                return (DateTime)Convert.ChangeType(CurrentValue!, typeof(DateTime));
             else if (UnderlyingType == typeof(DateOnly))
-                return ((DateOnly)(object)Value!).ToDateTime(TimeOnly.MinValue);
+                return ((DateOnly)(object)CurrentValue!).ToDateTime(TimeOnly.MinValue);
             else if (UnderlyingType == typeof(TimeSpan))
-                return DateTime.Today.Add((TimeSpan)(object)Value!);
+                return DateTime.Today.Add((TimeSpan)(object)CurrentValue!);
             else
-                return DateOnly.FromDateTime(DateTime.Today).ToDateTime((TimeOnly)(object)Value!);
+                return DateOnly.FromDateTime(DateTime.Today).ToDateTime((TimeOnly)(object)CurrentValue!);
         }
     }
 
@@ -193,18 +199,19 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 	/// <inheritdoc />
 	protected override void OnInitialized()
 	{
-        // Validation
-        if (UnderlyingType == typeof(TimeSpan) && (Options.HasFlag(InputDateTimeOptions.ShowHours) || Options.HasFlag(InputDateTimeOptions.ShowMinutes) || Options.HasFlag(InputDateTimeOptions.ShowSeconds)) == false)
-            throw new ArgumentException($"Must set at least one of ShowHours, ShowMinutes, or ShowSeconds flags when using {nameof(TimeSpan)}.", nameof(Options));
+		// Get services
+		Logger = ServiceProvider.GetService<ILogger<InputDateTime<TValue>>>();
 
-        if (UnderlyingType == typeof(TimeOnly) && (Options.HasFlag(InputDateTimeOptions.ShowHours) || Options.HasFlag(InputDateTimeOptions.ShowMinutes) || Options.HasFlag(InputDateTimeOptions.ShowSeconds)) == false)
-            throw new ArgumentException($"Must set at least one of ShowHours, ShowMinutes, or ShowSeconds flags when using {nameof(TimeOnly)}.", nameof(Options));
+		// Validation
+		if (UnderlyingType == typeof(TimeSpan) && Options.HasAnyFlag(InputDateTimeOptions.ShowHours | InputDateTimeOptions.ShowMinutes | InputDateTimeOptions.ShowSeconds) == false)
+            Logger?.LogWarning($"Must set at least one of ShowHours, ShowMinutes, or ShowSeconds flags when using {nameof(TimeSpan)} for InputDateTime to work correctly.");
+
+        if (UnderlyingType == typeof(TimeOnly) && Options.HasAnyFlag(InputDateTimeOptions.ShowHours | InputDateTimeOptions.ShowMinutes | InputDateTimeOptions.ShowSeconds) == false)
+			Logger?.LogWarning($"Must set at least one of ShowHours, ShowMinutes, or ShowSeconds flags when using {nameof(TimeOnly)} for InputDateTime to work correctly.");
 
         // Set required options
         if (UnderlyingType == typeof(DateOnly))
-		{
 			Options |= InputDateTimeOptions.ShowDate;
-        }
 
         // Unset invalid options
         if (UnderlyingType == typeof(DateOnly))
@@ -215,9 +222,7 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 		}
 
         if (UnderlyingType == typeof(TimeSpan) || UnderlyingType == typeof(TimeOnly))
-		{
 			Options &= ~InputDateTimeOptions.ShowDate;
-		}
 
 		// Set starting values
 		InitialValue = ValueAsDateTime;
@@ -256,7 +261,7 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 		// Fix formatting
 		if (string.IsNullOrWhiteSpace(value) == false)
 		{
-			if (Options.HasFlag(InputDateTimeOptions.ShowDate) == false && value.All(x => char.IsDigit(x)))
+			if (Options.HasFlag(InputDateTimeOptions.ShowDate) == false && value.All(char.IsDigit))
                 value = $"{value}:00:00";
 
             if (value.StartsWith(':'))

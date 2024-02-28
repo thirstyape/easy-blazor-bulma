@@ -29,13 +29,26 @@ internal static class InternalExtensions
         return attribute;
     }
 
-    /// <summary>
-    /// Returns the <see cref="DisplayAttribute.Name"/> value of the selected flags in a CSV string.
-    /// </summary>
-    /// <typeparam name="TEnum">The type of the property.</typeparam>
-    /// <param name="value">The value to find the name of.</param>
-    /// <param name="ignoreZero">Specifies whether to ignore the flag with a zero value.</param>
-    internal static string GetFlaggedEnumDisplay<TEnum>(this TEnum value, bool ignoreZero = true) where TEnum : Enum
+	/// <summary>
+	/// Checks to see the provided value has at least one of the acceptable flags.
+	/// </summary>
+	/// <param name="value">The value to check.</param>
+	/// <param name="acceptableFlags">The flags to check against (input as TEnum.Option1 | TEnum.Option2).</param>
+	internal static bool HasAnyFlag<TEnum>(this TEnum value, TEnum acceptableFlags) where TEnum : Enum
+	{
+        if (Enum.GetUnderlyingType(typeof(TEnum)) == typeof(ulong))
+		    return (Convert.ToUInt64(value) & Convert.ToUInt64(acceptableFlags)) != 0;
+        else
+			return (Convert.ToInt64(value) & Convert.ToInt64(acceptableFlags)) != 0;
+	}
+
+	/// <summary>
+	/// Returns the <see cref="DisplayAttribute.Name"/> value of the selected flags in a CSV string.
+	/// </summary>
+	/// <typeparam name="TEnum">The type of the property.</typeparam>
+	/// <param name="value">The value to find the name of.</param>
+	/// <param name="ignoreZero">Specifies whether to ignore the flag with a zero value.</param>
+	internal static string GetFlaggedEnumDisplay<TEnum>(this TEnum value, bool ignoreZero = true) where TEnum : Enum
     {
         var display = "";
 

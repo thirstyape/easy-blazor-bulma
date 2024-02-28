@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -72,15 +74,19 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         InputDurationOptions.ShowSeconds |
         InputDurationOptions.ValidateTextInput;
 
-    private TimeSpan InitialValue;
+	[Inject]
+	private IServiceProvider ServiceProvider { get; init; }
+
+	private TimeSpan InitialValue;
     private TimeSpan PopoutValue;
     private bool IsPopoutDisplayed;
 
     private readonly bool IsNullable;
     private readonly Type UnderlyingType;
     private ElementReference? Element;
+	private ILogger<InputDuration<TValue>>? Logger;
 
-    private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
+	private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
 
     private string FullCssClass
     {
@@ -158,12 +164,12 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
     {
         get
         {
-            if (IsNullable && Value == null)
+            if (IsNullable && CurrentValue == null)
                 return TimeSpan.Zero;
             else if (UnderlyingType == typeof(TimeSpan))
-                return (TimeSpan)Convert.ChangeType(Value!, typeof(TimeSpan));
+                return (TimeSpan)Convert.ChangeType(CurrentValue!, typeof(TimeSpan));
             else
-                return ((TimeOnly)(object)Value!).ToTimeSpan();
+                return ((TimeOnly)(object)CurrentValue!).ToTimeSpan();
         }
     }
 
@@ -181,24 +187,27 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
     /// <inheritdoc />
     protected override void OnInitialized()
     {
-        // Validation
-        if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours) && Options.HasFlag(InputDurationOptions.ShowDays))
-            throw new ArgumentException("Cannot set both DisplayDaysAsHours and ShowDays.", nameof(Options));
+		// Get services
+		Logger = ServiceProvider.GetService<ILogger<InputDuration<TValue>>>();
 
-        if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes) && Options.HasFlag(InputDurationOptions.ShowHours))
-            throw new ArgumentException("Cannot set both DisplayHoursAsMinutes and ShowHours.", nameof(Options));
+		// Validation
+		if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours | InputDurationOptions.ShowDays))
+			Logger?.LogWarning("Cannot set both DisplayDaysAsHours and ShowDays for InputDuration.");
 
-        if (Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds) && Options.HasFlag(InputDurationOptions.ShowMinutes))
-            throw new ArgumentException("Cannot set both DisplayMinutesAsSeconds and ShowMinutes.", nameof(Options));
+        if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes | InputDurationOptions.ShowHours))
+			Logger?.LogWarning("Cannot set both DisplayHoursAsMinutes and ShowHours for InputDuration.");
 
-        if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours) && Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes))
-            throw new ArgumentException("Cannot set both DisplayDaysAsHours and DisplayHoursAsMinutes.", nameof(Options));
+        if (Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds | InputDurationOptions.ShowMinutes))
+			Logger?.LogWarning("Cannot set both DisplayMinutesAsSeconds and ShowMinutes for InputDuration.");
+
+        if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours | InputDurationOptions.DisplayHoursAsMinutes))
+			Logger?.LogWarning("Cannot set both DisplayDaysAsHours and DisplayHoursAsMinutes for InputDuration.");
         
-        if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours) && Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds))
-            throw new ArgumentException("Cannot set both DisplayDaysAsHours and DisplayMinutesAsSeconds.", nameof(Options));
+        if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours | InputDurationOptions.DisplayMinutesAsSeconds))
+			Logger?.LogWarning("Cannot set both DisplayDaysAsHours and DisplayMinutesAsSeconds for InputDuration.");
         
-        if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes) && Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds))
-            throw new ArgumentException("Cannot set both DisplayHoursAsMinutes and DisplayMinutesAsSeconds.", nameof(Options));
+        if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes | InputDurationOptions.DisplayMinutesAsSeconds))
+			Logger?.LogWarning("Cannot set both DisplayHoursAsMinutes and DisplayMinutesAsSeconds for InputDuration.");
 
         // Unset invalid options
         if (UnderlyingType == typeof(TimeOnly))
