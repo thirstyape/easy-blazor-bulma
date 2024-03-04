@@ -38,6 +38,23 @@
   &.is-sticky-left
     left: 0
 
+.table.is-striped
+  tbody
+    tr:not(.is-selected):nth-child(even)
+      td.is-sticky
+        background-color: $table-striped-row-even-background-color
+    tr:not(.is-selected):nth-child(odd)
+      td.is-sticky
+        background-color: $table-background-color
+  &.is-hoverable
+    tbody
+      tr:not(.is-selected):nth-child(even):hover
+        td.is-sticky
+          background-color: $table-striped-row-even-hover-background-color
+      tr:not(.is-selected):nth-child(odd):hover
+        td.is-sticky
+          background-color: $table-row-hover-background-color
+
 .is-word-break
   word-break: break-all
 

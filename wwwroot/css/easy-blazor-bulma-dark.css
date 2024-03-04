@@ -19169,6 +19169,45 @@ span[data-tooltip].has-tooltip-danger {
   user-select: none;
 }
 
+.is-sticky {
+  position: sticky;
+  z-index: 1;
+}
+.is-sticky.is-sticky-top {
+  top: 0;
+}
+.is-sticky.is-sticky-left {
+  left: 0;
+}
+
+.table.is-striped tbody tr:not(.is-selected):nth-child(even) td.is-sticky {
+  background-color: hsl(0deg, 0%, 7%);
+}
+.table.is-striped tbody tr:not(.is-selected):nth-child(odd) td.is-sticky {
+  background-color: hsl(0deg, 0%, 4%);
+}
+.table.is-striped.is-hoverable tbody tr:not(.is-selected):nth-child(even):hover td.is-sticky {
+  background-color: hsl(0deg, 0%, 14%);
+}
+.table.is-striped.is-hoverable tbody tr:not(.is-selected):nth-child(odd):hover td.is-sticky {
+  background-color: hsl(0deg, 0%, 7%);
+}
+
+.is-word-break {
+  word-break: break-all;
+}
+
+.navbar-item.is-mega {
+  position: static;
+}
+.navbar-item.is-mega .is-mega-menu-title {
+  margin-bottom: 0;
+  padding: 0.375rem 1rem;
+}
+.navbar-item.is-mega .navbar-item {
+  font-size: 1.25rem;
+}
+
 .panel {
   margin-bottom: 1.5rem;
 }
