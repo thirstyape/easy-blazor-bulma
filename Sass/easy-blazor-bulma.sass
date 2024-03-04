@@ -30,6 +30,25 @@
   -ms-user-select: none
   user-select: none
 
+.is-sticky
+  position: sticky
+  z-index: 1
+  &.is-sticky-top
+    top: 0
+  &.is-sticky-left
+    left: 0
+
+.is-word-break
+  word-break: break-all
+
+.navbar-item.is-mega
+  position: static
+  .is-mega-menu-title
+    margin-bottom: 0
+    padding: .375rem 1rem
+  .navbar-item
+    font-size: $size-5
+
 ///////////////
 // Variables //
 ///////////////

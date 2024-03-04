@@ -108,6 +108,14 @@ There are 5 helper methods in the bundled JavaScript file.
 
 Additionally, you can use the `<ThemeSelector />` component to display a button that will toggle between themes. By default it applies the `.navbar-item` CSS class, if you provide another class this will override it. Simply including this component anywhere in your display will automatically load the correct theme when your app starts.
 
+**Icons**
+
+To use an icon just add a `<span>` with the desired icon text and the `.material-icons` CSS class. The sample below will produce the magnifier glass icon. An icon reference is available at [Google Fonts](https://fonts.google.com/icons).
+
+```html
+<span class="material-icons">search</span>
+```
+
 ## Build Details
 
 ### Frameworks
