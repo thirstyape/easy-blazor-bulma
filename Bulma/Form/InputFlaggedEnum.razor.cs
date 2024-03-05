@@ -52,7 +52,7 @@ public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAcc
 
         if (typeof(Enum).IsAssignableFrom(UnderlyingType) == false)
             throw new InvalidOperationException($"Unsupported type param '{UnderlyingType.Name}'. Must inherit {nameof(Enum)}.");
-        else if (Enum.GetUnderlyingType(typeof(TEnum)) == typeof(ulong))
+        else if (Enum.GetUnderlyingType(UnderlyingType) == typeof(ulong))
             throw new InvalidOperationException($"Unsupported type param '{UnderlyingType.Name}'. Does not support enums based on ulong.");
     }
 
