@@ -54,6 +54,26 @@ The following components are currently available for use. All of them are docume
 * `<ThemeSelector />`, toggles between dark and light CSS themes (requires JavaScript file and both CSS stylesheets in index.html)
 * `<TitleBlock />`, displays a banner accross the top of the screen with some text
 
+**Errors**
+
+* `<_400 />`, displays a message with 400: Bad Request
+* `<_401 />`, displays a message with 401: Unauthorized
+* `<_403 />`, displays a message with 403: Forbidden
+* `<_404 />`, displays a message with 404: Not Found
+* `<_405 />`, displays a message with 405: Method Not Allowed
+* `<_408 />`, displays a message with 408: Request Timeout
+* `<_409 />`, displays a message with 409: Conflict
+* `<_422 />`, displays a message with 422: Unprocessable Entity
+* `<_423 />`, displays a message with 423: Locked
+* `<_426 />`, displays a message with 426: Upgrade Required
+* `<_500 />`, displays a message with 500: Internal Server Error
+* `<_501 />`, displays a message with 501: Not Implemented
+* `<_502 />`, displays a message with 502: Bad Gateway
+* `<_503 />`, displays a message with 503: Service Unavailable
+* `<_504 />`, displays a message with 504: Gateway Timeout
+* `<ExtendedErrorBoundary />`, provides additional details on exceptions
+* `<Unknown />`, displays a message with generic error details
+
 ### Usage
 
 **Basic Example**

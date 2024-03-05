@@ -16,8 +16,11 @@
     <Description>This project was created to provide a standard implementation of Bulma with Blazor components.</Description>
     <RepositoryUrl>https://github.com/thirstyape/Easy-Blazor-Bulma</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <PackageReleaseNotes>
+		1.0.8
+		Add error handling components
+		
 		1.0.7
 		Fix exception in InputFlaggedEnum for nullable values
 		

@@ -86,4 +86,10 @@ internal static class InternalExtensions
 			.GroupBy(x => x.Index % count)
 			.Select(x => x.Select(y => y.Item));
 	}
+
+    /// <summary>
+    /// Splits the provided string into lines at either \r\n or \n.
+    /// </summary>
+    /// <param name="value">The value to split.</param>
+    internal static string[] ToLines(this string value) => value.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
 }

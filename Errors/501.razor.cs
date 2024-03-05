@@ -1,0 +1,28 @@
+﻿using Microsoft.AspNetCore.Components;
+
+namespace easy_blazor_bulma;
+
+/// <summary>
+/// Displays an error message detailing a 501 Not Implemented response code.
+/// </summary>
+/// <remarks>
+/// <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">Mozilla Reference</see>
+/// </remarks>
+public partial class _501 : HttpErrorBase
+{
+	/// <inheritdoc/>
+	[Parameter]
+	public override string? Icon { get; set; } = "troubleshoot";
+
+	/// <inheritdoc/>
+	[Parameter]
+	public override string Title { get; set; } = "Not Implemented";
+
+	/// <inheritdoc/>
+	[Parameter]
+	public override BulmaColors Color { get; set; } = BulmaColors.Yellow;
+
+	/// <inheritdoc/>
+	[Parameter]
+	public override string? Message { get; set; } = "The requested method does not exist.";
+}
