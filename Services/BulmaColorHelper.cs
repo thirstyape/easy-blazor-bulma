@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using easy_core;
+using System.ComponentModel.DataAnnotations;
 
 namespace easy_blazor_bulma;
 

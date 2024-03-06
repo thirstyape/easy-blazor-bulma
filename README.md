@@ -148,6 +148,7 @@ To use an icon just add a `<span>` with the desired icon text and the `.material
 
 | Name | Usage | License | Library |
 | ------ | ------ | ------ | ------ |
+| Easy Core | NuGet | MIT | [GitHub](https://github.com/thirstyape/easy-core) |
 | Bulma | Submodule | MIT | [GitHub](https://github.com/jgthms/bulma) |
 | Bulma Calendar | Submodule | MIT | [GitHub](https://github.com/Wikiki/bulma-calendar) |
 | Bulma Checkradio | Submodule | MIT | [GitHub](https://github.com/Wikiki/bulma-checkradio) |
