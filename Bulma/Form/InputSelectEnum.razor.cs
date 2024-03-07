@@ -120,7 +120,10 @@ public partial class InputSelectEnum<[DynamicallyAccessedMembers(DynamicallyAcce
 
     private void OnSelectionChanged(ChangeEventArgs args)
     {
-        CurrentValueAsString = args.Value?.ToString();
+        if (IsNullable && (args.Value == null || string.IsNullOrWhiteSpace(args.Value.ToString())))
+            CurrentValueAsString = null;
+        else
+            CurrentValueAsString = args.Value?.ToString() ?? "";
     }
 
     private void ResetStatus()

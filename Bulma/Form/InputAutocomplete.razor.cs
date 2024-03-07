@@ -11,7 +11,7 @@ using System.Reflection;
 namespace easy_blazor_bulma;
 
 /// <summary>
-/// An input component for selecting a value from a list of options. Supported types are inherit class.
+/// An input component for selecting a value from a list of options. Supported types inherit class.
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
 /// <remarks>
@@ -50,10 +50,16 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	[Parameter]
 	public InputStatus DisplayStatus { get; set; }
 
-	/// <summary>
-	/// The configuration options to apply to the component.
-	/// </summary>
-	[Parameter]
+    /// <summary>
+    /// Specifies whether to allow null values to be selected.
+    /// </summary>
+    [Parameter]
+    public bool IsNullable { get; set; } = true;
+
+    /// <summary>
+    /// The configuration options to apply to the component.
+    /// </summary>
+    [Parameter]
 	public InputAutocompleteOptions Options { get; set; } =
 		InputAutocompleteOptions.TypePopout |
 		InputAutocompleteOptions.ClickPopout |
@@ -77,12 +83,12 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	private TValue? HighlightedValue;
 	private string? InputValue;
 
-	private readonly bool IsNullable;
 	private readonly Type UnderlyingType;
 	private ElementReference? Element;
 	private ILogger<InputAutocomplete<TValue>>? Logger;
 
 	private bool OnKeyDownPreventDefault;
+	private bool OnBlurPreventDefault;
 
 	private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
 
@@ -159,10 +165,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 
 	public InputAutocomplete()
 	{
-		var nullable = Nullable.GetUnderlyingType(typeof(TValue));
-
-		UnderlyingType = nullable ?? typeof(TValue);
-		IsNullable = nullable != null;
+		UnderlyingType = typeof(TValue);
 
 		if (UnderlyingType.GetTypeInfo().IsClass == false)
 			throw new InvalidOperationException($"Unsupported type param '{UnderlyingType.Name}'. Must be a class.");
@@ -289,6 +292,9 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 
 	private void OnBlur(FocusEventArgs args)
 	{
+		if (OnBlurPreventDefault)
+			return; 
+
 		IsPopoutDisplayed = false;
 
 		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectOnExit))
@@ -343,6 +349,16 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 			HighlightNext();
 		else if (IsPopoutDisplayed && args.Code == "ArrowUp")
 			HighlightPrevious();
+	}
+
+	private void OnMouseDown(MouseEventArgs args)
+	{
+		OnBlurPreventDefault = true;
+	}
+
+	private void OnMouseUp(MouseEventArgs args)
+	{
+		OnBlurPreventDefault = false;
 	}
 
 	private void HighlightNext()
@@ -420,7 +436,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 
 	private string GetDropDownItemCssClass(TValue item)
 	{
-		var css = "dropdown-item";
+		var css = "dropdown-item is-clickable";
 
 		if (HighlightedValue != null && EqualityComparer<TValue>.Default.Equals(HighlightedValue, item))
 			css += " has-background-default";

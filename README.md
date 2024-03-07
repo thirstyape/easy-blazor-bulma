@@ -38,6 +38,7 @@ The following components are currently available for use. All of them are docume
 **Elements**
 
 * `<BooleanIcon />`, creates an icon with either a check or 'X'
+* `<ProgressBar />`, creates a meter to display completion or loading status
 
 **Form**
 
@@ -48,6 +49,7 @@ The following components are currently available for use. All of them are docume
 * `<InputFlaggedEnum />`, creates a series of checkboxes for bitmasked enum types
 * `<InputNumberPad />`, creates a keyboard style number pad for numeric values
 * `<InputSelectEnum />`, creates a select list for enum types
+* `<InputSelectObject />`, creates a select list for object types
 
 **Helpers**
 
