@@ -1,0 +1,13 @@
+﻿@namespace easy_blazor_bulma
+@typeparam TValue
+@inherits InputBase<TValue>
+
+<div class="@DivCssClass">
+    <input type="checkbox" class="@FullCssClass" id="@Id" @bind='CurrentValue' @attributes='FilteredAttributes' />
+    @if (string.IsNullOrWhiteSpace(Label) == false)
+    {
+        <label class="@LabelCssClass" for="@Id">
+            <span class="@TooltipCssClass" data-tooltip="@Tooltip">@Label</span>
+        </label>
+    }
+</div>

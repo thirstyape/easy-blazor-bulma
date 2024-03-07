@@ -50,6 +50,7 @@ The following components are currently available for use. All of them are docume
 * `<InputNumberPad />`, creates a keyboard style number pad for numeric values
 * `<InputSelectEnum />`, creates a select list for enum types
 * `<InputSelectObject />`, creates a select list for object types
+* `<InputSwitch \>`, creates a sliding on off switch with an underlying checkbox
 
 **Helpers**
 
