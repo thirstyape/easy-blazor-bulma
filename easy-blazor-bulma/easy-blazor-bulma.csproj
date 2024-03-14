@@ -21,7 +21,7 @@
 	<FileVersion>1.0.11.0</FileVersion>
     <PackageReleaseNotes>
 		1.0.11
-		Add InputSwitch and Tooltips
+		Add InputSwitch, Label, Navbar, NavbarDropdown, and NavbarItem components and Tooltips
 		
 		1.0.10
 		Fix issues and Add ProgressBar, InputSelectObject

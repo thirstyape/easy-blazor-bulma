@@ -1,31 +1,56 @@
-﻿<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-	<div class="navbar-brand no-select">
-		<NavLink href="" ActiveClass="is-active" class="navbar-item good-times" Match="NavLinkMatch.All">Easy Blazor Bulma</NavLink>
+﻿<Navbar class="is-dark" DisplayText="Easy Blazor Bulma">
+	<NavbarStart>
+		<NavbarDropdown DisplayText="Components">
+			<NavbarItem href="message">Message</NavbarItem>
+			<NavbarItem href="modal">Modal</NavbarItem>
+			<NavbarItem href="panel">Panel</NavbarItem>
+			<NavbarItem href="steps">Steps</NavbarItem>
+			<NavbarItem href="tabs">Tabs</NavbarItem>
+		</NavbarDropdown>
+		<NavbarDropdown DisplayText="Elements">
+			<NavbarItem href="booleanIcon">Boolean Icon</NavbarItem>
+			<NavbarItem href="progressBar">Progress Bar</NavbarItem>
+		</NavbarDropdown>
+		<NavbarDropdown DisplayText="Errors" IsFullWidth=true>
+			<div class="columns is-multiline">
+				<div class="column is-6">
+					<h1 class="title is-4 is-mega-menu-title">Client error responses</h1>
 
-		<a role="button" class='@BurgerCssClass' aria-label="menu" aria-expanded="false" data-target="easy-blazor-bulma-navigationmenu" @onclick="ToggleNavMenu">
-			<span aria-hidden="true"></span>
-			<span aria-hidden="true"></span>
-			<span aria-hidden="true"></span>
-		</a>
+					<NavbarItem href="400" Icon="warning_amber">400 Bad Request</NavbarItem>
+					<NavbarItem href="401" Icon="block">401 Unauthorized</NavbarItem>
+					<NavbarItem href="403" Icon="disabled_visible">403 Forbidden</NavbarItem>
+					<NavbarItem href="404" Icon="troubleshoot">404 Not Found</NavbarItem>
+					<NavbarItem href="405" Icon="disabled_visible">405 Method Not Allowed</NavbarItem>
+					<NavbarItem href="408" Icon="hourglass_disabled">408 Request Timeout</NavbarItem>
+					<NavbarItem href="409" Icon="warning_amber">409 Conflict</NavbarItem>
+					<NavbarItem href="422" Icon="error_outline">422 Unprocessable Entity</NavbarItem>
+					<NavbarItem href="423" Icon="lock">423 Locked</NavbarItem>
+					<NavbarItem href="426" Icon="browser_updated">426 Upgrade Required</NavbarItem>
+				</div>
+				<div class="column is-6">
+					<h1 class="title is-4 is-mega-menu-title">Server error responses</h1>
 
-	</div>
-
-	<div id="easy-blazor-bulma-navigationmenu" class='@MenuCssClass'>
-		<div class="navbar-start">
-		</div>
-		<div class="navbar-end">
-			<ThemeSelector />
-		</div>
-	</div>
-</nav>
-
-@code {
-	private bool ShowMenu;
-	private string MenuCssClass => ShowMenu ? "navbar-menu no-select is-active" : "navbar-menu no-select";
-	private string BurgerCssClass => ShowMenu ? "navbar-burger is-active" : "navbar-burger";
-
-	private void ToggleNavMenu()
-	{
-		ShowMenu = !ShowMenu;
-	}
-}
+					<NavbarItem href="500" Icon="warning_amber">500 Internal Server Error</NavbarItem>
+					<NavbarItem href="501" Icon="troubleshoot">501 Not Implemented</NavbarItem>
+					<NavbarItem href="502" Icon="router">502 Bad Gateway</NavbarItem>
+					<NavbarItem href="503" Icon="signal_disconnected">503 Service Unavailable</NavbarItem>
+					<NavbarItem href="504" Icon="hourglass_disabled">504 Gateway Timeout</NavbarItem>
+				</div>
+			</div>
+		</NavbarDropdown>
+		<NavbarDropdown DisplayText="Form">
+			<NavbarItem href="inputAutocomplete">Input Autocomplete</NavbarItem>
+			<NavbarItem href="inputCharacter">Input Character</NavbarItem>
+			<NavbarItem href="inputDateTime">Input Date Time</NavbarItem>
+			<NavbarItem href="inputDuration">Input Duration</NavbarItem>
+			<NavbarItem href="inputFlaggedEnum">Input Flagged Enum</NavbarItem>
+			<NavbarItem href="inputNumberPad">Input Number Pad</NavbarItem>
+			<NavbarItem href="inputSelectEnum">Input Select Enum</NavbarItem>
+			<NavbarItem href="inputSelectObject">Input Select Object</NavbarItem>
+			<NavbarItem href="inputSwitch">Input Switch</NavbarItem>
+		</NavbarDropdown>
+	</NavbarStart>
+	<NavbarEnd>
+		<ThemeSelector />
+	</NavbarEnd>
+</Navbar>

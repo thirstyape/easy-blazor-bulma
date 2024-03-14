@@ -57,9 +57,6 @@ public partial class InputSwitch<[DynamicallyAccessedMembers(DynamicallyAccessed
 		{
 			var css = "no-select";
 
-			if (string.IsNullOrWhiteSpace(Tooltip) == false)
-				css += " ";
-
 			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("label-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
 				css += $" {additional}";
 
@@ -139,18 +136,18 @@ public partial class InputSwitch<[DynamicallyAccessedMembers(DynamicallyAccessed
                 Id = Guid.NewGuid().ToString();
         }
 
+		DisplayAttribute? attribute = null;
+
 		if (ValueExpression != null)
-		{
-			var attribute = ValueExpression.GetPropertyAttribute<TValue, DisplayAttribute>();
+			attribute = ValueExpression.GetPropertyAttribute<TValue, DisplayAttribute>();
 
-			if (string.IsNullOrWhiteSpace(Label))
-				Label = attribute?.GetName();
+		if (string.IsNullOrWhiteSpace(Label))
+			Label = attribute?.GetName();
 
-            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("data-tooltip", out var tooltip) && string.IsNullOrWhiteSpace(Convert.ToString(tooltip, CultureInfo.InvariantCulture)) == false)
-                Tooltip = tooltip.ToString();
-            else
-                Tooltip = attribute?.GetDescription();
-        }
+		if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("data-tooltip", out var tooltip) && string.IsNullOrWhiteSpace(Convert.ToString(tooltip, CultureInfo.InvariantCulture)) == false)
+			Tooltip = tooltip.ToString();
+		else
+			Tooltip = attribute?.GetDescription();
 	}
 
     /// <inheritdoc/>

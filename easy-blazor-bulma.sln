@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "easy-blazor-bulma", "easy-blazor-bulma\easy-blazor-bulma.csproj", "{34AD28A5-D96C-46C4-9615-D3081AD6B551}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "easy-blazor-bulma-demo", "easy-blazor-bulma-demo\easy-blazor-bulma-demo.csproj", "{E72E1064-1DF5-4CAF-B920-DCEA31DEDECB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "easy-blazor-bulma-demo", "easy-blazor-bulma-demo\easy-blazor-bulma-demo.csproj", "{E72E1064-1DF5-4CAF-B920-DCEA31DEDECB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -31,6 +31,9 @@ The following components are currently available for use. All of them are docume
 
 * `<Message />`, creates a styled block containing a note to display
 * `<Modal />`, creates an overlay that can display additional content
+* `<Navbar />`, creates a navigation menu to use at the top of the screen
+* `<NavbarDropdown />`, creates a dropdown to use in a Navbar menu
+* `<NavbarItem />`, creates a link to use in a Navbar menu
 * `<Panel />`, creates a styled block containing content to display
 * `<Steps />` and `<Step />`, creates a progress tracker with visual indicators
 * `<Tabs />` and `<Tab />`, creates a tab bar and content panels
@@ -42,6 +45,7 @@ The following components are currently available for use. All of them are docume
 
 **Form**
 
+* `<Label />`, creates a label to display with form inputs
 * `<InputAutocomplete />`, creates a drop-down list of options to select from
 * `<InputCharacter />`, creates a series of buttons to select a single character
 * `<InputDateTime />`, creates an input with a popout for binding date and time values

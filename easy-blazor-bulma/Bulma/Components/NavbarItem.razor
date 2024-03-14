@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+
+@namespace easy_blazor_bulma
+@inherits ComponentBase
+
+<NavLink class="@FullCssClass" ActiveClass="is-active" Match="@Match" @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
+	@if (string.IsNullOrWhiteSpace(Icon) == false)
+	{
+		<span class="material-icons">@Icon</span>
+	}
+	<span class="@LinkCssClass">
+		@ChildContent
+	</span>
+</NavLink>
