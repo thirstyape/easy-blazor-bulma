@@ -61,12 +61,10 @@
   </PropertyGroup>
 
 	<PropertyGroup>
-		<DocumentationFile>$(ProjectDir)Easy-Blazor-Bulma.xml</DocumentationFile>
+		<DocumentationFile>$(ProjectDir)..\Easy-Blazor-Bulma.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>
-      <None Remove=".gitignore" />
-      <None Remove=".gitmodules" />
       <Compile Remove="external\**" />
       <Content Remove="external\**" />
       <None Remove="external\**" />
@@ -75,14 +73,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="external\bulma\bulma*.sass" Link="Sass\bulma\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<None Include="external\bulma\sass\**" Link="Sass\bulma\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<None Include="external\bulma-o-steps\index*.sass" Link="Sass\bulma-o-steps\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<None Include="external\bulma-tooltip\src\sass\**" Link="Sass\bulma-tooltip\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<None Include="external\bulma-calendar\src\sass\**" Link="Sass\bulma-calendar\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<None Include="external\bulma-checkradio\src\sass\**" Link="Sass\bulma-checkradio\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<None Include="external\bulma-switch\src\sass\**" Link="Sass\bulma-switch\%(RecursiveDir)\%(Filename)%(Extension)" />
-		<None Include="external\bulma-jumbo-tiny\sass\**" Link="Sass\bulma-jumbo-tiny\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<None Include="..\external\bulma\bulma*.sass" Link="Sass\bulma\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<None Include="..\external\bulma\sass\**" Link="Sass\bulma\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<None Include="..\external\bulma-o-steps\index*.sass" Link="Sass\bulma-o-steps\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<None Include="..\external\bulma-tooltip\src\sass\**" Link="Sass\bulma-tooltip\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<None Include="..\external\bulma-calendar\src\sass\**" Link="Sass\bulma-calendar\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<None Include="..\external\bulma-checkradio\src\sass\**" Link="Sass\bulma-checkradio\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<None Include="..\external\bulma-switch\src\sass\**" Link="Sass\bulma-switch\%(RecursiveDir)\%(Filename)%(Extension)" />
+		<None Include="..\external\bulma-jumbo-tiny\sass\**" Link="Sass\bulma-jumbo-tiny\%(RecursiveDir)\%(Filename)%(Extension)" />
 	</ItemGroup>
 
   <ItemGroup>
@@ -107,15 +105,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="icon.png">
+		<None Include="..\icon.png">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
-		<None Include="LICENSE">
+		<None Include="..\LICENSE">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
-		<None Include="README.md">
+		<None Include="..\README.md">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
