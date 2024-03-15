@@ -1,0 +1,29 @@
+﻿@page "/panel"
+@inherits ComponentBase
+
+<TitleBlock Title="Panel Test" />
+
+<div class="container pt-3">
+	<Panel class="is-size-4 is-tiny" Title="Tiny Panel" Color="BulmaColors.Cyan">
+		<p class="block">Here's a super small panel</p>
+	</Panel>
+
+	<Panel Title="Regular Panel" Color="BulmaColors.Yellow" Icon="history" OnTitleClicked="OnTitleClicked">
+		<p class="block">Here's a regular sized panel</p>
+		<p class="block">This one has a custom icon</p>
+		<p>@ChangeableMessage</p>
+	</Panel>
+
+	<Panel class="is-size-4 is-jumbo" Title="Jumbo Panel" Color="BulmaColors.Purple" ShowCollapseIcons=false>
+		<p class="block">Big panel!</p>
+	</Panel>
+</div>
+
+@code {
+	private string ChangeableMessage = "Click the title of this Panel and see what happens";
+
+	private void OnTitleClicked()
+	{
+		ChangeableMessage = "Whatever you want!";
+	}
+}

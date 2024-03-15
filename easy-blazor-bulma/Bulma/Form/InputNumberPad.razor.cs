@@ -67,8 +67,9 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 
 	private readonly bool SupportsDecimals;
 	private bool OnKeyDownPreventDefault;
+	private readonly string[] DefaultKeys = new[] { "Escape", "Tab", "Enter", "NumpadEnter" };
 
-	private string DisplayValueAsString = string.Empty;
+	private string InternalValueAsString = string.Empty;
 
 	private string FullCssClass
 	{
@@ -151,10 +152,8 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 	/// <inheritdoc />
 	protected override void OnInitialized()
 	{
-		if (string.IsNullOrWhiteSpace(CurrentValueAsString))
-			DisplayValueAsString = string.Empty;
-		else
-			DisplayValueAsString = CurrentValueAsString;
+		if (string.IsNullOrWhiteSpace(InternalValueAsString) && CurrentValue != null)
+			InternalValueAsString = FormatValueAsString(CurrentValue);
 	}
 
 	/// <inheritdoc />
@@ -202,57 +201,82 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 	}
 
 	/// <inheritdoc />
-	protected override string FormatValueAsString(TValue? value) => value switch
+	protected override string FormatValueAsString(TValue? value)
 	{
-		short shortValue => shortValue.ToString("g"),
-		int intValue => intValue.ToString("g"),
-		long longValue => longValue.ToString("g"),
-		float floatValue => floatValue.ToString("g"),
-		double doubleValue => doubleValue.ToString("g"),
-		decimal decimalValue => decimalValue.ToString("g"),
-		_ => string.Empty
-	};
+		if (value is short shortValue)
+		{
+			if (string.IsNullOrWhiteSpace(InternalValueAsString) || short.TryParse(InternalValueAsString, out short displayValue) && shortValue != displayValue)
+				InternalValueAsString = shortValue.ToString();
+		}
+		else if (value is int intValue)
+		{
+			if (string.IsNullOrWhiteSpace(InternalValueAsString) || int.TryParse(InternalValueAsString, out int displayValue) && intValue != displayValue)
+				InternalValueAsString = intValue.ToString();
+		}
+		else if (value is long longValue)
+		{
+			if (string.IsNullOrWhiteSpace(InternalValueAsString) || long.TryParse(InternalValueAsString, out long displayValue) && longValue != displayValue)
+				InternalValueAsString = longValue.ToString();
+		}
+		else if (value is float floatValue)
+		{
+			if (string.IsNullOrWhiteSpace(InternalValueAsString) || float.TryParse(InternalValueAsString, out float displayValue) && floatValue != displayValue)
+				InternalValueAsString = floatValue.ToString();
+		}
+		else if (value is double doubleValue)
+		{
+			if (string.IsNullOrWhiteSpace(InternalValueAsString) || double.TryParse(InternalValueAsString, out double displayValue) && doubleValue != displayValue)
+				InternalValueAsString = doubleValue.ToString();
+		}
+		else if (value is decimal decimalValue)
+		{
+			if (string.IsNullOrWhiteSpace(InternalValueAsString) || decimal.TryParse(InternalValueAsString, out decimal displayValue) && decimalValue != displayValue)
+				InternalValueAsString = decimalValue.ToString();
+		}
+
+		return InternalValueAsString;
+	}
 
 	private void OnDigitClicked(int digit)
 	{
-		DisplayValueAsString += digit.ToString();
+		InternalValueAsString += digit.ToString();
 
-		if (DisplayValueAsString.Length > 1 && DisplayValueAsString[0] == '0' && DisplayValueAsString[1] != '.')
-			DisplayValueAsString = DisplayValueAsString.TrimStart('0');
+		if (InternalValueAsString.Length > 1 && InternalValueAsString[0] == '0' && InternalValueAsString[1] != '.')
+			InternalValueAsString = InternalValueAsString.TrimStart('0');
 
-		CurrentValueAsString = DisplayValueAsString;
+		CurrentValueAsString = InternalValueAsString;
 	}
 
 	private void OnDecimalClicked()
 	{
-		if (DisplayValueAsString.Contains('.'))
+		if (InternalValueAsString.Contains('.'))
 			return;
 
-		if (DisplayValueAsString.Length == 0)
-			DisplayValueAsString = "0.";
+		if (InternalValueAsString.Length == 0)
+			InternalValueAsString = "0.";
 		else
-			DisplayValueAsString += '.';
+			InternalValueAsString += '.';
 	}
 
 	private void OnBackspaceClicked()
 	{
-		if (DisplayValueAsString.Length == 0)
+		if (InternalValueAsString.Length == 0)
 			return;
 
-		if (IsNullable && DisplayValueAsString.Length == 1)
+		if (IsNullable && InternalValueAsString.Length == 1)
 		{
-			DisplayValueAsString = string.Empty;
+			InternalValueAsString = string.Empty;
 			CurrentValueAsString = null;
 		}
-		else if (DisplayValueAsString.Length == 1)
+		else if (InternalValueAsString.Length == 1)
 		{
-			DisplayValueAsString = "0";
+			InternalValueAsString = "0";
 			CurrentValueAsString = "0";
 		}
 		else
 		{
-			DisplayValueAsString = DisplayValueAsString[..^1];
-			CurrentValueAsString = DisplayValueAsString;
+			InternalValueAsString = InternalValueAsString[..^1];
+			CurrentValueAsString = InternalValueAsString;
 		}
 	}
 
@@ -260,25 +284,37 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 	{
 		if (IsNullable)
 		{
-			DisplayValueAsString = string.Empty;
+			InternalValueAsString = string.Empty;
 			CurrentValueAsString = null;
 		}
 		else
 		{
-			DisplayValueAsString = "0";
+			InternalValueAsString = "0";
 			CurrentValueAsString = "0";
 		}
 	}
 
-	private void OnKeyDown(KeyboardEventArgs args)
+	private void OnInputKeyDown(KeyboardEventArgs args)
 	{
-		OnKeyDownPreventDefault = args.Code != "Escape" && args.Code != "Tab" && args.Code != "Enter" && args.Code != "NumpadEnter";
+		OnKeyDownPreventDefault = args.Code == "ArrowLeft" || args.Code == "ArrowRight" || DefaultKeys.Contains(args.Code) == false;
 
-		if (NumberKeys.ContainsKey(args.Code))
-			OnDigitClicked(NumberKeys[args.Code]);
-		else if (args.Code == "Backspace")
+		if (args.Code != "ArrowDown" && args.Code != "ArrowUp" && args.Code != "ArrowLeft" && args.Code != "ArrowRight")
+			OnKeyDown(args.Code);
+	}
+
+	private void OnButtonKeyDown(KeyboardEventArgs args)
+	{
+		OnKeyDownPreventDefault = DefaultKeys.Contains(args.Code) == false;
+		OnKeyDown(args.Code);
+	}
+
+	private void OnKeyDown(string key)
+	{
+		if (NumberKeys.TryGetValue(key, out int value))
+			OnDigitClicked(value);
+		else if (key == "Backspace")
 			OnBackspaceClicked();
-		else if (SupportsDecimals && (args.Code == "NumpadDecimal" || args.Code == "Period"))
+		else if (SupportsDecimals && (key == "NumpadDecimal" || key == "Period"))
 			OnDecimalClicked();
 	}
 

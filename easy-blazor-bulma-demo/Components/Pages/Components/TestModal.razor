@@ -1,0 +1,57 @@
+﻿@page "/modal"
+@inherits ComponentBase
+
+<TitleBlock Title="Modal Test" />
+
+<div class="container pt-3">
+	<Panel Title="Modal Controls">
+		<label class="label">First Modal</label>
+		<button type="button" class="button is-info" @onclick='OpenModal1'>Open Modal 1</button>
+
+		<label class="label mt-3">Second Modal</label>
+		<button type="button" class="button is-info" @onclick='OpenModal2'>Open Modal 2</button>
+	</Panel>
+</div>
+
+<Modal Title="Open Sesame" @bind-IsDisplayed=Modal1Displayed>
+	<ModalBody>
+		<p class="block">Here's a modal.</p>
+	</ModalBody>
+	<ModalFooter>
+		<button type="button" class="button" @onclick='CloseModal1'>Close</button>
+	</ModalFooter>
+</Modal>
+
+<Modal Title="Alakazam!" @bind-IsDisplayed=Modal2Displayed IsFullScreen=true>
+	<ModalBody>
+		<p class="block">Here's a bigger modal.</p>
+	</ModalBody>
+	<ModalFooter>
+		<button type="button" class="button" @onclick='CloseModal2'>Close</button>
+	</ModalFooter>
+</Modal>
+
+@code {
+	private bool Modal1Displayed = false;
+	private bool Modal2Displayed = false;
+
+	private void OpenModal1()
+	{
+		Modal1Displayed = true;
+	}
+	
+	private void OpenModal2()
+	{
+		Modal2Displayed = true;
+	}
+
+	private void CloseModal1()
+	{
+		Modal1Displayed = false;
+	}
+	
+	private void CloseModal2()
+	{
+		Modal2Displayed = false;
+	}
+}

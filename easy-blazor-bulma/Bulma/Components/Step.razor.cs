@@ -9,7 +9,7 @@ namespace easy_blazor_bulma;
 /// <remarks>
 /// <see href="https://octoshrimpy.github.io/bulma-o-steps/">GitHub Documentation</see>
 /// </remarks>
-public partial class Step : ComponentBase, IDisposable
+public partial class Step : ComponentBase, IAsyncDisposable
 {
     /// <summary>
 	/// The name to display this step as in the list.
@@ -53,15 +53,15 @@ public partial class Step : ComponentBase, IDisposable
     }
 
     /// <inheritdoc/>
-	protected override void OnInitialized()
+	protected async override Task OnInitializedAsync()
     {
-        Parent.AddChild(this);
+        await Parent.AddChild(this);
     }
 
     /// <inheritdoc/>
-    public void Dispose()
-    {
-        Parent.RemoveChild(this);
-        GC.SuppressFinalize(this);
-    }
+	public async ValueTask DisposeAsync()
+	{
+		await Parent.RemoveChild(this);
+		GC.SuppressFinalize(this);
+	}
 }

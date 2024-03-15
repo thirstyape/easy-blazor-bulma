@@ -1,0 +1,44 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@page "/inputDateTime"
+@inherits ComponentBase
+
+<TitleBlock Title="Input Date Time Test" />
+
+<div class="columns p-3">
+	<div class="column is-4">
+
+	</div>
+	<div class="column is-8">
+		<EditForm Model="InputModel">
+			<div class="field">
+				<Label For="() => InputModel.DateTimeTest" TooltipMode="TooltipDisplayMode" />
+				<div class="control has-icons-left has-icons-right">
+					<InputDateTime @bind-Value=InputModel.DateTimeTest StartOfWeek="DayOfWeek.Monday" />
+				</div>
+			</div>
+			<div class="field">
+				<Label For="() => InputModel.DateOnlyTest" TooltipMode="TooltipDisplayMode" />
+				<div class="control has-icons-left has-icons-right">
+					<InputDateTime @bind-Value=InputModel.DateOnlyTest Options="Options" />
+				</div>
+			</div>
+		</EditForm>
+	</div>
+</div>
+
+@code {
+	private readonly PageModel InputModel = new();
+
+	private readonly InputDateTimeOptions Options = InputDateTimeOptions.HoverPopout | InputDateTimeOptions.ShowResetButton | InputDateTimeOptions.ShowDate | InputDateTimeOptions.CloseOnDateClicked;
+	private readonly TooltipOptions TooltipDisplayMode = TooltipOptions.Right | TooltipOptions.HasArrow | TooltipOptions.Multiline;
+
+	private class PageModel
+	{
+		[Display(Name = "Date Time Test", Description = "Input to test a non-nullable DateTime value.")]
+		public DateTime DateTimeTest { get; set; } = DateTime.Now;
+
+		[Display(Name = "Date Only Test", Description = "Input to test a nullable DateOnly value.")]
+		public DateOnly? DateOnlyTest { get; set; }
+	}
+}

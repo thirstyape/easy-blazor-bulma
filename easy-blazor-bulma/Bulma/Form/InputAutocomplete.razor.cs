@@ -88,6 +88,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	private ILogger<InputAutocomplete<TValue>>? Logger;
 
 	private bool OnKeyDownPreventDefault;
+	private readonly string[] DefaultKeys = new[] { "Escape", "ArrowDown", "ArrowUp" };
 	private bool OnBlurPreventDefault;
 
 	private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
@@ -340,7 +341,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 
 	private void OnKeyDown(KeyboardEventArgs args)
 	{
-		OnKeyDownPreventDefault = args.Code == "ArrowDown" || args.Code == "ArrowUp" || args.Code == "Escape";
+		OnKeyDownPreventDefault = DefaultKeys.Contains(args.Code);
 
 		if (Options.HasFlag(InputAutocompleteOptions.TypePopout) && Items.Any() && (args.Code == "ArrowDown" || args.Code == "ArrowUp"))
 			IsPopoutDisplayed = true;

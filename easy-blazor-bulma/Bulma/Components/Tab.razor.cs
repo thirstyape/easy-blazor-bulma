@@ -8,7 +8,7 @@ namespace easy_blazor_bulma;
 /// <remarks>
 /// <see href="https://bulma.io/documentation/components/tabs/">Bulma Documentation</see>
 /// </remarks>
-public partial class Tab : ComponentBase, IDisposable
+public partial class Tab : ComponentBase, IAsyncDisposable
 {
 	/// <summary>
 	/// The name to display this tab as on the tab bar.
@@ -41,15 +41,15 @@ public partial class Tab : ComponentBase, IDisposable
 	internal int Index;
 
 	/// <inheritdoc/>
-	protected override void OnInitialized()
+	protected async override Task OnInitializedAsync()
 	{
-		Parent.AddChild(this);
+		await Parent.AddChild(this);
 	}
 
 	/// <inheritdoc/>
-	public void Dispose()
+	public async ValueTask DisposeAsync()
 	{
-		Parent.RemoveChild(this);
+		await Parent.RemoveChild(this);
 		GC.SuppressFinalize(this);
 	}
 }

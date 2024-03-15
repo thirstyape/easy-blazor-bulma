@@ -4,19 +4,23 @@
 
 @if (DisplayInput)
 {
-	<input type="text" class="@FullCssClass" value='@DisplayValueAsString' @onkeydown='OnKeyDown' @onkeydown:preventDefault="OnKeyDownPreventDefault" @ref=Element @attributes='FilteredAttributes' />
+	<input type="text" class="@FullCssClass" value='@CurrentValueAsString' @onkeydown='OnInputKeyDown' @onkeydown:preventDefault="OnKeyDownPreventDefault" @ref=Element @attributes='FilteredAttributes' />
 	@if (string.IsNullOrWhiteSpace(Icon) == false)
 	{
 		<span class="material-icons icon is-left">@Icon</span>
 	}
 }
+else
+{
+	<input type="hidden" class="is-hidden" value='@CurrentValueAsString' />
+}
 
 <div class='@ColumnsCssClass'>
 	<div class='@ColumnCssClass'>
-		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(7)">7</button>
-		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(4)">4</button>
-		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(1)">1</button>
-		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnResetClicked()">
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnDigitClicked(7)">7</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnDigitClicked(4)">4</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnDigitClicked(1)">1</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnResetClicked()">
 			@if (IsNullable)
 			{
 				@:Clear
@@ -28,18 +32,18 @@
 		</button>
 	</div>
 	<div class='@ColumnCssClass'>
-		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(8)">8</button>
-		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(5)">5</button>
-		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(2)">2</button>
-		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(0)">0</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnDigitClicked(8)">8</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnDigitClicked(5)">5</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnDigitClicked(2)">2</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnDigitClicked(0)">0</button>
 	</div>
 	<div class='@ColumnCssClass'>
-		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(9)">9</button>
-		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(6)">6</button>
-		<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDigitClicked(3)">3</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnDigitClicked(9)">9</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnDigitClicked(6)">6</button>
+		<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnDigitClicked(3)">3</button>
 		@if (SupportsDecimals)
 		{
-			<button type="button" class='@ButtonCssClass' @onkeydown="OnKeyDown" @onclick="() => OnDecimalClicked()">.</button>
+			<button type="button" class='@ButtonCssClass' @onkeydown="OnButtonKeyDown" @onclick="() => OnDecimalClicked()">.</button>
 		}
 		else
 		{

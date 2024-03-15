@@ -369,7 +369,7 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 
 	private void ClosePopout(bool save = false, bool reset = false, DateTime? value = null)
 	{
-		if (IsPopoutDisplayed == false || Options.HasFlag(InputDateTimeOptions.NoPopout))
+		if ((IsPopoutDisplayed == false && Options.HasFlag(InputDateTimeOptions.HoverPopout) == false) || Options.HasFlag(InputDateTimeOptions.NoPopout))
 			return;
 
 		UpdateDisplayMode(PopoutDisplayMode.Calendar);

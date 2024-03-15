@@ -104,15 +104,20 @@ public partial class Steps : ComponentBase
     }
 
     /// <inheritdoc/>
-	protected override void OnInitialized()
+	protected async override Task OnInitializedAsync()
     {
 		Logger = ServiceProvider.GetService<ILogger<Steps>>();
 
 		if (string.IsNullOrWhiteSpace(Active) && Children.Count > 0)
-            Active = Children.First().Name;
+        {
+			Active = Children.First().Name;
+
+			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
+				await ActiveChanged.Value.InvokeAsync(Active);
+		}
     }
 
-    internal void AddChild(Step step)
+    internal async Task AddChild(Step step)
     {
         if (step.Name == null)
         {
@@ -132,10 +137,17 @@ public partial class Steps : ComponentBase
         Children.Add(step);
 
         if (string.IsNullOrWhiteSpace(Active))
-            Active = step.Name;
-    }
+        {
+			Active = step.Name;
 
-    internal void RemoveChild(Step step)
+			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
+				await ActiveChanged.Value.InvokeAsync(Active);
+		}
+
+		StateHasChanged();
+	}
+
+    internal async Task RemoveChild(Step step)
     {
         var child = Children.FirstOrDefault(x => x.Index == step.Index);
 
@@ -153,8 +165,15 @@ public partial class Steps : ComponentBase
             item.Index = i++;
 
         if (Active == child.Name && Children.Count != 0)
-            Active = Children.First().Name;
-    }
+        {
+			Active = Children.First().Name;
+
+			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
+				await ActiveChanged.Value.InvokeAsync(Active);
+		}
+
+		StateHasChanged();
+	}
 
     private async Task OnSelectionChanged(Step step)
     {
@@ -168,8 +187,8 @@ public partial class Steps : ComponentBase
         {
             Active = step.Name;
 
-            if (ActiveChanged != null)
-                await ActiveChanged.Value.InvokeAsync(step.Name);
+            if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
+                await ActiveChanged.Value.InvokeAsync(Active);
         }
     }
 

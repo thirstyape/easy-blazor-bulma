@@ -59,6 +59,7 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 
 	private bool IsUpperCase = true;
 	private bool OnKeyDownPreventDefault;
+	private readonly string[] DefaultKeys = new[] { "Escape", "Tab", "Enter", "NumpadEnter" };
 
 	private string ColumnsCssClass
 	{
@@ -155,7 +156,7 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 
 	private void OnKeyDown(KeyboardEventArgs args)
 	{
-		OnKeyDownPreventDefault = args.Code != "Escape" && args.Code != "Tab" && args.Code != "Enter" && args.Code != "NumpadEnter";
+		OnKeyDownPreventDefault = DefaultKeys.Contains(args.Code) == false;
 
 		if (args.Code != "ArrowDown" && args.Code != "ArrowUp" && args.Code != "ArrowLeft" && args.Code != "ArrowRight")
 			return;

@@ -1,0 +1,18 @@
+﻿@page "/message"
+@inherits ComponentBase
+
+<TitleBlock Title="Message Test" />
+
+<div class="container pt-3">
+	<Message class="is-size-4 is-tiny" Title="Tiny Cyan Message" Color="BulmaColors.Cyan" ShowDeleteButton=false>
+		<p class="block">Here's a super small message</p>
+	</Message>
+
+	<Message Title="Yellow Message" Color="BulmaColors.Yellow">
+		<p class="block">Here's a regular sized message</p>
+	</Message>
+
+	<Message class="is-size-4 is-jumbo" Title="Jumbo Purple Message" Color="BulmaColors.Purple" ShowDeleteButton=false>
+		<p class="block">Big message!</p>
+	</Message>
+</div>

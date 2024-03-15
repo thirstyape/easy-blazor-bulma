@@ -13,9 +13,9 @@
 		<Company>NF Software Inc.</Company>
 		<Product>Easy Logger Parser</Product>
 		<Copyright>Copyright 2024 $(Company)</Copyright>
-		<AssemblyVersion>1.0.11.0</AssemblyVersion>
-		<FileVersion>1.0.11.0</FileVersion>
-		<Version>1.0.11</Version>
+		<AssemblyVersion>1.0.12.0</AssemblyVersion>
+		<FileVersion>1.0.12.0</FileVersion>
+		<Version>1.0.12</Version>
 		<MauiVersion>8.0.10</MauiVersion>
 
         <!-- Display name -->
@@ -26,7 +26,7 @@
 		<ApplicationIdGuid>033431F0-FF8E-466E-ACE0-C8C426AE0242</ApplicationIdGuid>
 
         <!-- Versions -->
-        <ApplicationDisplayVersion>1.0.11</ApplicationDisplayVersion>
+        <ApplicationDisplayVersion>1.0.12</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>

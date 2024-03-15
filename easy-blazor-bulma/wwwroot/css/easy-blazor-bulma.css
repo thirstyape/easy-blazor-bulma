@@ -19162,13 +19162,6 @@ span[data-tooltip].has-tooltip-danger {
   vertical-align: text-bottom;
 }
 
-.no-select {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 .is-sticky {
   position: sticky;
   z-index: 1;
@@ -19206,6 +19199,22 @@ span[data-tooltip].has-tooltip-danger {
 }
 .navbar-item.is-mega .navbar-item {
   font-size: 1.25rem;
+}
+
+.is-cursor-default {
+  cursor: default !important;
+}
+
+.is-cursor-help {
+  cursor: help !important;
+}
+
+.is-cursor-progress {
+  cursor: progress !important;
+}
+
+.is-cursor-wait {
+  cursor: wait !important;
 }
 
 .panel {

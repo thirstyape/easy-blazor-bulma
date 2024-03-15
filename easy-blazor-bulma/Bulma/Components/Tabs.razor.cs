@@ -106,15 +106,20 @@ public partial class Tabs : ComponentBase
 	}
 
 	/// <inheritdoc/>
-	protected override void OnInitialized()
+	protected async override Task OnInitializedAsync()
 	{
 		Logger = ServiceProvider.GetService<ILogger<Tabs>>();
 
 		if (string.IsNullOrWhiteSpace(Active) && Children.Count > 0)
+		{
 			Active = Children.First().Name;
+
+			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
+				await ActiveChanged.Value.InvokeAsync(Active);
+		}
 	}
 
-	internal void AddChild(Tab tab)
+	internal async Task AddChild(Tab tab)
 	{
 		if (tab.Name == null)
 		{
@@ -132,10 +137,17 @@ public partial class Tabs : ComponentBase
 		Children.Add(tab);
 
 		if (string.IsNullOrWhiteSpace(Active))
+		{
 			Active = tab.Name;
+
+			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
+				await ActiveChanged.Value.InvokeAsync(Active);
+		}
+
+		StateHasChanged();
 	}
 
-	internal void RemoveChild(Tab tab)
+	internal async Task RemoveChild(Tab tab)
 	{
 		var child = Children.FirstOrDefault(x => x.Index == tab.Index);
 
@@ -153,7 +165,14 @@ public partial class Tabs : ComponentBase
 			item.Index = i++;
 
 		if (Active == child.Name && Children.Count != 0)
+		{
 			Active = Children.First().Name;
+
+			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
+				await ActiveChanged.Value.InvokeAsync(Active);
+		}
+
+		StateHasChanged();
 	}
 
 	private async Task OnSelectionChanged(Tab tab)
@@ -168,8 +187,8 @@ public partial class Tabs : ComponentBase
 		{
 			Active = tab.Name;
 
-			if (ActiveChanged != null)
-				await ActiveChanged.Value.InvokeAsync(tab.Name);
+			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
+				await ActiveChanged.Value.InvokeAsync(Active);
 		}
 	}
 

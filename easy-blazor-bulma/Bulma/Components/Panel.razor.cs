@@ -158,7 +158,7 @@ public partial class Panel : ComponentBase
     {
         IsCollapsed = !IsCollapsed;
 
-        if (IsCollapsedChanged != null)
+        if (IsCollapsedChanged.HasValue && IsCollapsedChanged.Value.HasDelegate)
             await IsCollapsedChanged.Value.InvokeAsync(IsCollapsed);
     }
 }

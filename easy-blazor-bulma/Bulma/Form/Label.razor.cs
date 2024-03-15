@@ -54,7 +54,7 @@ public partial class Label<TValue> : ComponentBase
 	{
 		get
 		{
-			var css = "";
+			var css = "is-cursor-help";
 
 			if (string.IsNullOrWhiteSpace(Tooltip) == false)
 			{

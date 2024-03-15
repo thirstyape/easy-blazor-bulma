@@ -16,13 +16,16 @@
     <Description>This project was created to provide a standard implementation of Bulma with Blazor components.</Description>
     <RepositoryUrl>https://github.com/thirstyape/Easy-Blazor-Bulma</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.11</Version>
-	<AssemblyVersion>1.0.11.0</AssemblyVersion>
-	<FileVersion>1.0.11.0</FileVersion>
+    <Version>1.0.12</Version>
+	<AssemblyVersion>1.0.12.0</AssemblyVersion>
+	<FileVersion>1.0.12.0</FileVersion>
     <PackageReleaseNotes>
+		1.0.12
+		Fix issues
+		
 		1.0.11
 		Add InputSwitch, Label, Navbar, NavbarDropdown, and NavbarItem components and Tooltips
-		
+
 		1.0.10
 		Fix issues and Add ProgressBar, InputSelectObject
 

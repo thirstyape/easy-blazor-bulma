@@ -1,0 +1,50 @@
+﻿@page "/steps"
+@inherits ComponentBase
+
+<TitleBlock Title="Steps Test" />
+
+<div class="container pt-3">
+	<Panel Title="Horizontal Steps">
+		<Steps @bind-Active=ActiveStep1 OnItemClicked="OnSteps1Clicked">
+			<Step Name="Step 1" Icon="home" MarkerColor="BulmaColors.Yellow" />
+			<Step Name="Step 2" Icon="star" MarkerColor="BulmaColors.Red" />
+			<Step Name="Step 3" Icon="settings" MarkerColor="BulmaColors.Purple" />
+			<Step Name="Step 4" Icon="cancel" MarkerColor="BulmaColors.Green" />
+		</Steps>
+		<p class="block">@Message1</p>
+	</Panel>
+
+	<Panel Title="Vertical Steps">
+		<div class="columns">
+			<div class="column">
+				<Steps @bind-Active=ActiveStep2 OnItemClicked="OnSteps2Clicked" IsVertical=true TextAbove=true>
+					<Step Name="Step 1" Icon="home" MarkerColor="BulmaColors.Yellow" />
+					<Step Name="Step 2" Icon="star" MarkerColor="BulmaColors.Red" />
+					<Step Name="Step 3" Icon="settings" MarkerColor="BulmaColors.Purple" />
+					<Step Name="Step 4" Icon="cancel" MarkerColor="BulmaColors.Green" />
+				</Steps>
+			</div>
+			<div class="column">
+				<p class="block">@Message2</p>
+			</div>
+		</div>
+	</Panel>
+</div>
+
+@code {
+	private string ActiveStep1 = "Step 2";
+	private string? Message1;
+
+	private string ActiveStep2 = "Step 1";
+	private string? Message2;
+
+	private async Task OnSteps1Clicked(string name)
+	{
+		Message1 = $"You clicked {name}";
+	}
+	
+	private async Task OnSteps2Clicked(string name)
+	{
+		Message2 = $"You clicked {name}";
+	}
+}

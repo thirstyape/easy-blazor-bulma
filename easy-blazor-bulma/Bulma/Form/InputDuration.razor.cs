@@ -518,7 +518,7 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
 
     private void ClosePopout(bool save = false, bool reset = false)
     {
-        if (IsPopoutDisplayed == false || Options.HasFlag(InputDurationOptions.NoPopout))
+        if ((IsPopoutDisplayed == false && Options.HasFlag(InputDurationOptions.HoverPopout) == false) || Options.HasFlag(InputDurationOptions.NoPopout))
             return;
 
         IsPopoutDisplayed = false;

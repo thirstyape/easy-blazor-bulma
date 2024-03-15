@@ -1,0 +1,43 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@page "/inputDuration"
+@inherits ComponentBase
+
+<TitleBlock Title="Input Duration Test" />
+
+<div class="columns p-3">
+	<div class="column is-4">
+	</div>
+	<div class="column is-8">
+		<EditForm Model="InputModel">
+			<div class="field">
+				<Label For="() => InputModel.TimeSpanTest" TooltipMode="TooltipDisplayMode" />
+				<div class="control has-icons-left has-icons-right">
+					<InputDuration @bind-Value=InputModel.TimeSpanTest />
+				</div>
+			</div>
+			<div class="field">
+				<Label For="() => InputModel.TimeOnlyTest" TooltipMode="TooltipDisplayMode" />
+				<div class="control has-icons-left has-icons-right">
+					<InputDuration @bind-Value=InputModel.TimeOnlyTest Options="Options" StepSeconds="30" />
+				</div>
+			</div>
+		</EditForm>
+	</div>
+</div>
+
+@code {
+	private readonly PageModel InputModel = new();
+
+	private readonly InputDurationOptions Options = InputDurationOptions.HoverPopout | InputDurationOptions.ShowResetButton | InputDurationOptions.ShowHours | InputDurationOptions.ShowMinutes | InputDurationOptions.ShowSeconds;
+	private readonly TooltipOptions TooltipDisplayMode = TooltipOptions.Right | TooltipOptions.HasArrow | TooltipOptions.Multiline;
+
+	private class PageModel
+	{
+		[Display(Name = "Time Span Test", Description = "Input to test a non-nullable TimeSpan value.")]
+		public TimeSpan TimeSpanTest { get; set; } = TimeSpan.Zero;
+
+		[Display(Name = "Time Only Test", Description = "Input to test a nullable TimeOnly value.")]
+		public TimeOnly? TimeOnlyTest { get; set; }
+	}
+}

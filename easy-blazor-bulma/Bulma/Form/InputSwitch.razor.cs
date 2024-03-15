@@ -55,7 +55,7 @@ public partial class InputSwitch<[DynamicallyAccessedMembers(DynamicallyAccessed
 	{
 		get
 		{
-			var css = "no-select";
+			var css = "is-unselectable";
 
 			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("label-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
 				css += $" {additional}";

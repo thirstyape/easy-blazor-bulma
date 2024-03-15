@@ -1,0 +1,31 @@
+﻿@page "/tabs"
+@inherits ComponentBase
+
+<TitleBlock Title="Tabs Test" />
+
+<div class="container pt-3">
+	<Tabs @bind-Active=ActiveTab OnItemClicked="OnTabClicked">
+		<Tab Name="Tab 1" Icon="home">
+			<p class="block">Here's some stuff for Tab 1.</p>
+		</Tab>
+		<Tab Name="Tab 2" Icon="star">
+			<p class="block">And some stuff for Tab 2.</p>
+		</Tab>
+		<Tab Name="Tab 3" Icon="settings">
+			<p class="block">And this one has a count of how many times you clicked it.</p>
+			<p class="block">Tab 3 has been clicked: @Tab3Clicked times.</p>
+		</Tab>
+		<Tab Name="Disabled" Icon="cancel" IsEnabled=false></Tab>
+	</Tabs>
+</div>
+
+@code {
+	private string ActiveTab = "Tab 2";
+	private int Tab3Clicked;
+
+	private async Task OnTabClicked(string name)
+	{
+		if (name == "Tab 3")
+			Tab3Clicked++;
+	}
+}

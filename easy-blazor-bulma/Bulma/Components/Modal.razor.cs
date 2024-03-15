@@ -96,8 +96,11 @@ public partial class Modal : ComponentBase
         }
     }
 
-    private void CloseModal()
+    private async Task CloseModal()
     {
         IsDisplayed = false;
+
+        if (IsDisplayedChanged.HasDelegate)
+            await IsDisplayedChanged.InvokeAsync(IsDisplayed);
     }
 }

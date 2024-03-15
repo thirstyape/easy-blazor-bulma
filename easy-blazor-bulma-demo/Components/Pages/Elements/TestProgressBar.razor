@@ -1,0 +1,33 @@
+﻿@page "/progressBar"
+@inherits ComponentBase
+
+<TitleBlock Title="Progress Bar Test" />
+
+<div class="container">
+	<Panel class="m-3" Title="Progress Bar Tests" Color="BulmaColors.Turquoise">
+		<label class="label">Changable Value</label>
+		<ProgressBar Color="BulmaColors.Green" Max="50" Current="@CurrentValue" />
+		<button type="button" class="button is-danger" @onclick=Decrement>Subtract 5</button>
+		<button type="button" class="button is-success" @onclick=Increment>Add 5</button>
+
+		<label class="label mt-3">Indeterminate Value</label>
+		<ProgressBar class="is-jumbo" Color="BulmaColors.Purple" Max="250" Current="null" />
+
+	</Panel>
+</div>
+
+@code {
+	private int CurrentValue = 25;
+
+	private void Increment()
+	{
+		if (CurrentValue < 50)
+			CurrentValue += 5;
+	}
+
+	private void Decrement()
+	{
+		if (CurrentValue > 0)
+			CurrentValue -= 5;
+	}
+}

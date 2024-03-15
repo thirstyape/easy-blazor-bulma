@@ -1,0 +1,36 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@page "/inputSwitch"
+@inherits ComponentBase
+
+<TitleBlock Title="Input Switch Test" />
+
+<div class="columns p-3">
+	<div class="column is-4">
+
+	</div>
+	<div class="column is-8">
+		<EditForm Model="InputModel">
+			<div class="field">
+				<label class="label">Switch Test</label>
+				<InputSwitch @bind-Value="InputModel.BoolTest" TooltipMode="TooltipDisplayMode" />
+				<InputSwitch @bind-Value="InputModel.NullableBoolTest" TooltipMode="TooltipDisplayMode" />
+			</div>
+		</EditForm>
+	</div>
+</div>
+
+@code {
+	private readonly PageModel InputModel = new();
+
+	private readonly TooltipOptions TooltipDisplayMode = TooltipOptions.Right | TooltipOptions.HasArrow | TooltipOptions.Multiline;
+
+	private class PageModel
+	{
+		[Display(Name = "Bool Test", Description = "Input to test modifying a non-nullable boolean value.")]
+		public bool BoolTest { get; set; }
+
+		[Display(Name = "Nullable Bool Test", Description = "Input to test modifying a nullable boolean value.")]
+		public bool? NullableBoolTest { get; set; }
+	}
+}

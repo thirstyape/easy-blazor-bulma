@@ -16,13 +16,13 @@ else if (UpdatePageTitle)
 			@if (string.IsNullOrWhiteSpace(Icon) == false && string.IsNullOrWhiteSpace(IconUrl) == false)
 			{
 				<a class="is-pulled-left" href="@IconUrl">
-					<span class="material-icons is-pulled-left no-select" aria-hidden="true">@Icon</span>
+					<span class="material-icons is-pulled-left is-unselectable" aria-hidden="true">@Icon</span>
 				</a>
 				<span>@Title</span>
 			}
 			else if (string.IsNullOrWhiteSpace(Icon) == false)
 			{
-				<span class="material-icons is-pulled-left no-select" aria-hidden="true">@Icon</span>
+				<span class="material-icons is-pulled-left is-unselectable" aria-hidden="true">@Icon</span>
 				<span>@Title</span>
 			}
 			else

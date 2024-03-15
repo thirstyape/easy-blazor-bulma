@@ -6,18 +6,20 @@
 <nav class="@FullCssClass" role="navigation" aria-label="main navigation">
 	@if (UseBurger || string.IsNullOrWhiteSpace(DisplayText) == false)
 	{
-		if (string.IsNullOrWhiteSpace(DisplayText) == false)
-		{
-			<NavLink href="" ActiveClass="is-active" class="navbar-item" Match="NavLinkMatch.All">@DisplayText</NavLink>
-		}
-		if (UseBurger)
-		{
-			<a role="button" class='@BurgerCssClass' aria-label="menu" aria-expanded="false" data-target="@Id" @onclick="ToggleMenu">
-				<span aria-hidden="true"></span>
-				<span aria-hidden="true"></span>
-				<span aria-hidden="true"></span>
-			</a>
-		}
+		<div class="navbar-brand no-select">
+			@if (string.IsNullOrWhiteSpace(DisplayText) == false)
+			{
+				<NavLink href="" ActiveClass="is-active" class="navbar-item" Match="NavLinkMatch.All">@DisplayText</NavLink>
+			}
+			@if (UseBurger)
+			{
+				<a role="button" class='@BurgerCssClass' aria-label="menu" aria-expanded="false" data-target="@Id" @onclick="ToggleMenu">
+					<span aria-hidden="true"></span>
+					<span aria-hidden="true"></span>
+					<span aria-hidden="true"></span>
+				</a>
+			}
+		</div>
 	}
 	<div id="@Id" class="@MenuCssClass">
 		@if (NavbarStart != null || ChildContent != null)

@@ -69,7 +69,7 @@ public partial class Navbar : ComponentBase
 	{
 		get
 		{
-			var css = "navbar-menu no-select";
+			var css = "navbar-menu is-unselectable";
 
 			if (IsActive)
 				css += " is-active";
