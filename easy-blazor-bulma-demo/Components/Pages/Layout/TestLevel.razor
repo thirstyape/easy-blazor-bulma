@@ -1,0 +1,32 @@
+﻿@page "/level"
+@inherits ComponentBase
+
+<TitleBlock Title="Level Test" />
+
+<div class="container pt-3">
+	<Panel Title="Standard Level" Color="BulmaColors.Turquoise">
+		<Level>
+			<LevelItem class="has-text-centered" Heading="Contestants" Title="257" />
+			<LevelItem class="has-text-centered" Heading="Finalists" Title="10" />
+			<LevelItem class="has-text-centered" Heading="Runner up" Title="Jane R" />
+			<LevelItem class="has-text-centered" Heading="Champion" Title="Dave B" />
+		</Level>
+	</Panel>
+
+	<Panel Title="Custom Content Level" Color="BulmaColors.Purple">
+		<Level>
+			<LevelItem class="has-text-centered">
+				<a class="link is-info">Home</a>
+			</LevelItem>
+			<LevelItem class="has-text-centered">
+				<a class="link is-info">Menu</a>
+			</LevelItem>
+			<LevelItem class="has-text-centered">
+				<a class="link is-info">Reservations</a>
+			</LevelItem>
+			<LevelItem class="has-text-centered">
+				<a class="link is-info">Contact</a>
+			</LevelItem>
+		</Level>
+	</Panel>
+</div>

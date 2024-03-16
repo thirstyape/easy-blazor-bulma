@@ -21,7 +21,7 @@
 	<FileVersion>1.0.12.0</FileVersion>
     <PackageReleaseNotes>
 		1.0.12
-		Fix issues
+		Fix issues and Add Level
 		
 		1.0.11
 		Add InputSwitch, Label, Navbar, NavbarDropdown, and NavbarItem components and Tooltips

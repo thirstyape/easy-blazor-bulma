@@ -1,0 +1,16 @@
+﻿@namespace easy_blazor_bulma
+@inherits ComponentBase
+
+<div class="@FullCssClass">
+	<div>
+		@if (ChildContent != null)
+		{
+			@ChildContent
+		}
+		else
+		{
+			<p class="heading">@Heading</p>
+			<p class="title">@Title</p>
+		}
+	</div>
+</div>

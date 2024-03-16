@@ -43,24 +43,6 @@ The following components are currently available for use. All of them are docume
 * `<BooleanIcon />`, creates an icon with either a check or 'X'
 * `<ProgressBar />`, creates a meter to display completion or loading status
 
-**Form**
-
-* `<Label />`, creates a label to display with form inputs
-* `<InputAutocomplete />`, creates a drop-down list of options to select from
-* `<InputCharacter />`, creates a series of buttons to select a single character
-* `<InputDateTime />`, creates an input with a popout for binding date and time values
-* `<InputDuration />`, creates an input with a popout for binding duration values
-* `<InputFlaggedEnum />`, creates a series of checkboxes for bitmasked enum types
-* `<InputNumberPad />`, creates a keyboard style number pad for numeric values
-* `<InputSelectEnum />`, creates a select list for enum types
-* `<InputSelectObject />`, creates a select list for object types
-* `<InputSwitch \>`, creates a sliding on off switch with an underlying checkbox
-
-**Helpers**
-
-* `<ThemeSelector />`, toggles between dark and light CSS themes (requires JavaScript file and both CSS stylesheets in index.html)
-* `<TitleBlock />`, displays a banner accross the top of the screen with some text
-
 **Errors**
 
 * `<_400 />`, displays a message with 400: Bad Request
@@ -80,6 +62,28 @@ The following components are currently available for use. All of them are docume
 * `<_504 />`, displays a message with 504: Gateway Timeout
 * `<ExtendedErrorBoundary />`, provides additional details on exceptions
 * `<Unknown />`, displays a message with generic error details
+
+**Form**
+
+* `<Label />`, creates a label to display with form inputs
+* `<InputAutocomplete />`, creates a drop-down list of options to select from
+* `<InputCharacter />`, creates a series of buttons to select a single character
+* `<InputDateTime />`, creates an input with a popout for binding date and time values
+* `<InputDuration />`, creates an input with a popout for binding duration values
+* `<InputFlaggedEnum />`, creates a series of checkboxes for bitmasked enum types
+* `<InputNumberPad />`, creates a keyboard style number pad for numeric values
+* `<InputSelectEnum />`, creates a select list for enum types
+* `<InputSelectObject />`, creates a select list for object types
+* `<InputSwitch \>`, creates a sliding on off switch with an underlying checkbox
+
+**Helpers**
+
+* `<ThemeSelector />`, toggles between dark and light CSS themes (requires JavaScript file and both CSS stylesheets in index.html)
+* `<TitleBlock />`, displays a banner accross the top of the screen with some text
+
+**Layout**
+
+* `<Level />`, displays a multi-purpose horizontal level
 
 ### Usage
 
