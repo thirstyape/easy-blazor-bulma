@@ -54,7 +54,7 @@ public partial class Message : ComponentBase
 			var css = "message";
 
 			if (IsHidden)
-				css += "is-hidden";
+				css += " is-hidden";
 
             if (Color != BulmaColors.Default)
                 css += ' ' + BulmaColorHelper.GetColorCss(Color);
@@ -77,5 +77,6 @@ public partial class Message : ComponentBase
 	private void Delete()
 	{
 		IsHidden = true;
+		StateHasChanged();
 	}
 }

@@ -92,6 +92,9 @@ public partial class Label<TValue> : ComponentBase
 		}
 	}
 
+	private readonly string[] Filter = new[] { "class", "data-tooltip" };
+	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
+
 	/// <inheritdoc />
 	protected override void OnInitialized()
 	{

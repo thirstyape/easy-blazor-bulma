@@ -23,10 +23,11 @@ public partial class Tab : ComponentBase, IAsyncDisposable
 	public string? Icon { get; set; }
 
 	/// <summary>
-	/// Specifies whether this tab is selectable within the tab bar.
+	/// Obsolete, will be removed.
 	/// </summary>
 	[Parameter]
-	public bool IsEnabled { get; set; } = true;
+	[Obsolete("This parameter is no longer used, add a disabled attribute for the same effect.")]
+	public bool IsEnabled { get; set; }
 
 	/// <summary>
 	/// The content to display within the tab.
@@ -34,7 +35,13 @@ public partial class Tab : ComponentBase, IAsyncDisposable
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
 
-	[CascadingParameter]
+    /// <summary>
+    /// Any additional attributes applied directly to the component.
+    /// </summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    [CascadingParameter]
 	private Tabs Parent { get; set; }
 
     internal bool IsActive => Name != null && Parent.Active == Name;

@@ -3,9 +3,9 @@
 
 @if (Current != null)
 {
-    <progress class="@FullCssClass" max="@Max" value="@Current">@Current</progress>
+    <progress class="@FullCssClass" max="@Max" value="@Current" @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>@Current</progress>
 }
 else
 {
-    <progress class="@FullCssClass" max="@Max">@Max</progress>
+    <progress class="@FullCssClass" max="@Max" @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>@Max</progress>
 }

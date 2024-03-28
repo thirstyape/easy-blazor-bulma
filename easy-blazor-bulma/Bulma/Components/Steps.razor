@@ -1,10 +1,10 @@
 ﻿@namespace easy_blazor_bulma
 @inherits ComponentBase
 
-<ul class='@FullCssClass'>
+<ul class='@FullCssClass' @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
 	@foreach (var step in Children)
 	{
-		<li class='@GetChildCssClass(step)' @onclick="() => OnSelectionChanged(step)">
+		<li class='@GetChildCssClass(step)' @onclick="() => OnSelectionChanged(step)" @attributes='step.AdditionalAttributes?.Where(x => x.Key != "class")'>
 			<span class='@GetMarkerCssClass(step)'>
 				@if (string.IsNullOrWhiteSpace(step.Icon) == false)
 				{

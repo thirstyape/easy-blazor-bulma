@@ -18,6 +18,12 @@ public partial class Navbar : ComponentBase
 	public string? DisplayText { get; set; }
 
 	/// <summary>
+	/// The URL of an image to display in the top left of the navbar.
+	/// </summary>
+	[Parameter]
+	public string? DisplayImageUrl { get; set; }
+
+	/// <summary>
 	/// Specifies whether to display the burger icon for mobile devices.
 	/// </summary>
 	[Parameter]
@@ -49,6 +55,7 @@ public partial class Navbar : ComponentBase
 
 	private bool IsActive;
 	private string? Id;
+	private string Href = "";
 
 	private string FullCssClass => string.Join(' ', "navbar", CssClass);
 
@@ -89,6 +96,9 @@ public partial class Navbar : ComponentBase
 		}
 	}
 
+	private readonly string[] Filter = new[] { "class", "id", "role", "aria-label", "href" };
+	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
+
 	/// <inheritdoc />
 	protected override void OnInitialized()
 	{
@@ -98,6 +108,12 @@ public partial class Navbar : ComponentBase
 				Id = id.ToString();
 			else
 				Id = Guid.NewGuid().ToString();
+		}
+
+		if (string.IsNullOrWhiteSpace(Href))
+		{
+			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("href", out var href) && string.IsNullOrWhiteSpace(Convert.ToString(href, CultureInfo.InvariantCulture)) == false)
+				Href = href.ToString() ?? string.Empty;
 		}
 	}
 

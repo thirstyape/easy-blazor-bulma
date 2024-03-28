@@ -41,7 +41,11 @@ The following components are currently available for use. All of them are docume
 **Elements**
 
 * `<BooleanIcon />`, creates an icon with either a check or 'X'
+* `<ButtonBase />`, allows easily creating standard buttons
+* `<DeleteButton />`, creates a button to delete a record with a confirmation modal
 * `<ProgressBar />`, creates a meter to display completion or loading status
+* `<ResetButton />`, creates a button to reset contents of a form
+* `<SubmitButton />`, creates a button to submit contents of a form
 
 **Errors**
 

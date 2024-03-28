@@ -35,6 +35,12 @@ public partial class ThemeSelector : ComponentBase
 	public string DarkModeKeyName { get; set; } = "easyblazorbulma.isdarkmode";
 
 	/// <summary>
+	/// Specifies whether the component will be contained in the navbar.
+	/// </summary>
+	[Parameter]
+	public bool IsNavbarItem { get; set; } = true;
+
+	/// <summary>
 	/// Any additional attributes applied directly to the component.
 	/// </summary>
 	[Parameter(CaptureUnmatchedValues = true)]
@@ -45,7 +51,18 @@ public partial class ThemeSelector : ComponentBase
 
 	private IJSRuntime? JsRuntime;
 
-	private string FullCssClass => string.IsNullOrWhiteSpace(CssClass) == false ? CssClass : "navbar-item";
+	private string FullCssClass
+	{
+		get
+		{
+			var css = "";
+
+			if (IsNavbarItem)
+				css += " navbar-item";
+
+			return string.Join(' ', css.TrimStart(), CssClass);
+		}
+	}
 
 	private string? CssClass
 	{

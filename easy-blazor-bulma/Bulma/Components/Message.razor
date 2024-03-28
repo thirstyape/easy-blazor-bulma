@@ -1,7 +1,7 @@
 ﻿@namespace easy_blazor_bulma
 @inherits ComponentBase
 
-<article class='@FullCssClass'>
+<article class='@FullCssClass' @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
     @if (Title != null)
     {
         <div class="message-header">

@@ -1,0 +1,44 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@page "/buttons"
+@inherits ComponentBase
+
+<TitleBlock Title="Buttons Test" />
+
+<div class="container">
+	<Panel class="m-3" Title="Button Tests" Color="BulmaColors.Turquoise">
+		<div class="block">
+			<EditForm Model="InputModel">
+				<div class="field">
+					<Label For="() => InputModel.Test" TooltipMode="TooltipDisplayMode" />
+					<div class="control has-icons-left">
+						<InputText class="input" @bind-Value=InputModel.Test />
+						<span class="icon material-icons is-left">title</span>
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="control">
+						<SubmitButton />
+						<ResetButton />
+					</div>
+				</div>
+			</EditForm>
+		</div>
+
+		<div class="block">
+			<DeleteButton DisplayText="Test Delete Button" Icon="delete_forever" Color="BulmaColors.Purple" ConfirmationText="Do you really want to delete this?" />
+		</div>
+	</Panel>
+</div>
+
+@code {
+	private PageModel InputModel = new();
+	private readonly TooltipOptions TooltipDisplayMode = TooltipOptions.Right | TooltipOptions.HasArrow | TooltipOptions.Multiline;
+
+	private class PageModel
+	{
+		[Display(Name = "Test", Description = "A value to demonstrate the buttons.")]
+		public string Test { get; set; } = "Hello";
+	}
+}

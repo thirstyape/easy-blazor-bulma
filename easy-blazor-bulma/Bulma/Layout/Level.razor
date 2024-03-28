@@ -1,6 +1,6 @@
 ﻿@namespace easy_blazor_bulma
 @inherits ComponentBase
 
-<nav class="@FullCssClass">
+<nav class="@FullCssClass" @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
 	@ChildContent
 </nav>

@@ -1,11 +1,11 @@
 ﻿@namespace easy_blazor_bulma
 @inherits ComponentBase
 
-<div class='@FullCssClass'>
+<div class='@FullCssClass' @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
     <ul>
         @foreach (var tab in Children)
         {
-            <li class="@GetChildCssClass(tab)" @onclick="() => OnSelectionChanged(tab)" disabled='@(tab.IsEnabled == false)'>
+			<li class="@GetChildCssClass(tab)" @onclick="() => OnSelectionChanged(tab)" @attributes='tab.AdditionalAttributes?.Where(x => x.Key != "class")'>
                 <a>
                     @if (string.IsNullOrWhiteSpace(tab.Icon) == false)
                     {

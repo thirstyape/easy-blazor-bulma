@@ -6,23 +6,26 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>$(MSBuildProjectName.Replace("-", "_"))</RootNamespace>
-    <PackageId>Easy.Blazor.Bulma</PackageId>
     <Authors>NF Software Inc.</Authors>
     <Company>NF Software Inc.</Company>
     <Copyright>Copyright 2023 $(Company)</Copyright>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageIcon>icon.png</PackageIcon>
+    <Version>1.0.13</Version>
+	<AssemblyVersion>1.0.13.0</AssemblyVersion>
+	<FileVersion>1.0.13.0</FileVersion>
+    <PackageId>Easy.Blazor.Bulma</PackageId>
     <PackageTags>blazor bulma components inputs layout forms icons</PackageTags>
-    <Description>This project was created to provide a standard implementation of Bulma with Blazor components.</Description>
     <RepositoryUrl>https://github.com/thirstyape/Easy-Blazor-Bulma</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <Version>1.0.12</Version>
-	<AssemblyVersion>1.0.12.0</AssemblyVersion>
-	<FileVersion>1.0.12.0</FileVersion>
+    <PackageProjectUrl>https://github.com/thirstyape/Easy-Blazor-Bulma</PackageProjectUrl>
+    <Description>
+		This project was created to provide a standard implementation of Bulma with Blazor components.
+	</Description>
     <PackageReleaseNotes>
+		1.0.13
+		Update publishing parameters, Add button components, and Improve custom attribute support
+		
 		1.0.12
 		Fix issues and Add Level
-		
+
 		1.0.11
 		Add InputSwitch, Label, Navbar, NavbarDropdown, and NavbarItem components and Tooltips
 
@@ -59,13 +62,25 @@
 		1.0.0
 		Initial release
 	</PackageReleaseNotes>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-  </PropertyGroup>
+</PropertyGroup>
 
-	<PropertyGroup>
-		<DocumentationFile>$(ProjectDir)..\Easy-Blazor-Bulma.xml</DocumentationFile>
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<DocumentationFile>$(ProjectDir)$(AssemblyName).xml</DocumentationFile>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryType>git</RepositoryType>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<CopyDebugSymbolFilesFromPackages>true</CopyDebugSymbolFilesFromPackages>
 	</PropertyGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.*" PrivateAssets="All" />		
+	</ItemGroup>
 
 	<ItemGroup>
       <Compile Remove="external\**" />
@@ -91,10 +106,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BuildWebCompiler2022" Version="1.14.10">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Easy.Base" Version="1.0.0" />
+      <PackageReference Include="BuildWebCompiler2022" Version="1.14.10" PrivateAssets="all" />
+	  <PackageReference Include="Easy.Base" Version="1.0.*" />
   </ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">

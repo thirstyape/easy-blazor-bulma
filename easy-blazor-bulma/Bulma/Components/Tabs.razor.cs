@@ -177,7 +177,7 @@ public partial class Tabs : ComponentBase
 
 	private async Task OnSelectionChanged(Tab tab)
 	{
-		if (tab.IsEnabled == false) 
+		if (tab.AdditionalAttributes != null && tab.AdditionalAttributes.Any(x => x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true"))) 
 			return;
 
         if (OnItemClicked != null)
@@ -205,6 +205,9 @@ public partial class Tabs : ComponentBase
 
 		if (Active == tab.Name)
 			css += "is-active";
+
+		if (tab.AdditionalAttributes != null && tab.AdditionalAttributes.TryGetValue("class", out var tabCss) && string.IsNullOrWhiteSpace(Convert.ToString(tabCss, CultureInfo.InvariantCulture)) == false)
+			css += $" {tabCss}";
 
 		return css.TrimEnd();
 	}

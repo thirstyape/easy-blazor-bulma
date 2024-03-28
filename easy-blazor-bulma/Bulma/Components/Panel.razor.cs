@@ -146,7 +146,10 @@ public partial class Panel : ComponentBase
         }
     }
 
-    private async Task TitleClicked()
+	private readonly string[] Filter = new[] { "class", "content-class", "header-class" };
+	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
+
+	private async Task TitleClicked()
     {
         if (OnTitleClicked.HasDelegate)
             await OnTitleClicked.InvokeAsync();

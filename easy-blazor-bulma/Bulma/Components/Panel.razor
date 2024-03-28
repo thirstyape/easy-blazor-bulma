@@ -1,7 +1,7 @@
 ﻿@namespace easy_blazor_bulma
 @inherits ComponentBase
 
-<div class='@FullCssClass'>
+<div class='@FullCssClass' @attributes='FilteredAttributes'>
     <p class='@HeaderCssClass' @onclick="() => TitleClicked()">
         <span>@Title</span>
         @if (ShowCollapseIcons || string.IsNullOrWhiteSpace(Icon) == false)

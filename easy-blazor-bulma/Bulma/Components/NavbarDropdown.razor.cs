@@ -106,6 +106,9 @@ public partial class NavbarDropdown : ComponentBase
 		}
 	}
 
+	private readonly string[] Filter = new[] { "class", "dropdown-class" };
+	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
+
 	private void ToggleMenu()
 	{
 		IsActive = !IsActive;

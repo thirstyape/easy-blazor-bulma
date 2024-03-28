@@ -195,13 +195,18 @@ public partial class Steps : ComponentBase
     private string? GetChildCssClass(Step step)
     {
         var active = Children.Single(x => x.Name == Active);
+        var css = "steps-segment";
 
-        if (step.Index < active.Index)
-            return "steps-segment";
-        else if (step.Index == active.Index)
-            return "steps-segment is-active is-dashed";
-        else
-            return "steps-segment is-dashed";
+		if (step.Index == active.Index)
+			css += " is-active";
+
+		if (step.Index >= active.Index)
+			css += " is-dashed";
+
+		if (step.AdditionalAttributes != null && step.AdditionalAttributes.TryGetValue("class", out var stepCss) && string.IsNullOrWhiteSpace(Convert.ToString(stepCss, CultureInfo.InvariantCulture)) == false)
+			css += $" {stepCss}";
+
+		return css;
     }
 
     private string GetMarkerCssClass(Step step)
