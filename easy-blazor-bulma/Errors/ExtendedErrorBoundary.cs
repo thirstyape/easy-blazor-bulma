@@ -6,7 +6,7 @@ namespace easy_blazor_bulma;
 /// <summary>
 /// Extends the default error boundary to provide access to the current error details.
 /// </summary>
-internal class ExtendedErrorBoundary : ErrorBoundary
+public class ExtendedErrorBoundary : ErrorBoundary
 {
 	/// <summary>
 	/// Returns the current exception if present.
