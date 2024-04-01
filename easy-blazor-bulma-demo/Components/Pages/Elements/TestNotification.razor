@@ -1,0 +1,27 @@
+﻿@page "/notification"
+@inherits ComponentBase
+
+<TitleBlock Title="Notification Test" />
+
+<div class="container pt-2">
+	<Notification Color="BulmaColors.Purple" ShowDeleteButton=false>
+		Notification that cannot be deleted.
+	</Notification>
+
+	<Notification Color="BulmaColors.Blue">
+		Notification that can be deleted.
+	</Notification>
+
+	<Notification @bind-IsHidden=DeleteNotification>
+		<button type="button" class="button" @onclick=HideNotification>Hide</button>
+	</Notification>
+</div>
+
+@code {
+	private bool DeleteNotification;
+
+	private void HideNotification()
+	{
+		DeleteNotification = true;
+	}
+}

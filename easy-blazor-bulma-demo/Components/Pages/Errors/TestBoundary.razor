@@ -1,0 +1,40 @@
+﻿@using easy_blazor_bulma_demo.Components.Helpers
+
+@page "/boundary"
+@inherits ComponentBase
+
+<TitleBlock Title="Extended Error Boundary Test" />
+
+<ExtendedErrorBoundary OnError="HandleError" @ref=Boundary>
+	<ChildContent>
+		<Panel class="m-2" Title="Trigger Exception">
+			<ErrorButton />
+		</Panel>
+	</ChildContent>
+	<ErrorContent>
+		<Panel class="m-2" Icon="error" Color="BulmaColors.Red" Title="Caught Exception">
+			<p class="block">Type: @ExceptionType?.Name</p>
+			<p class="block">Message: @Boundary?.GetErrorMessage()</p>
+
+			<button type="button" class="button is-success" @onclick=ResetError>
+				Recover
+			</button>
+		</Panel>
+	</ErrorContent>
+</ExtendedErrorBoundary>
+
+@code {
+	private ExtendedErrorBoundary? Boundary;
+	private Type? ExceptionType;
+
+	private void HandleError(Exception exception)
+	{
+		ExceptionType = exception.GetType();
+	}
+
+	private void ResetError()
+	{
+		Boundary?.Recover();
+		ExceptionType = null;
+	}
+}

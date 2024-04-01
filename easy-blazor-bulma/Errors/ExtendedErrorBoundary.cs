@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Web;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using System.Net;
 
 namespace easy_blazor_bulma;
@@ -9,11 +10,37 @@ namespace easy_blazor_bulma;
 public class ExtendedErrorBoundary : ErrorBoundary
 {
 	/// <summary>
+	/// Notifies subscribers that an error has occurred.
+	/// </summary>
+	[Parameter]
+	public EventCallback<Exception> OnError { get; set; }
+
+	private Exception? ExtendedException;
+
+	/// <inheritdoc />
+	protected async override Task OnErrorAsync(Exception exception)
+	{
+		ExtendedException = exception;
+
+		await base.OnErrorAsync(exception);
+
+		if (OnError.HasDelegate)
+			await OnError.InvokeAsync(exception);
+	}
+
+	/// <inheritdoc cref="ErrorBoundaryBase.Recover" />
+	public new void Recover()
+	{
+		ExtendedException = null;
+		base.Recover();
+	}
+
+	/// <summary>
 	/// Returns the current exception if present.
 	/// </summary>
 	public Exception? GetCurrentException()
 	{
-		return CurrentException;
+		return ExtendedException;
 	}
 
 	/// <summary>
@@ -21,7 +48,7 @@ public class ExtendedErrorBoundary : ErrorBoundary
 	/// </summary>
 	public string? GetErrorMessage()
 	{
-		return CurrentException?.Message;
+		return ExtendedException?.Message;
 	}
 
 	/// <summary>
@@ -29,7 +56,7 @@ public class ExtendedErrorBoundary : ErrorBoundary
 	/// </summary>
 	public Type? GetErrorType()
 	{
-		return CurrentException?.GetType();
+		return ExtendedException?.GetType();
 	}
 
 	/// <summary>
@@ -37,7 +64,7 @@ public class ExtendedErrorBoundary : ErrorBoundary
 	/// </summary>
 	public HttpStatusCode? GetHttpStatusCode()
 	{
-		if (CurrentException != null && CurrentException is HttpRequestException exception)
+		if (ExtendedException != null && ExtendedException is HttpRequestException exception)
 			return exception.StatusCode;
 
 		return null;

@@ -1,0 +1,12 @@
+﻿@inherits ComponentBase
+
+<button type="button" class="button is-info" @onclick=GenerateError>
+	Throw Exception
+</button>
+
+@code {
+	private void GenerateError()
+	{
+		throw new Exception("Oh no! It broke.");
+	}
+}

@@ -23,7 +23,7 @@ public partial class Steps : ComponentBase
     /// Event that occurs when <see cref="Active"/> is modified.
     /// </summary>
     [Parameter]
-    public EventCallback<string?>? ActiveChanged { get; set; }
+    public EventCallback<string?> ActiveChanged { get; set; }
 
     /// <summary>
 	/// Displays the steps in a vertical layout when true.
@@ -112,8 +112,8 @@ public partial class Steps : ComponentBase
         {
 			Active = Children.First().Name;
 
-			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
-				await ActiveChanged.Value.InvokeAsync(Active);
+			if (ActiveChanged.HasDelegate)
+				await ActiveChanged.InvokeAsync(Active);
 		}
     }
 
@@ -140,8 +140,8 @@ public partial class Steps : ComponentBase
         {
 			Active = step.Name;
 
-			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
-				await ActiveChanged.Value.InvokeAsync(Active);
+			if (ActiveChanged.HasDelegate)
+				await ActiveChanged.InvokeAsync(Active);
 		}
 
 		StateHasChanged();
@@ -168,8 +168,8 @@ public partial class Steps : ComponentBase
         {
 			Active = Children.First().Name;
 
-			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
-				await ActiveChanged.Value.InvokeAsync(Active);
+			if (ActiveChanged.HasDelegate)
+				await ActiveChanged.InvokeAsync(Active);
 		}
 
 		StateHasChanged();
@@ -187,8 +187,8 @@ public partial class Steps : ComponentBase
         {
             Active = step.Name;
 
-            if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
-                await ActiveChanged.Value.InvokeAsync(Active);
+            if (ActiveChanged.HasDelegate)
+                await ActiveChanged.InvokeAsync(Active);
         }
     }
 

@@ -1,0 +1,51 @@
+﻿@page "/hero"
+@inherits ComponentBase
+
+<TitleBlock Title="Hero Test" />
+
+<Hero class="mt-2" Color="BulmaColors.Blue" Title="Basic Hero" Subtitle="Demonstrates creating a hero element with the fewest parameters" />
+
+<hr />
+
+<Hero class="is-secondary">
+    <div class="container has-text-centered">
+        <p class="title">Centered Text</p>
+        <p class="subtitle">This one has centered text</p>
+    </div>
+</Hero>
+
+<hr />
+
+<Hero class="is-fullheight" Color="BulmaColors.Green">
+    <HeroHead>
+        <header class="navbar">
+            <div class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item is-active">Home</a>
+                    <a class="navbar-item">Examples</a>
+                    <a class="navbar-item">Documentation</a>
+                </div>
+            </div>
+        </header>
+    </HeroHead>
+    <HeroBody>
+        <div>
+            <p class="title">Advanced Hero</p>
+            <p class="subtitle">This hero will be full height with a top and bottom menu</p>
+        </div>
+    </HeroBody>
+    <HeroFoot>
+        <nav class="tabs is-boxed is-fullwidth">
+            <div class="container">
+                <ul>
+                    <li class="is-active"><a>Overview</a></li>
+                    <li><a>Modifiers</a></li>
+                    <li><a>Grid</a></li>
+                    <li><a>Elements</a></li>
+                    <li><a>Components</a></li>
+                    <li><a>Layout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </HeroFoot>
+</Hero>

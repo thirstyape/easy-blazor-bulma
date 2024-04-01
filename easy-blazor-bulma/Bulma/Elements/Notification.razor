@@ -1,0 +1,10 @@
+﻿@namespace easy_blazor_bulma
+@inherits ComponentBase
+
+<div class="@FullCssClass" @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
+    @if (ShowDeleteButton)
+    {
+        <button type="button" class="delete" @onclick="Delete"></button>
+    }
+    @ChildContent
+</div>

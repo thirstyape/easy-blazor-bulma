@@ -43,6 +43,7 @@ The following components are currently available for use. All of them are docume
 * `<BooleanIcon />`, creates an icon with either a check or 'X'
 * `<ButtonBase />`, allows easily creating standard buttons
 * `<DeleteButton />`, creates a button to delete a record with a confirmation modal
+* `<Notification />`, creates a bold notification block, to alert your users of something
 * `<ProgressBar />`, creates a meter to display completion or loading status
 * `<ResetButton />`, creates a button to reset contents of a form
 * `<SubmitButton />`, creates a button to submit contents of a form
@@ -87,6 +88,7 @@ The following components are currently available for use. All of them are docume
 
 **Layout**
 
+* `<Hero />`, creates an imposing hero banner to showcase something
 * `<Level />`, displays a multi-purpose horizontal level
 
 ### Usage

@@ -23,7 +23,7 @@ public partial class Tabs : ComponentBase
 	/// Event that occurs when <see cref="Active"/> is modified.
 	/// </summary>
 	[Parameter]
-	public EventCallback<string?>? ActiveChanged { get; set; }
+	public EventCallback<string?> ActiveChanged { get; set; }
 
     /// <summary>
     /// Positions the tab bar in the center of the area when true.
@@ -114,8 +114,8 @@ public partial class Tabs : ComponentBase
 		{
 			Active = Children.First().Name;
 
-			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
-				await ActiveChanged.Value.InvokeAsync(Active);
+			if (ActiveChanged.HasDelegate)
+				await ActiveChanged.InvokeAsync(Active);
 		}
 	}
 
@@ -140,8 +140,8 @@ public partial class Tabs : ComponentBase
 		{
 			Active = tab.Name;
 
-			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
-				await ActiveChanged.Value.InvokeAsync(Active);
+			if (ActiveChanged.HasDelegate)
+				await ActiveChanged.InvokeAsync(Active);
 		}
 
 		StateHasChanged();
@@ -168,8 +168,8 @@ public partial class Tabs : ComponentBase
 		{
 			Active = Children.First().Name;
 
-			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
-				await ActiveChanged.Value.InvokeAsync(Active);
+			if (ActiveChanged.HasDelegate)
+				await ActiveChanged.InvokeAsync(Active);
 		}
 
 		StateHasChanged();
@@ -187,8 +187,8 @@ public partial class Tabs : ComponentBase
 		{
 			Active = tab.Name;
 
-			if (ActiveChanged.HasValue && ActiveChanged.Value.HasDelegate)
-				await ActiveChanged.Value.InvokeAsync(Active);
+			if (ActiveChanged.HasDelegate)
+				await ActiveChanged.InvokeAsync(Active);
 		}
 	}
 

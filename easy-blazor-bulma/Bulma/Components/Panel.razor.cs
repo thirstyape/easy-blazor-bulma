@@ -58,7 +58,7 @@ public partial class Panel : ComponentBase
     /// Event that occurs when the collapsed or expanded status of the content section changes.
     /// </summary>
     [Parameter]
-    public EventCallback<bool>? IsCollapsedChanged { get; set; }
+    public EventCallback<bool> IsCollapsedChanged { get; set; }
 
     /// <summary>
     /// A method to run when the title bar is clicked.
@@ -161,7 +161,7 @@ public partial class Panel : ComponentBase
     {
         IsCollapsed = !IsCollapsed;
 
-        if (IsCollapsedChanged.HasValue && IsCollapsedChanged.Value.HasDelegate)
-            await IsCollapsedChanged.Value.InvokeAsync(IsCollapsed);
+        if (IsCollapsedChanged.HasDelegate)
+            await IsCollapsedChanged.InvokeAsync(IsCollapsed);
     }
 }
