@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -35,16 +34,7 @@ public partial class LevelItem : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private string FullCssClass => string.Join(' ', "level-item", CssClass);
+	private readonly string[] Filter = new[] { "class" };
 
-	private string? CssClass
-	{
-		get
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-				return css.ToString();
-
-			return null;
-		}
-	}
+	private string MainCssClass => string.Join(' ', "level-item", AdditionalAttributes.GetClass("class"));
 }

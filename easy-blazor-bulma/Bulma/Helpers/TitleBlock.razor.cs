@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
 /// <summary>
 /// Creates a styled block to display a title at the top of a page.
 /// </summary>
+/// <remarks>
+/// There is 1 additional attribute that can be used: body-class. It will apply CSS classes to the resulting element as per its name.
+/// </remarks>
 public partial class TitleBlock : ComponentBase
 {
 	/// <summary>
@@ -58,11 +60,13 @@ public partial class TitleBlock : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private string FullCssClass
+	private readonly string[] Filter = new[] { "class", "body-class" };
+
+	private string MainCssClass
 	{
 		get
 		{
-			var css = "hero";
+			var css = "hero is-primary";
 
 			if (IsTiny)
 				css += " is-tiny";
@@ -70,21 +74,9 @@ public partial class TitleBlock : ComponentBase
 			if (IsBold)
 				css += " is-bold";
 
-			if (string.IsNullOrWhiteSpace(CssClass))
-				css += " is-primary";
-
-			return string.Join(' ', css, CssClass);
+			return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
 		}
 	}
 
-	private string? CssClass
-	{
-		get
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-				return css.ToString();
-
-			return null;
-		}
-	}
+	private string BodyCssClass => string.Join(' ', "hero-body pl-4", AdditionalAttributes.GetClass("body-class"));
 }

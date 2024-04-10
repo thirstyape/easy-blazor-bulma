@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -46,12 +45,14 @@ public partial class ThemeSelector : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
+	private readonly string[] Filter = new[] { "class" };
+
 	[Inject]
 	private IServiceProvider ServiceProvider { get; init; }
 
 	private IJSRuntime? JsRuntime;
 
-	private string FullCssClass
+	private string MainCssClass
 	{
 		get
 		{
@@ -60,18 +61,7 @@ public partial class ThemeSelector : ComponentBase
 			if (IsNavbarItem)
 				css += " navbar-item";
 
-			return string.Join(' ', css.TrimStart(), CssClass);
-		}
-	}
-
-	private string? CssClass
-	{
-		get
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-				return css.ToString();
-
-			return null;
+			return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
 		}
 	}
 

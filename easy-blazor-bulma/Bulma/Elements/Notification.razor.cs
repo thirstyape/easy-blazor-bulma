@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -40,7 +39,9 @@ public partial class Notification : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private string FullCssClass
+    private readonly string[] Filter = new[] { "class" };
+
+    private string MainCssClass
 	{
 		get
 		{
@@ -52,18 +53,7 @@ public partial class Notification : ComponentBase
 			if (Color != BulmaColors.Default)
 				css += ' ' + BulmaColorHelper.GetColorCss(Color);
 
-			return string.Join(' ', css, CssClass);
-		}
-	}
-
-	private string? CssClass
-	{
-		get
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-				return css.ToString();
-
-			return null;
+			return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
 		}
 	}
 

@@ -3,10 +3,10 @@
 @namespace easy_blazor_bulma
 @inherits ComponentBase
 
-<nav class="@FullCssClass" role="navigation" aria-label="main navigation" @attributes='FilteredAttributes'>
+<nav class="@MainCssClass" role="navigation" aria-label="main navigation" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
 	@if (UseBurger || string.IsNullOrWhiteSpace(DisplayText) == false)
 	{
-		<div class="navbar-brand no-select">
+		<div class="@BrandCssClass">
 			@if (string.IsNullOrWhiteSpace(DisplayText) == false || string.IsNullOrWhiteSpace(DisplayImageUrl) == false)
 			{
 				<NavLink ActiveClass="is-active" href="@Href" class="navbar-item" Match="NavLinkMatch.All">

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
+using System.Linq.Expressions;
 
 namespace easy_blazor_bulma;
 
@@ -54,10 +54,16 @@ public partial class Panel : ComponentBase
     [Parameter]
     public bool IsCollapsed { get; set; }
 
-    /// <summary>
-    /// Event that occurs when the collapsed or expanded status of the content section changes.
-    /// </summary>
-    [Parameter]
+	/// <summary>
+	/// Expression for manual binding to <see cref="IsCollapsed"/>.
+	/// </summary>
+	[Parameter]
+	public Expression<Func<bool>>? IsCollapsedExpression { get; set; }
+
+	/// <summary>
+	/// Event that occurs when the collapsed or expanded status of the content section changes.
+	/// </summary>
+	[Parameter]
     public EventCallback<bool> IsCollapsedChanged { get; set; }
 
     /// <summary>
@@ -78,7 +84,9 @@ public partial class Panel : ComponentBase
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    private string FullCssClass
+    private readonly string[] Filter = new[] { "class", "content-class", "header-class" };
+
+    private string MainCssClass
     {
         get
         {
@@ -90,7 +98,7 @@ public partial class Panel : ComponentBase
             if (Color != BulmaColors.Default)
                 css += ' ' + BulmaColorHelper.GetColorCss(Color);
 
-            return string.Join(' ', css, CssClass);
+            return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
         }
     }
 
@@ -98,15 +106,12 @@ public partial class Panel : ComponentBase
     {
         get
         {
-            var css = "panel-heading py-3";
+            var css = "panel-heading is-unselectable py-3";
 
             if (OnTitleClicked.HasDelegate || ShowCollapseIcons)
                 css += " is-clickable";
 
-            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("header-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-                css += $" {additional}";
-
-            return css;
+            return string.Join(' ', css, AdditionalAttributes.GetClass("header-class"));
         }
     }
 
@@ -128,26 +133,9 @@ public partial class Panel : ComponentBase
             if (Color != BulmaColors.Default)
                 css += ' ' + BulmaColorHelper.GetBackgroundCss(Color, "light");
 
-            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("content-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-                css += $" {additional}";
-
-            return css;
+            return string.Join(' ', css, AdditionalAttributes.GetClass("content-class"));
         }
     }
-
-    private string? CssClass
-    {
-        get
-        {
-            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-                return css.ToString();
-
-            return null;
-        }
-    }
-
-	private readonly string[] Filter = new[] { "class", "content-class", "header-class" };
-	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
 
 	private async Task TitleClicked()
     {

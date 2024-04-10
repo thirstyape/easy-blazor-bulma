@@ -10,8 +10,8 @@ else if (UpdatePageTitle)
 	<PageTitle>@Title</PageTitle>
 }
 
-<section class="@FullCssClass" @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
-	<div class="hero-body pl-4">
+<section class="@MainCssClass" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
+	<div class="@BodyCssClass">
 		<h1 class="title has-text-centered">
 			@if (string.IsNullOrWhiteSpace(Icon) == false && string.IsNullOrWhiteSpace(IconUrl) == false)
 			{

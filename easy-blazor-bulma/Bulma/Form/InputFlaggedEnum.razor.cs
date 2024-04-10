@@ -26,12 +26,14 @@ public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAcc
     [Parameter]
     public bool HideZeroOption { get; set; } = true;
 
-    private readonly bool IsNullable;
+	private readonly string[] Filter = new[] { "class" };
+
+	private readonly bool IsNullable;
     private readonly Type UnderlyingType;
     private readonly string PropertyName = Guid.NewGuid().ToString();
 
-    private string FullCssClass 
-    { 
+    private string MainCssClass
+    {
         get
         {
             var css = "checkbox";

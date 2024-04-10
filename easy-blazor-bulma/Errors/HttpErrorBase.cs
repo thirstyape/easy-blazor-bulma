@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -43,25 +42,11 @@ public abstract class HttpErrorBase : ComponentBase
     /// <summary>
     /// The full CSS class to assign to the error message.
     /// </summary>
-    protected string FullCssClass
+    protected string MainCssClass
     {
         get
         {
-            return string.Join(' ', "column is-12-tablet is-10-desktop is-10-widescreen", CssClass);
-        }
-    }
-
-    /// <summary>
-    /// Returns the class attibute value.
-    /// </summary>
-    protected string? CssClass
-    {
-        get
-        {
-            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-                return css.ToString();
-
-            return null;
+            return string.Join(' ', "column is-12-tablet is-10-desktop is-10-widescreen", AdditionalAttributes.GetClass("class"));
         }
     }
 }

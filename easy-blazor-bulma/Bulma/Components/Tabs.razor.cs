@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Globalization;
+using System.Linq.Expressions;
 
 namespace easy_blazor_bulma;
 
@@ -18,6 +18,12 @@ public partial class Tabs : ComponentBase
 	/// </summary>
 	[Parameter]
 	public string? Active { get; set; }
+
+	/// <summary>
+	/// Expression for manual binding to <see cref="Active"/>.
+	/// </summary>
+	[Parameter]
+	public Expression<Func<string?>>? ActiveExpression { get; set; }
 
 	/// <summary>
 	/// Event that occurs when <see cref="Active"/> is modified.
@@ -46,7 +52,7 @@ public partial class Tabs : ComponentBase
     /// <summary>
     /// Rounds the first and last elements in the tab bar. Requires <see cref="IsToggle"/> to be true.
     /// </summary>
-    [Parameter] 
+    [Parameter]
 	public bool IsRounded { get; set; } = true;
 
     /// <summary>
@@ -67,13 +73,15 @@ public partial class Tabs : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	[Inject]
+    private readonly string[] Filter = new[] { "class" };
+
+    [Inject]
 	private IServiceProvider ServiceProvider { get; init; }
 
 	private readonly List<Tab> Children = new();
 	private ILogger<Tabs>? Logger;
 
-	private string FullCssClass 
+	private string MainCssClass
 	{
 		get
 		{
@@ -90,19 +98,8 @@ public partial class Tabs : ComponentBase
 			if (IsToggle && IsRounded)
 				css += " is-toggle-rounded";
 
-            return string.Join(' ', css, CssClass);
+            return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
         }
-	}
-
-	private string? CssClass
-	{
-		get
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-				return css.ToString();
-
-			return null;
-		}
 	}
 
 	/// <inheritdoc/>
@@ -177,7 +174,7 @@ public partial class Tabs : ComponentBase
 
 	private async Task OnSelectionChanged(Tab tab)
 	{
-		if (tab.AdditionalAttributes != null && tab.AdditionalAttributes.Any(x => x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true"))) 
+		if (tab.AdditionalAttributes != null && tab.AdditionalAttributes.Any(x => x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")))
 			return;
 
         if (OnItemClicked != null)
@@ -192,23 +189,20 @@ public partial class Tabs : ComponentBase
 		}
 	}
 
-	private string? GetChildCssClass(Tab tab)
+	private string GetChildCssClass(Tab tab)
 	{
-		string css;
+        string? css;
 
-		if (tab.Index == 0)
-			css = "mr-1 ";
+        if (tab.Index == 0)
+			css = "mr-1";
 		else if (tab.Index == Children.Count - 1)
-			css = "ml-1 ";
+			css = "ml-1";
 		else
-			css = "mx-1 ";
+			css = "mx-1";
 
 		if (Active == tab.Name)
-			css += "is-active";
+			css += " is-active";
 
-		if (tab.AdditionalAttributes != null && tab.AdditionalAttributes.TryGetValue("class", out var tabCss) && string.IsNullOrWhiteSpace(Convert.ToString(tabCss, CultureInfo.InvariantCulture)) == false)
-			css += $" {tabCss}";
-
-		return css.TrimEnd();
-	}
+        return string.Join(' ', css, tab.AdditionalAttributes.GetClass("class"));
+    }
 }

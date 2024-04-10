@@ -61,6 +61,8 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 	[Parameter]
 	public Func<Task>? OnCustomButtonClicked { get; set; }
 
+	private readonly string[] Filter = new string[] { "class", "columns-class", "column-class", "button-class" };
+
 	private readonly bool IsNullable;
 	private readonly Type UnderlyingType;
 	private ElementReference? Element;
@@ -71,7 +73,7 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 
 	private string InternalValueAsString = string.Empty;
 
-	private string FullCssClass
+	private string MainCssClass
 	{
 		get
 		{
@@ -88,31 +90,9 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 		}
 	}
 
-	private string ColumnsCssClass
-	{
-		get
-		{
-			var css = "columns mb-0";
+	private string ColumnsCssClass => string.Join(' ', "columns mb-0", AdditionalAttributes.GetClass("columns-class"));
 
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("columns-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-			return css;
-		}
-	}
-
-	private string ColumnCssClass
-	{
-		get
-		{
-			var css = "column pb-0";
-
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("column-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-			return css;
-		}
-	}
+	private string ColumnCssClass => string.Join(' ', "column pb-0", AdditionalAttributes.GetClass("column-class"));
 
 	private string ButtonCssClass
 	{
@@ -126,15 +106,9 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 			if (IsBordered)
 				css += " is-bordered";
 
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("button-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-			return css;
+			return string.Join(' ', css, AdditionalAttributes.GetClass("button-class"));
 		}
 	}
-
-	private readonly string[] Filter = new string[] { "class", "columns-class", "column-class", "button-class" };
-	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
 
 	public InputNumberPad()
 	{

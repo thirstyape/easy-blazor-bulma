@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -35,7 +34,15 @@ public abstract class ButtonBase : ComponentBase
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    protected string FullCssClass
+    /// <summary>
+    /// Contains HTTP attributes to remove from those applied to the resulting component.
+    /// </summary>
+	protected virtual string[] Filter { get; } = new[] { "class" };
+
+	/// <summary>
+	/// The full CSS class to assign to the button.
+	/// </summary>
+	protected string MainCssClass
     {
         get
         {
@@ -44,18 +51,7 @@ public abstract class ButtonBase : ComponentBase
             if (Color != BulmaColors.Default)
                 css += ' ' + BulmaColorHelper.GetColorCss(Color);
 
-            return string.Join(' ', css, CssClass);
-        }
-    }
-
-    protected string? CssClass
-    {
-        get
-        {
-            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-                return css.ToString();
-
-            return null;
+            return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
         }
     }
 }

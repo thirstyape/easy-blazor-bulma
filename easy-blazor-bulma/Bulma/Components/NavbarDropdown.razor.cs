@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -7,7 +6,7 @@ namespace easy_blazor_bulma;
 /// A dropdown to use in a Navbar menu to contain additional items.
 /// </summary>
 /// <remarks>
-/// There is additional attribute that can be used: dropdown-class. It will apply CSS classes to the resulting element as per its name.
+/// There are 2 additional attributes that can be used: dropdown-class and link-class. They will apply CSS classes to the resulting elements as per their names.
 /// <see href="https://bulma.io/documentation/components/navbar/">Bulma Documentation</see>
 /// </remarks>
 public partial class NavbarDropdown : ComponentBase
@@ -48,9 +47,11 @@ public partial class NavbarDropdown : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private bool IsActive;
+    private readonly string[] Filter = new[] { "class", "dropdown-class", "link-class" };
 
-	private string FullCssClass
+    private bool IsActive;
+
+	private string MainCssClass
 	{
 		get
 		{
@@ -59,8 +60,8 @@ public partial class NavbarDropdown : ComponentBase
 			if (IsFullWidth)
 				css += " is-mega";
 
-			return string.Join(' ', css, CssClass);
-		}
+            return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
+        }
 	}
 
 	private string LinkCssClass
@@ -75,8 +76,8 @@ public partial class NavbarDropdown : ComponentBase
 			if (CompactDisplay && string.IsNullOrWhiteSpace(DisplayText) == false)
 				css += " is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only";
 
-			return css.TrimStart();
-		}
+            return string.Join(' ', css.TrimStart(), AdditionalAttributes.GetClass("link-class"));
+        }
 	}
 
 	private string DropdownCssClass
@@ -88,26 +89,9 @@ public partial class NavbarDropdown : ComponentBase
 			if (IsActive)
 				css += " is-active";
 
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("dropdown-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-			return css;
-		}
+            return string.Join(' ', css, AdditionalAttributes.GetClass("dropdown-class"));
+        }
 	}
-
-	private string? CssClass
-	{
-		get
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-				return css.ToString();
-
-			return null;
-		}
-	}
-
-	private readonly string[] Filter = new[] { "class", "dropdown-class" };
-	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
 
 	private void ToggleMenu()
 	{

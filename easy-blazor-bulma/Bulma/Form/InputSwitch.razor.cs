@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -12,7 +11,7 @@ namespace easy_blazor_bulma;
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
 /// <remarks>
-/// There are 3 additional attributes that can be used: div-class, label-class, and data-tooltip. The first two apply CSS classes to the resulting elements as per their names. The last adds a hover tooltip to the element.
+/// There are 4 additional attributes that can be used: div-class, label-class, tooltip-class, and data-tooltip. The first 3 apply CSS classes to the resulting elements as per their names. The last adds a hover tooltip to the element.
 /// </remarks>
 public partial class InputSwitch<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TValue> : InputBase<TValue>
 {
@@ -37,32 +36,17 @@ public partial class InputSwitch<[DynamicallyAccessedMembers(DynamicallyAccessed
 	[Parameter]
 	public TooltipOptions TooltipMode { get; set; } = TooltipOptions.Default;
 
-    private readonly bool IsNullable;
+	private readonly string[] Filter = new string[] { "class", "id", "data-tooltip", "div-class", "label-class", "tooltip-class" };
+
+	private readonly bool IsNullable;
 	private readonly Type UnderlyingType;
 
     private string? Id;
     private string? Tooltip;
 
-    private string FullCssClass
-	{
-		get
-		{
-			return string.Join(' ', "switch", CssClass);
-		}
-	}
+    private string MainCssClass => string.Join(' ', "switch", CssClass);
 
-	private string LabelCssClass
-	{
-		get
-		{
-			var css = "is-unselectable";
-
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("label-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-			return css;
-		}
-	}
+	private string LabelCssClass => string.Join(' ', "is-unselectable", AdditionalAttributes.GetClass("label-class"));
 
 	private string DivCssClass
 	{
@@ -73,10 +57,7 @@ public partial class InputSwitch<[DynamicallyAccessedMembers(DynamicallyAccessed
 			if (IsBoxed)
 				css += " box";
 
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("div-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-			return css;
+			return string.Join(' ', css, AdditionalAttributes.GetClass("div-class"));
 		}
 	}
 
@@ -107,12 +88,9 @@ public partial class InputSwitch<[DynamicallyAccessedMembers(DynamicallyAccessed
 					css += " has-tooltip-multiline";
             }
 
-			return css;
+			return string.Join(' ', css, AdditionalAttributes.GetClass("tooltip-class"));
 		}
 	}
-
-    private readonly string[] Filter = new string[] { "class", "id", "data-tooltip" };
-    private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
 
     public InputSwitch()
 	{
@@ -129,12 +107,7 @@ public partial class InputSwitch<[DynamicallyAccessedMembers(DynamicallyAccessed
     protected override void OnInitialized()
 	{
 		if (string.IsNullOrWhiteSpace(Id))
-		{
-            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("id", out var id) && string.IsNullOrWhiteSpace(Convert.ToString(id, CultureInfo.InvariantCulture)) == false)
-                Id = id.ToString();
-			else
-                Id = Guid.NewGuid().ToString();
-        }
+			Id = AdditionalAttributes.GetValue("id") ?? Guid.NewGuid().ToString();
 
 		DisplayAttribute? attribute = null;
 
@@ -144,10 +117,7 @@ public partial class InputSwitch<[DynamicallyAccessedMembers(DynamicallyAccessed
 		if (string.IsNullOrWhiteSpace(Label))
 			Label = attribute?.GetName();
 
-		if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("data-tooltip", out var tooltip) && string.IsNullOrWhiteSpace(Convert.ToString(tooltip, CultureInfo.InvariantCulture)) == false)
-			Tooltip = tooltip.ToString();
-		else
-			Tooltip = attribute?.GetDescription();
+		Tooltip = AdditionalAttributes.GetValue("data-tooltip") ?? attribute?.GetDescription();
 	}
 
     /// <inheritdoc/>

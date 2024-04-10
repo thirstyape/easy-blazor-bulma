@@ -19,6 +19,7 @@ To use this library either clone a copy of the repository or check out the [NuGe
 
 * Pre-compiled CSS bundle containing Bulma, several extensions, and a dark theme
 * Interactive Blazor components for Bulma framework elements
+* Additional components to help with common Blazor tasks
 * Bundled with Google Material Symbols icon font
 * No additional dependencies (Microsoft.AspNetCore.Components.Web is already required by Blazor)
 * No JavaScript required (except for `<ThemeSelector />`)
@@ -83,6 +84,7 @@ The following components are currently available for use. All of them are docume
 
 **Helpers**
 
+* `<Loader />`, displays a loading screen with a progress meter and message
 * `<ThemeSelector />`, toggles between dark and light CSS themes (requires JavaScript file and both CSS stylesheets in index.html)
 * `<TitleBlock />`, displays a banner accross the top of the screen with some text
 

@@ -1,7 +1,7 @@
 ﻿@namespace easy_blazor_bulma
 @inherits ButtonBase
 
-<button type="reset" class='@FullCssClass' @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
+<button type="reset" class='@MainCssClass' @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
     @if (string.IsNullOrWhiteSpace(Icon) == false)
     {
         <span class="material-icons icon">@Icon</span>

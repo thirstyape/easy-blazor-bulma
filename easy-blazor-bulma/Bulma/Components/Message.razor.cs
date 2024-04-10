@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -7,6 +6,7 @@ namespace easy_blazor_bulma;
 /// A colored message block, to emphasize part of your page.
 /// </summary>
 /// <remarks>
+/// There are 2 additional attributes that can be used: header-class and body-class. Each of which apply CSS classes to the resulting elements as per their names.
 /// <see href="https://bulma.io/documentation/components/message/">Bulma Documentation</see>
 /// </remarks>
 public partial class Message : ComponentBase
@@ -47,7 +47,9 @@ public partial class Message : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private string FullCssClass
+    private readonly string[] Filter = new[] { "class", "header-class", "body-class" };
+
+    private string MainCssClass
 	{
 		get
 		{
@@ -59,22 +61,15 @@ public partial class Message : ComponentBase
             if (Color != BulmaColors.Default)
                 css += ' ' + BulmaColorHelper.GetColorCss(Color);
 
-            return string.Join(' ', css, CssClass);
-		}
+            return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
+        }
 	}
 
-	private string? CssClass
-	{
-		get
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-				return css.ToString();
+    private string HeaderCssClass => string.Join(' ', "message-header", AdditionalAttributes.GetClass("header-class"));
 
-			return null;
-		}
-	}
+    private string BodyCssClass => string.Join(' ', "message-header", AdditionalAttributes.GetClass("body-class"));
 
-	private void Delete()
+    private void Delete()
 	{
 		IsHidden = true;
 		StateHasChanged();

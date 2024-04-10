@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System.Globalization;
+using System.Linq.Expressions;
 
 namespace easy_blazor_bulma;
 
@@ -19,10 +19,16 @@ public partial class Steps : ComponentBase
 	[Parameter]
     public string? Active { get; set; }
 
-    /// <summary>
-    /// Event that occurs when <see cref="Active"/> is modified.
-    /// </summary>
-    [Parameter]
+	/// <summary>
+	/// Expression for manual binding to <see cref="Active"/>.
+	/// </summary>
+	[Parameter]
+	public Expression<Func<string?>>? ActiveExpression { get; set; }
+
+	/// <summary>
+	/// Event that occurs when <see cref="Active"/> is modified.
+	/// </summary>
+	[Parameter]
     public EventCallback<string?> ActiveChanged { get; set; }
 
     /// <summary>
@@ -67,13 +73,15 @@ public partial class Steps : ComponentBase
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	[Inject]
+    private readonly string[] Filter = new[] { "class" };
+
+    [Inject]
 	private IServiceProvider ServiceProvider { get; init; }
 
 	private readonly List<Step> Children = new();
 	private ILogger<Steps>? Logger;
 
-	private string FullCssClass
+	private string MainCssClass
     {
         get
         {
@@ -88,18 +96,7 @@ public partial class Steps : ComponentBase
             if (IsCentered)
                 css += " has-content-centered";
 
-            return css;
-        }
-    }
-
-    private string? CssClass
-    {
-        get
-        {
-            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-                return css.ToString();
-
-            return null;
+            return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
         }
     }
 
@@ -124,13 +121,13 @@ public partial class Steps : ComponentBase
             Logger?.LogError("Steps must have a name assigned.");
             return;
         }
-            
+
         else if (Children.Any(x => x.Name == step.Name))
         {
             Logger?.LogError("Steps must have a unique name. Duplicate is {name}.", step.Name);
             return;
         }
-            
+
 
         step.Index = Children.Count != 0 ? Children.Max(x => x.Index) + 1 : 0;
 
@@ -151,7 +148,7 @@ public partial class Steps : ComponentBase
     {
         var child = Children.FirstOrDefault(x => x.Index == step.Index);
 
-        if (child == null) 
+        if (child == null)
         {
             Logger?.LogError("Could not find step to remove with name {name}.", step.Name);
             return;
@@ -192,7 +189,7 @@ public partial class Steps : ComponentBase
         }
     }
 
-    private string? GetChildCssClass(Step step)
+    private string GetChildCssClass(Step step)
     {
         var active = Children.Single(x => x.Name == Active);
         var css = "steps-segment";
@@ -203,10 +200,7 @@ public partial class Steps : ComponentBase
 		if (step.Index >= active.Index)
 			css += " is-dashed";
 
-		if (step.AdditionalAttributes != null && step.AdditionalAttributes.TryGetValue("class", out var stepCss) && string.IsNullOrWhiteSpace(Convert.ToString(stepCss, CultureInfo.InvariantCulture)) == false)
-			css += $" {stepCss}";
-
-		return css;
+        return string.Join(' ', css, step.AdditionalAttributes.GetClass("class"));
     }
 
     private string GetMarkerCssClass(Step step)
@@ -222,6 +216,8 @@ public partial class Steps : ComponentBase
         if (step.MarkerColor != BulmaColors.Default)
             css += ' ' + BulmaColorHelper.GetColorCss(step.MarkerColor);
 
-        return css;
+        return string.Join(' ', css, step.AdditionalAttributes.GetClass("marker-class"));
     }
+
+    private string GetContentCssClass(Step step) => string.Join(' ', "steps-content is-size-4", step.AdditionalAttributes.GetClass("content-class"));
 }

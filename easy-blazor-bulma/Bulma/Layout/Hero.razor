@@ -1,23 +1,23 @@
 ﻿@namespace easy_blazor_bulma
 @inherits ComponentBase
 
-<section class="@FullCssClass" @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
+<section class="@MainCssClass" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
 	@if (HeroHead != null)
 	{
-		<div class="hero-head">
+		<div class="@HeaderCssClass">
 			@HeroHead
 		</div>
 	}
 
 	@if (HeroBody != null || ChildContent != null)
 	{
-		<div class="hero-body">
+		<div class="@BodyCssClass">
 			@(HeroBody ?? ChildContent)
 		</div>
 	}
 	else if (string.IsNullOrWhiteSpace(Title) == false && string.IsNullOrWhiteSpace(Subtitle) == false)
 	{
-		<div class="hero-body">
+		<div class="@BodyCssClass">
 			<div>
 				<p class="title">@Title</p>
 				<p class="subtitle">@Subtitle</p>
@@ -26,14 +26,14 @@
 	}
 	else if (string.IsNullOrWhiteSpace(Title) == false)
 	{
-		<div class="hero-body">
+		<div class="@BodyCssClass">
 			<p class="title">@Title</p>
 		</div>
 	}
 
 	@if (HeroFoot != null)
 	{
-		<div class="hero-foot">
+		<div class="@FootCssClass">
 			@HeroFoot
 		</div>
 	}

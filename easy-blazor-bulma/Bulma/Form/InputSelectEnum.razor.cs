@@ -42,10 +42,12 @@ public partial class InputSelectEnum<[DynamicallyAccessedMembers(DynamicallyAcce
     [Parameter]
     public bool HideZeroOption { get; set; }
 
-    private readonly bool IsNullable;
+	private readonly string[] Filter = new[] { "class" };
+
+	private readonly bool IsNullable;
     private readonly Type UnderlyingType;
 
-    private string FullCssClass
+    private string MainCssClass
     {
         get
         {

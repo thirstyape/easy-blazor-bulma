@@ -2,6 +2,6 @@
 @typeparam TValue
 @inherits ComponentBase
 
-<label class="@FullCssClass" @attributes='FilteredAttributes'>
+<label class="@MainCssClass" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
 	<span class="@TooltipCssClass" data-tooltip="@Tooltip">@DisplayText</span>
 </label>

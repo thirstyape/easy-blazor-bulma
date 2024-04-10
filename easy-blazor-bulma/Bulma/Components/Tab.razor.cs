@@ -35,15 +35,16 @@ public partial class Tab : ComponentBase, IAsyncDisposable
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
 
+    [CascadingParameter]
+    private Tabs Parent { get; set; }
+
     /// <summary>
     /// Any additional attributes applied directly to the component.
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    [CascadingParameter]
-	private Tabs Parent { get; set; }
-
+    internal readonly string[] Filter = new[] { "class" };
     internal bool IsActive => Name != null && Parent.Active == Name;
 	internal int Index;
 

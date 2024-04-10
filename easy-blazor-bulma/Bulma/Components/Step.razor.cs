@@ -7,6 +7,7 @@ namespace easy_blazor_bulma;
 /// Use to create a single step within a <see cref="Steps"/> component.
 /// </summary>
 /// <remarks>
+/// There are 2 additional attributes that can be used: marker-class and content-class. Each of which apply CSS classes to the resulting elements as per their names.
 /// <see href="https://octoshrimpy.github.io/bulma-o-steps/">GitHub Documentation</see>
 /// </remarks>
 public partial class Step : ComponentBase, IAsyncDisposable
@@ -38,19 +39,9 @@ public partial class Step : ComponentBase, IAsyncDisposable
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
+    internal readonly string[] Filter = new[] { "class", "marker-class", "content-class" };
     internal bool IsActive => Name != null && Parent.Active == Name;
     internal int Index;
-
-    internal string? CssClass
-    {
-        get
-        {
-            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-                return css.ToString();
-
-            return "is-size-4";
-        }
-    }
 
     /// <inheritdoc/>
 	protected async override Task OnInitializedAsync()

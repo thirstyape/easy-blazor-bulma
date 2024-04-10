@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -7,6 +6,7 @@ namespace easy_blazor_bulma;
 /// Creates an imposing hero banner to showcase something.
 /// </summary>
 /// <remarks>
+/// There are 3 additional attributes that can be used: header-class, body-class, and foot-class. Each of which apply CSS classes to the resulting elements as per their names.
 /// <see href="https://bulma.io/documentation/layout/hero/">Bulma Documentation</see>
 /// </remarks>
 public partial class Hero : ComponentBase
@@ -59,7 +59,9 @@ public partial class Hero : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private string FullCssClass 
+	private readonly string[] Filter = new[] { "class", "header-class", "body-class", "foot-class" };
+
+	private string MainCssClass
 	{
 		get
 		{
@@ -68,18 +70,11 @@ public partial class Hero : ComponentBase
 			if (Color != BulmaColors.Default)
 				css += ' ' + BulmaColorHelper.GetColorCss(Color);
 
-			return string.Join(' ', css, CssClass);
+			return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
 		}
 	}
 
-	private string? CssClass
-	{
-		get
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-				return css.ToString();
-
-			return null;
-		}
-	}
+	private string HeaderCssClass => string.Join(' ', "hero-head", AdditionalAttributes.GetClass("header-class"));
+	private string BodyCssClass => string.Join(' ', "hero-body", AdditionalAttributes.GetClass("body-class"));
+	private string FootCssClass => string.Join(' ', "hero-foot", AdditionalAttributes.GetClass("foot-class"));
 }

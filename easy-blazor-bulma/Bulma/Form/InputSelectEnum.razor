@@ -4,8 +4,8 @@
 
 @using System.ComponentModel.DataAnnotations
 
-<div class='@FullCssClass'>
-    <select class='input' @onchange=OnSelectionChanged @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
+<div class='@MainCssClass'>
+    <select class='input' @onchange=OnSelectionChanged @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
         @if (IsNullable)
         {
             <option value="" selected='@(CurrentValue == null)'>@NullText</option>

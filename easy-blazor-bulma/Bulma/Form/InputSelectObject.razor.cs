@@ -55,9 +55,11 @@ public partial class InputSelectObject<[DynamicallyAccessedMembers(DynamicallyAc
 	[Parameter]
 	public bool UseAutomaticStatusColors { get; set; } = true;
 
+	private readonly string[] Filter = new[] { "class" };
+
 	private readonly Type UnderlyingType;
 
-	private string FullCssClass
+	private string MainCssClass
 	{
 		get
 		{

@@ -82,6 +82,8 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
         InputDateTimeOptions.CloseOnDateClicked |
         InputDateTimeOptions.ValidateTextInput;
 
+	private readonly string[] Filter = new string[] { "class", "datetimepicker-class", "icon-class" };
+
 	[Inject]
 	private IServiceProvider ServiceProvider { get; init; }
 
@@ -97,7 +99,7 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 
 	private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
 
-    private string FullCssClass
+    private string MainCssClass
 	{
 		get
 		{
@@ -136,10 +138,7 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 			else if (Options.HasFlag(InputDateTimeOptions.PopoutRight))
 				css += " datetimepicker-right";
 
-            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("datetimepicker-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-                css += $" {additional}";
-
-            return css;
+			return string.Join(' ', css, AdditionalAttributes.GetClass("datetimepicker-class"));
 		}
 	}
 
@@ -149,7 +148,7 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 		{
 			var css = "material-icons icon is-left";
 
-			if (FullCssClass.Contains("is-small"))
+			if (MainCssClass.Contains("is-small"))
 				css += " is-small";
 
 			if (DisplayStatus.HasFlag(InputStatus.IconDanger))
@@ -159,15 +158,9 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 			else if (DisplayStatus.HasFlag(InputStatus.IconSuccess))
 				css += " has-text-success";
 
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("icon-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-            return css;
+			return string.Join(' ', css, AdditionalAttributes.GetClass("icon-class"));
 		}
 	}
-
-	private readonly string[] Filter = new string[] { "class", "datetimepicker-class", "icon-class" };
-	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
 
 	private DateTime ValueAsDateTime
     {

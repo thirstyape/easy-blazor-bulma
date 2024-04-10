@@ -1,7 +1,6 @@
 ﻿using easy_core;
 using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Linq.Expressions;
 
 namespace easy_blazor_bulma;
@@ -11,7 +10,7 @@ namespace easy_blazor_bulma;
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
 /// <remarks>
-/// There is 1 additional attribute that can be used: data-tooltip. It adds a hover tooltip to the element.
+/// There are 2 additional attributes that can be used: data-tooltip and tooltip-class. The data-tooltip adds a hover tooltip to the element and the tooltip-class adds custom CSS to the corresponding element.
 /// <see href="https://bulma.io/documentation/form/general/">Bulma Documentation</see>
 /// </remarks>
 public partial class Label<TValue> : ComponentBase
@@ -46,9 +45,11 @@ public partial class Label<TValue> : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
+	private readonly string[] Filter = new[] { "class", "data-tooltip", "tooltip-class" };
+
 	private string? Tooltip;
 
-	private string FullCssClass => string.Join(' ', "label", CssClass);
+	private string MainCssClass => string.Join(' ', "label", AdditionalAttributes.GetClass("class"));
 
 	private string TooltipCssClass
 	{
@@ -77,23 +78,9 @@ public partial class Label<TValue> : ComponentBase
 					css += " has-tooltip-multiline";
 			}
 
-			return css;
+			return string.Join(' ', css, AdditionalAttributes.GetClass("tooltip-class"));
 		}
 	}
-
-	private string? CssClass
-	{
-		get
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-				return css.ToString();
-
-			return null;
-		}
-	}
-
-	private readonly string[] Filter = new[] { "class", "data-tooltip" };
-	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
 
 	/// <inheritdoc />
 	protected override void OnInitialized()
@@ -106,9 +93,6 @@ public partial class Label<TValue> : ComponentBase
 		if (string.IsNullOrWhiteSpace(DisplayText))
 			DisplayText = attribute?.GetName();
 
-		if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("data-tooltip", out var tooltip) && string.IsNullOrWhiteSpace(Convert.ToString(tooltip, CultureInfo.InvariantCulture)) == false)
-			Tooltip = tooltip.ToString();
-		else
-			Tooltip = attribute?.GetDescription();
+		Tooltip = AdditionalAttributes.GetValue("data-tooltip") ?? attribute?.GetDescription();
 	}
 }

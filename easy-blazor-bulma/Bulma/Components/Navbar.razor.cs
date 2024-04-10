@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -7,6 +6,7 @@ namespace easy_blazor_bulma;
 /// A navigation menu to use at the top of the screen.
 /// </summary>
 /// <remarks>
+/// There are 3 additional attributes that can be used: brand-class, burger-class, and menu-class. Each of which apply CSS classes to the resulting elements as per their names.
 /// <see href="https://bulma.io/documentation/components/navbar/">Bulma Documentation</see>
 /// </remarks>
 public partial class Navbar : ComponentBase
@@ -53,13 +53,17 @@ public partial class Navbar : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
+	private readonly string[] Filter = new[] { "class", "id", "role", "aria-label", "href", "brand-class", "burger-class", "menu-class" };
+
 	private bool IsActive;
 	private string? Id;
 	private string Href = "";
 
-	private string FullCssClass => string.Join(' ', "navbar", CssClass);
+	private string MainCssClass => string.Join(' ', "navbar", AdditionalAttributes.GetClass("class"));
 
-	private string BurgerCssClass
+    private string BrandCssClass => string.Join(' ', "navbar-brand no-select", AdditionalAttributes.GetClass("brand-class"));
+
+    private string BurgerCssClass
 	{
 		get
 		{
@@ -68,8 +72,8 @@ public partial class Navbar : ComponentBase
 			if (IsActive)
 				css += " is-active";
 
-			return css;
-		}
+            return string.Join(' ', css, AdditionalAttributes.GetClass("burger-class"));
+        }
 	}
 
 	private string MenuCssClass
@@ -81,40 +85,18 @@ public partial class Navbar : ComponentBase
 			if (IsActive)
 				css += " is-active";
 
-			return css;
-		}
+            return string.Join(' ', css, AdditionalAttributes.GetClass("menu-class"));
+        }
 	}
-
-	private string? CssClass
-	{
-		get
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-				return css.ToString();
-
-			return null;
-		}
-	}
-
-	private readonly string[] Filter = new[] { "class", "id", "role", "aria-label", "href" };
-	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
 
 	/// <inheritdoc />
 	protected override void OnInitialized()
 	{
 		if (string.IsNullOrWhiteSpace(Id))
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("id", out var id) && string.IsNullOrWhiteSpace(Convert.ToString(id, CultureInfo.InvariantCulture)) == false)
-				Id = id.ToString();
-			else
-				Id = Guid.NewGuid().ToString();
-		}
+			Id = AdditionalAttributes.GetValue("id") ?? Guid.NewGuid().ToString();
 
 		if (string.IsNullOrWhiteSpace(Href))
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("href", out var href) && string.IsNullOrWhiteSpace(Convert.ToString(href, CultureInfo.InvariantCulture)) == false)
-				Href = href.ToString() ?? string.Empty;
-		}
+			Href = AdditionalAttributes.GetValue("href") ?? string.Empty;
 	}
 
 	private void ToggleMenu()

@@ -1,7 +1,7 @@
 ﻿@namespace easy_blazor_bulma
 @inherits ComponentBase
 
-<div class="@FullCssClass" @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
+<div class="@MainCssClass" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
     @if (ShowDeleteButton)
     {
         <button type="button" class="delete" @onclick="Delete"></button>

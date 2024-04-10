@@ -6,7 +6,7 @@
 @if (string.IsNullOrWhiteSpace(Message) == false)
 {
 	<div class="columns is-centered">
-		<div class="@FullCssClass">
+		<div class="@MainCssClass">
 			@foreach (var line in Message.ToLines())
 			{
 				<p>@line</p>

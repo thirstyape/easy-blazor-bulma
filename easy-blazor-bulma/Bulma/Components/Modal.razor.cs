@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
 using System.Linq.Expressions;
 
 namespace easy_blazor_bulma;
@@ -8,6 +7,7 @@ namespace easy_blazor_bulma;
 /// A classic modal overlay, in which you can include any content you want.
 /// </summary>
 /// <remarks>
+/// There are 4 additional attributes that can be used: card-class, header-class, body-class, and foot-class. Each of which apply CSS classes to the resulting elements as per their names.
 /// <see href="https://bulma.io/documentation/components/modal/">Bulma Documentation</see>
 /// </remarks>
 public partial class Modal : ComponentBase
@@ -72,7 +72,9 @@ public partial class Modal : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    private string FullCssClass
+    private readonly string[] Filter = new[] { "class", "card-class", "header-class", "body-class", "foot-class" };
+
+    private string MainCssClass
     {
         get
         {
@@ -81,20 +83,14 @@ public partial class Modal : ComponentBase
             if (IsDisplayed)
                 css += " is-active";
 
-            return string.Join(' ', css, CssClass);
+            return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
         }
     }
 
-    private string? CssClass
-    {
-        get
-        {
-            if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-                return css.ToString();
-
-            return null;
-        }
-    }
+    private string CardCssClass => string.Join(' ', "modal-card", AdditionalAttributes.GetClass("card-class"));
+    private string HeaderCssClass => string.Join(' ', "modal-card-head", AdditionalAttributes.GetClass("header-class"));
+    private string BodyCssClass => string.Join(' ', "modal-card-body", AdditionalAttributes.GetClass("body-class"));
+    private string FootCssClass => string.Join(' ', "modal-card-foot", AdditionalAttributes.GetClass("foot-class"));
 
     private async Task CloseModal()
     {

@@ -76,6 +76,8 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	[Parameter]
 	public Func<string?, Task>? OnItemsRequested { get; set; }
 
+	private readonly string[] Filter = new[] { "class", "dropdown-class", "dropdown-trigger-class", "dropdown-menu-class", "dropdown-item-class" };
+
 	[Inject]
 	private IServiceProvider ServiceProvider { get; init; }
 
@@ -93,7 +95,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 
 	private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
 
-	private string FullCssClass
+	private string MainCssClass
 	{
 		get
 		{
@@ -128,41 +130,13 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 			if (Options.HasFlag(InputAutocompleteOptions.HoverPopout))
 				css += " is-hoverable";
 
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("dropdown-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-			return css;
+			return string.Join(' ', css, AdditionalAttributes.GetClass("dropdown-class"));
 		}
 	}
 
-	private string DropDownTriggerCssClass
-	{
-		get
-		{
-			var css = "dropdown-trigger";
+	private string DropDownTriggerCssClass => string.Join(' ', "dropdown-trigger", AdditionalAttributes.GetClass("dropdown-trigger-class"));
 
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("dropdown-trigger-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-			return css;
-		}
-	}
-
-	private string DropDownMenuCssClass
-	{
-		get
-		{
-			var css = "dropdown-menu p-0";
-
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("dropdown-menu-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-			return css;
-		}
-	}
-
-	private readonly string[] Filter = new[] { "class", "dropdown-class", "dropdown-trigger-class", "dropdown-menu-class", "dropdown-item-class" };
-	private IReadOnlyDictionary<string, object>? FilteredAttributes => AdditionalAttributes?.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
+	private string DropDownMenuCssClass => string.Join(' ', "dropdown-menu p-0", AdditionalAttributes.GetClass("dropdown-menu-class"));
 
 	public InputAutocomplete()
 	{
@@ -294,7 +268,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	private void OnBlur(FocusEventArgs args)
 	{
 		if (OnBlurPreventDefault)
-			return; 
+			return;
 
 		IsPopoutDisplayed = false;
 
@@ -445,9 +419,6 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 		if (CurrentValue != null && EqualityComparer<TValue>.Default.Equals(CurrentValue, item))
 			css += " has-text-success";
 
-		if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("dropdown-item-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-			css += $" {additional}";
-
-		return css;
+		return string.Join(' ', css, AdditionalAttributes.GetClass("dropdown-item-class"));
 	}
 }

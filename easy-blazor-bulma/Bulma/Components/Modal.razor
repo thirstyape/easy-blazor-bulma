@@ -1,25 +1,25 @@
 ﻿@namespace easy_blazor_bulma
 @inherits ComponentBase
 
-<div class='@FullCssClass' @attributes='AdditionalAttributes?.Where(x => x.Key != "class")'>
+<div class='@MainCssClass' @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
 	@if (UseBackground)
 	{
 		<div class="modal-background" @onclick='() => CloseModal()'></div>
 	}
-	<div class="modal-card" style='@(IsFullScreen ? "width: 100%; height: 100%" : "")'>
+	<div class="@CardCssClass" style='@(IsFullScreen ? "width: 100%; height: 100%" : "")'>
 		@if (string.IsNullOrWhiteSpace(Title) == false)
 		{
-			<header class="modal-card-head">
+			<header class="@HeaderCssClass">
 				<p class="modal-card-title">@Title</p>
 				<button type="button" class="delete" aria-label="close" @onclick='() => CloseModal()'></button>
 			</header>
 		}
-		<section class="modal-card-body">
+		<section class="@BodyCssClass">
 			@(ModalBody ?? ChildContent)
 		</section>
 		@if (ModalFooter != null)
 		{
-			<footer class="modal-card-foot">
+			<footer class="@FootCssClass">
 				@ModalFooter
 			</footer>
 		}

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -8,6 +7,7 @@ namespace easy_blazor_bulma;
 /// A link to use in a Navbar menu.
 /// </summary>
 /// <remarks>
+/// There is 1 additional attribute that can be used: link-class. It will apply CSS classes to the resulting element as per its name.
 /// <see href="https://bulma.io/documentation/components/navbar/">Bulma Documentation</see>
 /// </remarks>
 public partial class NavbarItem : ComponentBase
@@ -40,17 +40,11 @@ public partial class NavbarItem : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private string FullCssClass
-	{
-		get
-		{
-			var css = "navbar-item";
+    private readonly string[] Filter = new[] { "class", "link-class" };
 
-			return string.Join(' ', css, CssClass);
-		}
-	}
+    private string MainCssClass => string.Join(' ', "navbar-item", AdditionalAttributes.GetClass("class"));
 
-	private string LinkCssClass
+    private string LinkCssClass
 	{
 		get
 		{
@@ -62,18 +56,7 @@ public partial class NavbarItem : ComponentBase
 			if (CompactDisplay && ChildContent != null)
 				css += " is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only";
 
-			return css.TrimStart();
-		}
-	}
-
-	private string? CssClass
-	{
-		get
-		{
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("class", out var css) && string.IsNullOrWhiteSpace(Convert.ToString(css, CultureInfo.InvariantCulture)) == false)
-				return css.ToString();
-
-			return null;
-		}
+            return string.Join(' ', css.TrimStart(), AdditionalAttributes.GetClass("link-class"));
+        }
 	}
 }

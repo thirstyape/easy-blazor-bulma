@@ -54,6 +54,8 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 	[Parameter]
 	public char[] Characters { get; set; } = new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 
+	private readonly string[] Filter = new[] { "class", "columns-class", "column-class", "button-class" };
+
 	private readonly bool IsNullable;
 	private readonly Type UnderlyingType;
 
@@ -61,31 +63,9 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 	private bool OnKeyDownPreventDefault;
 	private readonly string[] DefaultKeys = new[] { "Escape", "Tab", "Enter", "NumpadEnter" };
 
-	private string ColumnsCssClass
-	{
-		get
-		{
-			var css = "columns mb-0";
+	private string ColumnsCssClass => string.Join(' ', "columns mb-0", AdditionalAttributes.GetClass("columns-class"));
 
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("columns-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-			return css;
-		}
-	}
-
-	private string ColumnCssClass
-	{
-		get
-		{
-			var css = "column pb-0";
-
-			if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("column-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-				css += $" {additional}";
-
-			return css;
-		}
-	}
+	private string ColumnCssClass => string.Join(' ', "column pb-0", AdditionalAttributes.GetClass("column-class"));
 
 	public InputCharacter()
 	{
@@ -221,7 +201,7 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 		return IsUpperCase ? char.ToUpper(character) : char.ToLower(character);
 	}
 
-	private void OnCaseChanged() 
+	private void OnCaseChanged()
 	{
 		IsUpperCase = !IsUpperCase;
 
@@ -245,13 +225,10 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 
 		if (IsRounded)
 			css += " is-rounded";
-		
+
 		if (IsBordered)
 			css += " is-bordered";
 
-		if (AdditionalAttributes != null && AdditionalAttributes.TryGetValue("button-class", out var additional) && string.IsNullOrWhiteSpace(Convert.ToString(additional, CultureInfo.InvariantCulture)) == false)
-			css += $" {additional}";
-
-		return css;
+		return string.Join(' ', css, AdditionalAttributes.GetClass("button-class"));
 	}
 }
