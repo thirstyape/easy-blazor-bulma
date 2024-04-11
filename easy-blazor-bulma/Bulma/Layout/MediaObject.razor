@@ -1,0 +1,20 @@
+﻿@namespace easy_blazor_bulma
+@inherits ComponentBase
+
+<article class="@MainCssClass" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
+    @if (string.IsNullOrWhiteSpace(DisplayImageUrl) == false)
+    {
+        <figure class="@LeftCssClass">
+            <p class="@ImageCssClass">
+                <img src="@DisplayImageUrl" />
+            </p>
+        </figure>
+        <div class="@ContentCssClass">
+            @ChildContent
+        </div>
+    }
+    else
+    {
+        @ChildContent
+    }
+</article>

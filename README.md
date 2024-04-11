@@ -48,6 +48,11 @@ The following components are currently available for use. All of them are docume
 * `<ProgressBar />`, creates a meter to display completion or loading status
 * `<ResetButton />`, creates a button to reset contents of a form
 * `<SubmitButton />`, creates a button to submit contents of a form
+* `<Table />`, creates an HTML table
+* `<TableCellBase />`, allows easily creating table cells
+* `<TableData />`, creates a td element within a table
+* `<TableHeader />`, creates a th element within a table
+* `<TableRow />`, creates a tr element within a table
 
 **Errors**
 
@@ -71,7 +76,6 @@ The following components are currently available for use. All of them are docume
 
 **Form**
 
-* `<Label />`, creates a label to display with form inputs
 * `<InputAutocomplete />`, creates a drop-down list of options to select from
 * `<InputCharacter />`, creates a series of buttons to select a single character
 * `<InputDateTime />`, creates an input with a popout for binding date and time values
@@ -81,6 +85,7 @@ The following components are currently available for use. All of them are docume
 * `<InputSelectEnum />`, creates a select list for enum types
 * `<InputSelectObject />`, creates a select list for object types
 * `<InputSwitch \>`, creates a sliding on off switch with an underlying checkbox
+* `<Label />`, creates a label to display with form inputs
 
 **Helpers**
 
@@ -91,7 +96,8 @@ The following components are currently available for use. All of them are docume
 **Layout**
 
 * `<Hero />`, creates an imposing hero banner to showcase something
-* `<Level />`, displays a multi-purpose horizontal level
+* `<Level />` and `<LevelItem />`, displays a multi-purpose horizontal level
+* `<MediaObject />`, creates a media object prevalent in social media interfaces
 
 ### Usage
 

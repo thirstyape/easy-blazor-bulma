@@ -8,7 +8,7 @@ namespace easy_blazor_bulma;
 public static class AttributeHelper
 {
     /// <summary>
-    /// Looks for the provided HTML attribute value and returns its value.
+    /// Looks for the provided HTML attribute value and returns its value as a string.
     /// </summary>
     /// <param name="attributes">The collection containing HTML attribute data.</param>
     /// <param name="selector">The HTML attribute name to return.</param>

@@ -139,6 +139,19 @@ public partial class Loader : ComponentBase
         }
     }
 
+    private string LoadingCssClass
+    {
+        get
+        {
+            var css = "";
+
+            if (Status == null || Status.Value == LoadingStatus.NotStarted)
+                css += " is-hidden";
+
+            return css;
+        }
+    }
+
     private string ContentCssClass
     {
         get

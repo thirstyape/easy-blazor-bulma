@@ -7,7 +7,7 @@ namespace easy_blazor_bulma;
 /// Creates a styled block to display a title at the top of a page.
 /// </summary>
 /// <remarks>
-/// There is 1 additional attribute that can be used: body-class. It will apply CSS classes to the resulting element as per its name.
+/// There are 2 additional attribute that can be used: body-class and title-class. They will apply CSS classes to the resulting elements as per their names.
 /// </remarks>
 public partial class TitleBlock : ComponentBase
 {
@@ -60,7 +60,7 @@ public partial class TitleBlock : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private readonly string[] Filter = new[] { "class", "body-class" };
+	private readonly string[] Filter = new[] { "class", "body-class", "title-class" };
 
 	private string MainCssClass
 	{
@@ -79,4 +79,5 @@ public partial class TitleBlock : ComponentBase
 	}
 
 	private string BodyCssClass => string.Join(' ', "hero-body pl-4", AdditionalAttributes.GetClass("body-class"));
+	private string TitleCssClass => string.Join(' ', "title has-text-centered", AdditionalAttributes.GetClass("title-class"));
 }

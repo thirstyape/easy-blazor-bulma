@@ -19217,6 +19217,14 @@ span[data-tooltip].has-tooltip-danger {
   cursor: wait !important;
 }
 
+.is-fullheight-minus-1 {
+  min-height: calc(100vh - 3.25rem);
+}
+
+.is-fullheight-minus-2 {
+  min-height: calc(100vh - 6.5rem);
+}
+
 .panel {
   margin-bottom: 1.5rem;
 }

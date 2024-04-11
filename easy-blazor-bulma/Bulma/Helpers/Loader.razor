@@ -26,13 +26,13 @@
             {
                 <button type="button" class="button is-link" @onclick="OnClose">@CloseButtonText</button>
             }
-            @if (Loading != null)
-            {
-                @Loading
-            }
         </div>
     </div>
 </section>
+
+<div class="@LoadingCssClass">
+    @Loading
+</div>
 
 <div class="@ContentCssClass">
     @(Loaded ?? ChildContent)

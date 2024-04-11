@@ -12,7 +12,7 @@ else if (UpdatePageTitle)
 
 <section class="@MainCssClass" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
 	<div class="@BodyCssClass">
-		<h1 class="title has-text-centered">
+		<h1 class="@TitleCssClass">
 			@if (string.IsNullOrWhiteSpace(Icon) == false && string.IsNullOrWhiteSpace(IconUrl) == false)
 			{
 				<a class="is-pulled-left" href="@IconUrl">

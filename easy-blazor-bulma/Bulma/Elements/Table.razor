@@ -1,0 +1,14 @@
+﻿@namespace easy_blazor_bulma
+@inherits ComponentBase
+
+<table class="@MainCssClass" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
+	@if (TableHead != null)
+	{
+		<thead>
+			@TableHead
+		</thead>
+	}
+	<tbody>
+		@(TableBody ?? ChildContent)
+	</tbody>
+</table>
