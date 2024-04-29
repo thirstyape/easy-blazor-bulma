@@ -19169,8 +19169,14 @@ span[data-tooltip].has-tooltip-danger {
 .is-sticky.is-sticky-top {
   top: 0;
 }
+.is-sticky.is-sticky-bottom {
+  bottom: 0;
+}
 .is-sticky.is-sticky-left {
   left: 0;
+}
+.is-sticky.is-sticky-right {
+  right: 0;
 }
 
 .table.is-striped tbody tr:not(.is-selected):nth-child(even) td.is-sticky {
@@ -19184,6 +19190,45 @@ span[data-tooltip].has-tooltip-danger {
 }
 .table.is-striped.is-hoverable tbody tr:not(.is-selected):nth-child(odd):hover td.is-sticky {
   background-color: hsl(0deg, 0%, 7%);
+}
+.table th.is-0 {
+  width: 0%;
+}
+.table th.is-1 {
+  width: 8.33333337%;
+}
+.table th.is-2 {
+  width: 16.66666674%;
+}
+.table th.is-3 {
+  width: 25%;
+}
+.table th.is-4 {
+  width: 33.33333337%;
+}
+.table th.is-5 {
+  width: 41.66666674%;
+}
+.table th.is-6 {
+  width: 50%;
+}
+.table th.is-7 {
+  width: 58.33333337%;
+}
+.table th.is-8 {
+  width: 66.66666674%;
+}
+.table th.is-9 {
+  width: 75%;
+}
+.table th.is-10 {
+  width: 83.33333337%;
+}
+.table th.is-11 {
+  width: 91.66666674%;
+}
+.table th.is-12 {
+  width: 100%;
 }
 
 .is-word-break {

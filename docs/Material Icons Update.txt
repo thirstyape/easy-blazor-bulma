@@ -1,0 +1,38 @@
+Sometimes the fonts contained in the Material Icons git repository are 
+out of date. Google fonts always has the latest version. The following
+links can be used to download a copy of the Woff2 edition.
+
+https://fonts.googleapis.com/css2?family=Material+Icons
+https://fonts.googleapis.com/css2?family=Material+Icons+Outlined
+https://fonts.googleapis.com/css2?family=Material+Icons+Round
+https://fonts.googleapis.com/css2?family=Material+Icons+Sharp
+https://fonts.googleapis.com/css2?family=Material+Icons+Two+Tone
+
+The following are for the newer Material Symbols font.
+
+https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined
+https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded
+https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp
+
+The codepoints file can be found in GitHub
+
+https://raw.githubusercontent.com/google/material-design-icons/master/font/MaterialIcons-Regular.codepoints
+
+Then rename the downloaded file to the desired name
+
+Then upload that into the following site to convert to otf
+https://cloudconvert.com/woff2-to-otf
+
+Then upload that into font squirrel to build a bundle
+https://www.fontsquirrel.com/tools/webfont-generator
+
+Use the following options
++ Expert
++ TrueType, WOFF, WOFF2, EOT Lite, SVG
++ Keep Existing
++ Fix GASP Table
++ No Adjustment
++ Spaces, Hyphens
++ None
++ No Subsetting
++ Clear the -webfont box

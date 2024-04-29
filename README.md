@@ -81,6 +81,7 @@ The following components are currently available for use. All of them are docume
 * `<InputDateTime />`, creates an input with a popout for binding date and time values
 * `<InputDuration />`, creates an input with a popout for binding duration values
 * `<InputFlaggedEnum />`, creates a series of checkboxes for bitmasked enum types
+* `<InputPassword />`, creates an input for entering passwords
 * `<InputNumberPad />`, creates a keyboard style number pad for numeric values
 * `<InputSelectEnum />`, creates a select list for enum types
 * `<InputSelectObject />`, creates a select list for object types

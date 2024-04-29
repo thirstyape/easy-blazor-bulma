@@ -29,25 +29,34 @@
   z-index: 1
   &.is-sticky-top
     top: 0
+  &.is-sticky-bottom
+    bottom: 0
   &.is-sticky-left
     left: 0
+  &.is-sticky-right
+    right: 0
 
-.table.is-striped
-  tbody
-    tr:not(.is-selected):nth-child(even)
-      td.is-sticky
-        background-color: $table-striped-row-even-background-color
-    tr:not(.is-selected):nth-child(odd)
-      td.is-sticky
-        background-color: $table-background-color
-  &.is-hoverable
+.table
+  &.is-striped
     tbody
-      tr:not(.is-selected):nth-child(even):hover
+      tr:not(.is-selected):nth-child(even)
         td.is-sticky
-          background-color: $table-striped-row-even-hover-background-color
-      tr:not(.is-selected):nth-child(odd):hover
+          background-color: $table-striped-row-even-background-color
+      tr:not(.is-selected):nth-child(odd)
         td.is-sticky
-          background-color: $table-row-hover-background-color
+          background-color: $table-background-color
+    &.is-hoverable
+      tbody
+        tr:not(.is-selected):nth-child(even):hover
+          td.is-sticky
+            background-color: $table-striped-row-even-hover-background-color
+        tr:not(.is-selected):nth-child(odd):hover
+          td.is-sticky
+            background-color: $table-row-hover-background-color
+
+  @for $i from 0 through 12
+    th.is-#{$i}
+      width: percentage(divide($i, 12))
 
 .is-word-break
   word-break: break-all
