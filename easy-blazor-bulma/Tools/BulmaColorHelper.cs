@@ -35,7 +35,7 @@ public static class BulmaColorHelper
     /// <param name="suffix">Specifies the suffix to apply to the CSS class.</param>
     /// <remarks>
     /// Valid suffixes include:
-    /// 
+    ///
     ///     light,
     ///     dark
     /// </remarks>
@@ -48,7 +48,7 @@ public static class BulmaColorHelper
     /// <param name="suffix">Specifies the suffix to apply to the CSS class.</param>
     /// <remarks>
     /// Valid suffixes include:
-    /// 
+    ///
     ///     light,
     ///     dark
     /// </remarks>
@@ -62,13 +62,13 @@ public static class BulmaColorHelper
     /// <param name="suffix">Specifies the suffix to apply to the CSS class.</param>
     /// <remarks>
     /// Valid prefixes include:
-    /// 
+    ///
     ///     is,
     ///     has-text,
     ///     has-background
-    ///     
+    ///
     /// Valid suffixes include:
-    /// 
+    ///
     ///     light,
     ///     dark
     /// </remarks>

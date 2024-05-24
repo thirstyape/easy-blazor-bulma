@@ -1,0 +1,40 @@
+﻿@namespace easy_blazor_bulma
+@inherits ComponentBase
+
+<div class="@MainCssClass" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
+    @if (string.IsNullOrWhiteSpace(Title) == false)
+    {
+        <header class="@HeaderCssClass">
+            <p class="@TitleCssClass">@Title</p>
+            @if (string.IsNullOrWhiteSpace(Icon) == false)
+            {
+                <span class="card-header-icon">
+                    <span class="material-icons icon">@Icon</span>
+                </span>
+            }
+        </header>
+    }
+
+    @if (string.IsNullOrWhiteSpace(DisplayImageUrl) == false)
+    {
+        <div class="card-image">
+            <figure class="@FigureCssClass">
+                <img src="@DisplayImageUrl" />
+            </figure>
+        </div>
+    }
+
+    @if (CardContent != null || ChildContent != null)
+    {
+        <div class="@ContentCssClass">
+            @(CardContent ?? ChildContent)
+        </div>
+    }
+
+    @if (CardFooter != null)
+    {
+        <footer class="@FooterCssClass">
+            @CardFooter
+        </footer>
+    }
+</div>

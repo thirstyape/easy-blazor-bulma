@@ -30,6 +30,8 @@ The following components are currently available for use. All of them are docume
 
 **Components**
 
+* `<BreadCrumb />` and `<BreadCrumbItem />`, creates a simple breadcrumb component to improve your navigation experience
+* `<Card />`, creates an all-around flexible and composable component
 * `<Message />`, creates a styled block containing a note to display
 * `<Modal />`, creates an overlay that can display additional content
 * `<Navbar />`, creates a navigation menu to use at the top of the screen
@@ -83,6 +85,7 @@ The following components are currently available for use. All of them are docume
 * `<InputFlaggedEnum />`, creates a series of checkboxes for bitmasked enum types
 * `<InputPassword />`, creates an input for entering passwords
 * `<InputNumberPad />`, creates a keyboard style number pad for numeric values
+* `<InputRadioGroupObject />`, creates a radio group with the provided option list
 * `<InputSelectEnum />`, creates a select list for enum types
 * `<InputSelectObject />`, creates a select list for object types
 * `<InputSwitch \>`, creates a sliding on off switch with an underlying checkbox

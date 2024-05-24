@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Globalization;
 
 namespace easy_blazor_bulma;
 
@@ -31,7 +30,7 @@ public partial class Step : ComponentBase, IAsyncDisposable
     public BulmaColors MarkerColor { get; set; }
 
     [CascadingParameter]
-    private Steps Parent { get; set; }
+    private Steps Parent { get; set; } = default!;
 
     /// <summary>
     /// Any additional attributes applied directly to the component.

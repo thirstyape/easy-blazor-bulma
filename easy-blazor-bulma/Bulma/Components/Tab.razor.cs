@@ -36,7 +36,7 @@ public partial class Tab : ComponentBase, IAsyncDisposable
 	public RenderFragment? ChildContent { get; set; }
 
     [CascadingParameter]
-    private Tabs Parent { get; set; }
+    private Tabs Parent { get; set; } = default!;
 
     /// <summary>
     /// Any additional attributes applied directly to the component.

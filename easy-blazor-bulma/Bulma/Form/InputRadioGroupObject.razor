@@ -1,0 +1,15 @@
+﻿@namespace easy_blazor_bulma
+@typeparam TValue
+@inherits InputBase<TValue>
+
+<InputRadioGroup class="@MainCssClass" Value="CurrentValueDisplay" ValueExpression="() => CurrentValueDisplay" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
+	@foreach (var option in Options)
+	{
+		<div class="control">
+			<div class="my-1 clickable" @onclick='() => OnCurrentChanged(option.Value)'>
+				<InputRadio class="@ItemCssClass" TValue="string" Value="@option.Key" id='@GetRadioOptionId(option.Key)' />
+				<label for='@GetRadioOptionId(option.Key)'>@option.Key</label>
+			</div>
+		</div>
+	}
+</InputRadioGroup>

@@ -76,9 +76,9 @@ public partial class Steps : ComponentBase
     private readonly string[] Filter = new[] { "class" };
 
     [Inject]
-	private IServiceProvider ServiceProvider { get; init; }
+	private IServiceProvider ServiceProvider { get; init; } = default!;
 
-	private readonly List<Step> Children = new();
+    private readonly List<Step> Children = new();
 	private ILogger<Steps>? Logger;
 
 	private string MainCssClass
