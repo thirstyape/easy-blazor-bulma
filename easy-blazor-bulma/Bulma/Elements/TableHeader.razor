@@ -22,18 +22,20 @@
 	}
 	else
 	{
-		if (string.IsNullOrWhiteSpace(Icon) == false)
-		{
-			<span class="material-icons icon">@Icon</span>
-		}
+		<span>
+			@if (string.IsNullOrWhiteSpace(Icon) == false)
+			{
+				<span class="material-icons icon">@Icon</span>
+			}
 
-		if (string.IsNullOrWhiteSpace(DisplayText) == false)
-		{
-			<span>@DisplayText</span>
-		}
-		else
-		{
-			<span>@ChildContent</span>
-		}
+			@if (string.IsNullOrWhiteSpace(DisplayText) == false)
+			{
+				<span>@DisplayText</span>
+			}
+			else
+			{
+				<span>@ChildContent</span>
+			}
+		</span>
 	}
 </th>

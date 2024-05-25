@@ -19179,6 +19179,12 @@ span[data-tooltip].has-tooltip-danger {
   right: 0;
 }
 
+.table th.is-resizable > div:first-child,
+.table th.is-resizable > span:first-child {
+  resize: horizontal;
+  display: block;
+  min-width: 20px;
+}
 .table.is-striped tbody tr:not(.is-selected):nth-child(even) td.is-sticky {
   background-color: hsl(0deg, 0%, 98%);
 }
