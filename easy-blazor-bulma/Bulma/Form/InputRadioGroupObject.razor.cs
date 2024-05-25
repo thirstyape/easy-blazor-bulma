@@ -22,20 +22,10 @@ public partial class InputRadioGroupObject<[DynamicallyAccessedMembers(Dynamical
 	private readonly string[] Filter = new[] { "class", "item-class" };
 
 	private readonly string PropertyName = Guid.NewGuid().ToString();
-	private string CurrentValueDisplay = string.Empty;
 
 	private string MainCssClass => CssClass;
 
 	private string ItemCssClass => string.Join(' ', "is-checkradio is-primary", AdditionalAttributes.GetClass("item-class"));
-
-	/// <inheritdoc/>
-	protected override void OnInitialized()
-	{
-		var match = Options.Select(x => new { x.Key, x.Value }).FirstOrDefault(x => EqualityComparer<TValue>.Default.Equals(x.Value, Value));
-
-		if (match != null)
-			CurrentValueDisplay = match.Key;
-	}
 
 	/// <inheritdoc/>
 	protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)
@@ -52,13 +42,17 @@ public partial class InputRadioGroupObject<[DynamicallyAccessedMembers(Dynamical
 
 	private void OnCurrentChanged(TValue? current)
 	{
-		var match = Options.Select(x => new { x.Key, x.Value }).FirstOrDefault(x => EqualityComparer<TValue>.Default.Equals(x.Value, current));
+		CurrentValue = current;
+	}
+
+	private string CurrentValueDisplay()
+	{
+		var match = Options.Select(x => new { x.Key, x.Value }).FirstOrDefault(x => EqualityComparer<TValue>.Default.Equals(x.Value, Value));
 
 		if (match != null)
-		{
-			CurrentValueDisplay = match.Key;
-			CurrentValue = current;
-		}
+			return match.Key;
+		else
+			return string.Empty;
 	}
 
 	private string GetRadioOptionId(string display) => $"radio-InputRadioGroupObject-{PropertyName}-{display.Replace(' ', '-')}";

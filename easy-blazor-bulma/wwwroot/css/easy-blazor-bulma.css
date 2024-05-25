@@ -19184,6 +19184,7 @@ span[data-tooltip].has-tooltip-danger {
   resize: horizontal;
   display: block;
   min-width: 20px;
+  overflow-x: auto;
 }
 .table.is-striped tbody tr:not(.is-selected):nth-child(even) td.is-sticky {
   background-color: hsl(0deg, 0%, 98%);
