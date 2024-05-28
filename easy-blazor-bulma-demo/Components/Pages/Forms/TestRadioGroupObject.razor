@@ -1,0 +1,55 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@page "/inputRadioGroupObject"
+@inherits ComponentBase
+
+<TitleBlock Title="Input Radio Group Object Test" />
+
+<div class="columns p-3">
+	<div class="column is-4">
+
+	</div>
+	<div class="column is-8">
+		<EditForm Model="InputModel">
+			<div class="field">
+				<label class="label">Selected Employee</label>
+				<InputRadioGroupObject @bind-Value=InputModel.Selected Options="EmployeeOptions" />
+			</div>
+			<div class="field">
+				<button class="button" @onclick=OnButtonClicked>Vote for Jimbo!</button>
+			</div>
+		</EditForm>
+	</div>
+</div>
+
+@code {
+	private readonly Dictionary<string, DemoObject?> EmployeeOptions = new()
+	{
+		["Nobody"] = null,
+		["Jimbo Moneybags"] = new DemoObject { Id = 1, Name = "Jimbo Moneybags", Age = 30, Position = "Accountant" },
+		["Suzy Goldenfold"] = new DemoObject { Id = 2, Name = "Suzy Goldenfold", Age = 18, Position = "Accountant" }
+	};
+
+	private readonly PlaceholderModel InputModel = new();
+
+	private void OnButtonClicked()
+	{
+		InputModel.Selected = EmployeeOptions["Jimbo Moneybags"];
+	}
+
+	private class DemoObject
+	{
+		public int Id { get; set; }
+
+		public string Name { get; set; }
+
+		public int Age { get; set; }
+
+		public string Position { get; set; }
+	}
+
+	private class PlaceholderModel
+	{
+		public DemoObject? Selected { get; set; }
+	}
+}

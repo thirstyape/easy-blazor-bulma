@@ -45,14 +45,17 @@ public partial class InputRadioGroupObject<[DynamicallyAccessedMembers(Dynamical
 		CurrentValue = current;
 	}
 
-	private string CurrentValueDisplay()
+	private string CurrentValueDisplay
 	{
-		var match = Options.Select(x => new { x.Key, x.Value }).FirstOrDefault(x => EqualityComparer<TValue>.Default.Equals(x.Value, Value));
+		get
+		{
+			var match = Options.Select(x => new { x.Key, x.Value }).FirstOrDefault(x => EqualityComparer<TValue>.Default.Equals(x.Value, Value));
 
-		if (match != null)
-			return match.Key;
-		else
-			return string.Empty;
+			if (match != null)
+				return match.Key;
+			else
+				return string.Empty;
+		}
 	}
 
 	private string GetRadioOptionId(string display) => $"radio-InputRadioGroupObject-{PropertyName}-{display.Replace(' ', '-')}";
