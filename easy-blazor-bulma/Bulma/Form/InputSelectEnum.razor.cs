@@ -27,6 +27,12 @@ public partial class InputSelectEnum<[DynamicallyAccessedMembers(DynamicallyAcce
     public string NullText { get; set; } = "Null";
 
     /// <summary>
+    /// A function to determine whether two items are equal.
+    /// </summary>
+    [Parameter]
+    public Func<TEnum, TEnum?, bool> AreEqual { get; set; } = EqualityComparer<TEnum>.Default.Equals;
+
+    /// <summary>
     /// Applies styles to the input.
     /// </summary>
     [Parameter]

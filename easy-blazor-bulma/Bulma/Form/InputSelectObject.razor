@@ -10,7 +10,7 @@
         }
         @foreach (var item in Items)
         {
-            <option value="@DisplayValue(item)" selected='@(EqualityComparer<TValue>.Default.Equals(item, CurrentValue))'>@DisplayValue(item)</option>
+            <option value="@DisplayValue(item)" selected='@(AreEqual(item, CurrentValue))'>@DisplayValue(item)</option>
         }
     </select>
 </div>

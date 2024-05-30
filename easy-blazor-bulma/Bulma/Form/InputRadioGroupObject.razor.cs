@@ -19,7 +19,13 @@ public partial class InputRadioGroupObject<[DynamicallyAccessedMembers(Dynamical
 	[Parameter]
 	public Dictionary<string, TValue?> Options { get; set; } = default!;
 
-	private readonly string[] Filter = new[] { "class", "item-class" };
+    /// <summary>
+    /// A function to determine whether two items are equal.
+    /// </summary>
+    [Parameter]
+    public Func<TValue?, TValue?, bool> AreEqual { get; set; } = EqualityComparer<TValue>.Default.Equals;
+
+    private readonly string[] Filter = new[] { "class", "item-class" };
 
 	private readonly string PropertyName = Guid.NewGuid().ToString();
 
@@ -49,7 +55,7 @@ public partial class InputRadioGroupObject<[DynamicallyAccessedMembers(Dynamical
 	{
 		get
 		{
-			var match = Options.Select(x => new { x.Key, x.Value }).FirstOrDefault(x => EqualityComparer<TValue>.Default.Equals(x.Value, Value));
+			var match = Options.Select(x => new { x.Key, x.Value }).FirstOrDefault(x => AreEqual(x.Value, Value));
 
 			if (match != null)
 				return match.Key;

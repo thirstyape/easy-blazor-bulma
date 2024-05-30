@@ -28,6 +28,12 @@ public partial class InputSelectObject<[DynamicallyAccessedMembers(DynamicallyAc
 	public Func<TValue, string> DisplayValue { get; set; }
 
 	/// <summary>
+	/// A function to determine whether two items are equal.
+	/// </summary>
+	[Parameter]
+	public Func<TValue, TValue?, bool> AreEqual { get; set; } = EqualityComparer<TValue>.Default.Equals;
+
+	/// <summary>
 	/// An icon to display within the input.
 	/// </summary>
 	[Parameter]

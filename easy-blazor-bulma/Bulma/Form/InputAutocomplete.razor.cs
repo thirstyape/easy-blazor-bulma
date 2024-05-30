@@ -38,10 +38,16 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	[Parameter]
 	public Func<TValue, string> DisplayValue { get; set; }
 
-	/// <summary>
-	/// An icon to display within the input.
-	/// </summary>
-	[Parameter]
+    /// <summary>
+    /// A function to determine whether two items are equal.
+    /// </summary>
+    [Parameter]
+    public Func<TValue, TValue?, bool> AreEqual { get; set; } = EqualityComparer<TValue>.Default.Equals;
+
+    /// <summary>
+    /// An icon to display within the input.
+    /// </summary>
+    [Parameter]
 	public string? Icon { get; set; } = "search";
 
 	/// <summary>
@@ -358,7 +364,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 				break;
 			}
 
-			if (EqualityComparer<TValue>.Default.Equals(HighlightedValue, item))
+			if (AreEqual(item, HighlightedValue))
 				takeNext = true;
 		}
 
@@ -378,7 +384,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 
 		foreach (var item in Items)
 		{
-			if (previous != null && EqualityComparer<TValue>.Default.Equals(HighlightedValue, item))
+			if (previous != null && AreEqual(item, HighlightedValue))
 				break;
 
 			previous = item;
@@ -413,10 +419,10 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	{
 		var css = "dropdown-item is-clickable";
 
-		if (HighlightedValue != null && EqualityComparer<TValue>.Default.Equals(HighlightedValue, item))
+		if (HighlightedValue != null && AreEqual(item, HighlightedValue))
 			css += " has-background-default";
 
-		if (CurrentValue != null && EqualityComparer<TValue>.Default.Equals(CurrentValue, item))
+		if (CurrentValue != null && AreEqual(item, CurrentValue))
 			css += " has-text-success";
 
 		return string.Join(' ', css, AdditionalAttributes.GetClass("dropdown-item-class"));
