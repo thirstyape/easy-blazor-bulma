@@ -77,8 +77,12 @@
 	};
 
 	private readonly TooltipOptions TooltipDisplayMode = TooltipOptions.Right | TooltipOptions.HasArrow | TooltipOptions.Multiline;
-	private readonly InputAutocompleteOptions Options = InputAutocompleteOptions.TypePopout | InputAutocompleteOptions.PopoutTop | InputAutocompleteOptions.UseAutomaticStatusColors;
 	private string? Filter;
+
+	private readonly InputAutocompleteOptions Options =
+		InputAutocompleteOptions.TypePopout |
+		InputAutocompleteOptions.PopoutTop |
+		InputAutocompleteOptions.UseAutomaticStatusColors;
 
 	private static readonly List<DemoAutocomplete> AllItems =
 	[
@@ -123,26 +127,27 @@
 				AllItems.Remove(remove);
 		}
 
+		await Task.CompletedTask;
 		StateHasChanged();
 	}
 
 	private class PageModel
 	{
 		[Display(Name = "Janitor Applicant", Description = "Please type the name of the applicant to hire for the Janitor position.")]
-		public DemoAutocomplete SelectedItem1 { get; set; }
+		public DemoAutocomplete SelectedItem1 { get; set; } = AllItems[0];
 
 		[Display(Name = "Accountant Applicant", Description = "Please type the name of the applicant to hire for the Accountant position.")]
 		public DemoAutocomplete? SelectedItem2 { get; set; }
 	}
 
-	private class DemoAutocomplete
+	private record class DemoAutocomplete
 	{
-		public int Id { get; set; }
+		public int Id { get; init; }
 
-		public string Name { get; set; }
+		public string Name { get; init; }
 
-		public int Age { get; set; }
+		public int Age { get; init; }
 
-		public string Position { get; set; }
+		public string Position { get; init; }
 	}
 }

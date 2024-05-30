@@ -15,7 +15,7 @@ namespace easy_blazor_bulma;
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
 /// <remarks>
-/// There are 4 additional attributes that can be used: dropdown-class, dropdown-trigger-class, dropdown-menu-class, and dropdown-item-class. Each of which apply CSS classes to the resulting elements as per their names.
+/// There are 5 additional attributes that can be used: dropdown-class, dropdown-trigger-class, dropdown-menu-class, dropdown-item-class, and tag-class. Each of which apply CSS classes to the resulting elements as per their names.
 /// <see href="https://bulma.io/documentation/components/dropdown/">Bulma Documentation</see>
 /// </remarks>
 public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TValue> : InputBase<TValue>
@@ -82,7 +82,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	[Parameter]
 	public Func<string?, Task>? OnItemsRequested { get; set; }
 
-	private readonly string[] Filter = new[] { "class", "dropdown-class", "dropdown-trigger-class", "dropdown-menu-class", "dropdown-item-class" };
+	private readonly string[] Filter = new[] { "class", "dropdown-class", "dropdown-trigger-class", "dropdown-menu-class", "dropdown-item-class", "tag-class" };
 
 	[Inject]
 	private IServiceProvider ServiceProvider { get; init; }
@@ -144,6 +144,8 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 
 	private string DropDownMenuCssClass => string.Join(' ', "dropdown-menu p-0", AdditionalAttributes.GetClass("dropdown-menu-class"));
 
+	private string TagCssClass => string.Join(' ', "tag is-success mt-1", AdditionalAttributes.GetClass("tag-class"));
+
 	public InputAutocomplete()
 	{
 		UnderlyingType = typeof(TValue);
@@ -184,7 +186,6 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 
 		// Set starting values
 		HighlightedValue = CurrentValue;
-		InputValue = CurrentValueAsString;
 	}
 
 	/// <inheritdoc />
@@ -301,8 +302,6 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 		if (OnItemsRequested != null)
 			await OnItemsRequested.Invoke(changed);
 
-		InputValue = changed;
-
 		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectOnInput))
 			CurrentValueAsString = changed;
 	}
@@ -395,8 +394,8 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 
 	private void OnItemSelected(TValue? value, bool close = true, bool success = true)
 	{
-		CurrentValueAsString = value != null ? DisplayValue(value) : string.Empty;
-		InputValue = CurrentValueAsString;
+		CurrentValue = value;
+		InputValue = null;
 
 		if (close)
 			IsPopoutDisplayed = false;
