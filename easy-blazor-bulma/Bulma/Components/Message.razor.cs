@@ -67,7 +67,7 @@ public partial class Message : ComponentBase
 
     private string HeaderCssClass => string.Join(' ', "message-header", AdditionalAttributes.GetClass("header-class"));
 
-    private string BodyCssClass => string.Join(' ', "message-header", AdditionalAttributes.GetClass("body-class"));
+    private string BodyCssClass => string.Join(' ', "message-body", AdditionalAttributes.GetClass("body-class"));
 
     private void Delete()
 	{

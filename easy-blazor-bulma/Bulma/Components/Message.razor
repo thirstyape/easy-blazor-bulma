@@ -12,7 +12,10 @@
             }
         </div>
     }
-    <div class="@BodyCssClass">
-        @ChildContent
-    </div>
+    @if (ChildContent != null)
+    {
+        <div class="@BodyCssClass">
+            @ChildContent
+        </div>
+    }
 </article>
