@@ -19155,30 +19155,31 @@ span[data-tooltip].has-tooltip-danger {
   font-family: "Material Icons";
   font-style: normal;
   font-weight: 400;
-  src: local("Material Icons"), local("MaterialIcons-Regular"), url("/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.woff2") format("woff2"), url("/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.woff") format("woff"), url("/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.ttf") format("truetype"), url("/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.svg#material_iconsregular") format("svg");
+  src: local("Material Icons"), local("MaterialIcons-Regular"), url("/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.woff2") format("woff2"), url("/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.woff") format("woff");
 }
 .material-icons {
   font-family: Material Icons;
   vertical-align: text-bottom;
 }
 
-.is-sticky {
-  position: sticky;
-  z-index: 1;
+@media screen {
+  .is-sticky {
+    position: sticky;
+    z-index: 1;
+  }
+  .is-sticky.is-sticky-top {
+    top: 0;
+  }
+  .is-sticky.is-sticky-bottom {
+    bottom: 0;
+  }
+  .is-sticky.is-sticky-left {
+    left: 0;
+  }
+  .is-sticky.is-sticky-right {
+    right: 0;
+  }
 }
-.is-sticky.is-sticky-top {
-  top: 0;
-}
-.is-sticky.is-sticky-bottom {
-  bottom: 0;
-}
-.is-sticky.is-sticky-left {
-  left: 0;
-}
-.is-sticky.is-sticky-right {
-  right: 0;
-}
-
 .table th.is-resizable > div:first-child,
 .table th.is-resizable > span:first-child {
   resize: horizontal;

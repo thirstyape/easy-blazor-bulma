@@ -18,17 +18,13 @@ else if (UpdatePageTitle)
 				<a class="is-pulled-left" href="@IconUrl">
 					<span class="material-icons is-pulled-left is-unselectable" aria-hidden="true">@Icon</span>
 				</a>
-				<span>@Title</span>
 			}
 			else if (string.IsNullOrWhiteSpace(Icon) == false)
 			{
 				<span class="material-icons is-pulled-left is-unselectable" aria-hidden="true">@Icon</span>
-				<span>@Title</span>
 			}
-			else
-			{
-				@Title
-			}
+
+			<span class="@TooltipCssClass" data-tooltip="@Tooltip">@Title</span>
 		</h1>
 	</div>
 </section>

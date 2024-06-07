@@ -55,10 +55,12 @@ public partial class Label<TValue> : ComponentBase
 	{
 		get
 		{
-			var css = "is-cursor-help";
+			var css = "";
 
 			if (string.IsNullOrWhiteSpace(Tooltip) == false)
 			{
+				css += "is-cursor-help";
+
 				if (TooltipMode.HasFlag(TooltipOptions.Top))
 					css += " has-tooltip-top";
 				else if (TooltipMode.HasFlag(TooltipOptions.Bottom))

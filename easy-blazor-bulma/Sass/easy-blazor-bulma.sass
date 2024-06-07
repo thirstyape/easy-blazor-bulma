@@ -14,7 +14,7 @@
   font-family: 'Material Icons'
   font-style: normal
   font-weight: 400
-  src: local('Material Icons'), local('MaterialIcons-Regular'), url('/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.woff2') format('woff2'), url('/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.woff') format('woff'), url('/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.ttf') format('truetype'), url('/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.svg#material_iconsregular') format('svg')
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url('/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.woff2') format('woff2'), url('/_content/Easy.Blazor.Bulma/fonts/iconfont/materialicons-regular-webfont.woff') format('woff')
 
 .material-icons
   font-family: Material Icons
@@ -24,17 +24,18 @@
 // Additional Classes //
 ////////////////////////
 
-.is-sticky
-  position: sticky
-  z-index: 1
-  &.is-sticky-top
-    top: 0
-  &.is-sticky-bottom
-    bottom: 0
-  &.is-sticky-left
-    left: 0
-  &.is-sticky-right
-    right: 0
+@media screen
+  .is-sticky
+    position: sticky
+    z-index: 1
+    &.is-sticky-top
+      top: 0
+    &.is-sticky-bottom
+      bottom: 0
+    &.is-sticky-left
+      left: 0
+    &.is-sticky-right
+      right: 0
 
 .table
   th.is-resizable > div:first-child,

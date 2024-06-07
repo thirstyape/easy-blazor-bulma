@@ -7,7 +7,7 @@ namespace easy_blazor_bulma;
 /// Creates a styled block to display a title at the top of a page.
 /// </summary>
 /// <remarks>
-/// There are 2 additional attribute that can be used: body-class and title-class. They will apply CSS classes to the resulting elements as per their names.
+/// There are 4 additional attributes that can be used: body-class, title-class, data-tooltip and tooltip-class. The data-tooltip adds a hover tooltip to the element and the rest will apply CSS classes to the resulting elements as per their names.
 /// </remarks>
 public partial class TitleBlock : ComponentBase
 {
@@ -55,12 +55,23 @@ public partial class TitleBlock : ComponentBase
 	public bool UpdatePageTitle { get; set; } = true;
 
 	/// <summary>
+	/// Sets the display mode for a tooltip when present.
+	/// </summary>
+	/// <remarks>
+	/// Tooltips can be added by using the data-tooltip attibute.
+	/// </remarks>
+	[Parameter]
+	public TooltipOptions TooltipMode { get; set; } = TooltipOptions.Default;
+
+	/// <summary>
 	/// Any additional attributes applied directly to the component.
 	/// </summary>
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private readonly string[] Filter = new[] { "class", "body-class", "title-class" };
+	private readonly string[] Filter = new[] { "class", "body-class", "title-class", "data-tooltip", "tooltip-class" };
+
+	private string? Tooltip;
 
 	private string MainCssClass
 	{
@@ -80,4 +91,43 @@ public partial class TitleBlock : ComponentBase
 
 	private string BodyCssClass => string.Join(' ', "hero-body pl-4", AdditionalAttributes.GetClass("body-class"));
 	private string TitleCssClass => string.Join(' ', "title has-text-centered", AdditionalAttributes.GetClass("title-class"));
+
+	private string TooltipCssClass
+	{
+		get
+		{
+			var css = "";
+
+			if (string.IsNullOrWhiteSpace(Tooltip) == false)
+			{
+				css += "is-cursor-help";
+
+				if (TooltipMode.HasFlag(TooltipOptions.Top))
+					css += " has-tooltip-top";
+				else if (TooltipMode.HasFlag(TooltipOptions.Bottom))
+					css += " has-tooltip-bottom";
+				else if (TooltipMode.HasFlag(TooltipOptions.Left))
+					css += " has-tooltip-left";
+				else if (TooltipMode.HasFlag(TooltipOptions.Right))
+					css += " has-tooltip-right";
+
+				if (TooltipMode.HasFlag(TooltipOptions.HasArrow))
+					css += " has-tooltip-arrow";
+
+				if (TooltipMode.HasFlag(TooltipOptions.AlwaysActive))
+					css += " has-tooltip-active";
+
+				if (TooltipMode.HasFlag(TooltipOptions.Multiline))
+					css += " has-tooltip-multiline";
+			}
+
+			return string.Join(' ', css, AdditionalAttributes.GetClass("tooltip-class"));
+		}
+	}
+
+	/// <inheritdoc />
+	protected override void OnInitialized()
+	{
+		Tooltip = AdditionalAttributes.GetValue("data-tooltip");
+	}
 }

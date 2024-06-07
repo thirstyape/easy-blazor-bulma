@@ -41,10 +41,12 @@ public partial class TableHeader : TableCellBase
 	{
 		get
 		{
-			var css = "is-cursor-help";
+			var css = "";
 
 			if (string.IsNullOrWhiteSpace(Tooltip) == false)
 			{
+				css += "is-cursor-help";
+
 				if (TooltipMode.HasFlag(TooltipOptions.Top))
 					css += " has-tooltip-top";
 				else if (TooltipMode.HasFlag(TooltipOptions.Bottom))
