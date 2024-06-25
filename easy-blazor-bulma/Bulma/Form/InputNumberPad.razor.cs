@@ -100,7 +100,10 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 		{
 			var css = "button is-fullwidth mb-3";
 
-			if (IsRounded)
+            if (AdditionalAttributes.IsDisabled())
+                css += " is-disabled";
+
+            if (IsRounded)
 				css += " is-rounded";
 
 			if (IsBordered)
@@ -213,7 +216,10 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 
 	private void OnDigitClicked(int digit)
 	{
-		InternalValueAsString += digit.ToString();
+        if (AdditionalAttributes.IsDisabled())
+            return;
+
+        InternalValueAsString += digit.ToString();
 
 		if (InternalValueAsString.Length > 1 && InternalValueAsString[0] == '0' && InternalValueAsString[1] != '.')
 			InternalValueAsString = InternalValueAsString.TrimStart('0');
@@ -234,7 +240,10 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 
 	private void OnBackspaceClicked()
 	{
-		if (InternalValueAsString.Length == 0)
+        if (AdditionalAttributes.IsDisabled())
+            return;
+
+        if (InternalValueAsString.Length == 0)
 			return;
 
 		if (IsNullable && InternalValueAsString.Length == 1)
@@ -256,7 +265,10 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 
 	private void OnResetClicked()
 	{
-		if (IsNullable)
+        if (AdditionalAttributes.IsDisabled())
+            return;
+
+        if (IsNullable)
 		{
 			InternalValueAsString = string.Empty;
 			CurrentValueAsString = null;
@@ -278,13 +290,16 @@ public partial class InputNumberPad<[DynamicallyAccessedMembers(DynamicallyAcces
 
 	private void OnButtonKeyDown(KeyboardEventArgs args)
 	{
-		OnKeyDownPreventDefault = DefaultKeys.Contains(args.Code) == false;
+        if (AdditionalAttributes.IsDisabled())
+            return;
+
+        OnKeyDownPreventDefault = DefaultKeys.Contains(args.Code) == false;
 		OnKeyDown(args.Code);
 	}
 
 	private void OnKeyDown(string key)
 	{
-		if (NumberKeys.TryGetValue(key, out int value))
+        if (NumberKeys.TryGetValue(key, out int value))
 			OnDigitClicked(value);
 		else if (key == "Backspace")
 			OnBackspaceClicked();

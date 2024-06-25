@@ -10,6 +10,7 @@ namespace easy_blazor_bulma;
 /// </summary>
 /// <typeparam name="TEnum">The type of enum to use.</typeparam>
 /// <remarks>
+/// There are 2 additional attributes that can be used: switch-class and label-class. Each of which apply CSS classes to the resulting elements as per their names.
 /// <see href="https://bulma.io/documentation/form/checkbox/">Bulma Documentation</see>
 /// </remarks>
 public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TEnum> : InputBase<TEnum>
@@ -26,7 +27,7 @@ public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAcc
     [Parameter]
     public bool HideZeroOption { get; set; } = true;
 
-	private readonly string[] Filter = new[] { "class" };
+	private readonly string[] Filter = new[] { "class", "switch-class", "label-class" };
 
 	private readonly bool IsNullable;
     private readonly Type UnderlyingType;
@@ -41,9 +42,12 @@ public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAcc
             if (IsBoxed)
                 css += " box";
 
-            return string.Join(' ', css, CssClass);
+			return string.Join(' ', css, CssClass);
         }
-    }
+	}
+
+    private string SwitchCssClass => string.Join(' ', "switch", AdditionalAttributes.GetClass("switch-class"));
+    private string LabelCssClass => string.Join(' ', "is-unselectable", AdditionalAttributes.GetClass("label-class"));
 
     public InputFlaggedEnum()
     {
@@ -96,7 +100,10 @@ public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAcc
         var current = CurrentValue != null ? Convert.ToInt64(CurrentValue) : 0L;
         var update = Convert.ToInt64(flag);
 
-        if ((current & update) != 0)
+		if (AdditionalAttributes.IsDisabled())
+			return;
+
+		if ((current & update) != 0)
             current &= ~update;
         else
             current |= update;
@@ -110,4 +117,14 @@ public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAcc
     }
 
     private string GetEnumSwitchId(TEnum value) => $"switch-InputFlaggedEnum-{PropertyName}-{value}";
+
+	public IReadOnlyDictionary<string, object>? GetFilteredAttributes()
+	{
+		if (AdditionalAttributes == null)
+			return null;
+        else if (AdditionalAttributes.Any(x => x.Key == "readonly"))
+			return AdditionalAttributes.Append(new KeyValuePair<string, object>("disabled", "true")).Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
+		else
+			return AdditionalAttributes.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
+	}
 }

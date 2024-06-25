@@ -10,7 +10,7 @@
         <span class="@IconCssClass">@Icon</span>
     }
 
-    @if (Options.HasFlag(InputDateTimeOptions.ShowResetButton) && Inactive == false)
+    @if (Options.HasFlag(InputDateTimeOptions.ShowResetButton) && AdditionalAttributes.IsDisabled() == false)
     {
         <span class="material-icons icon is-right is-clickable" @onclick='() => ClosePopout(reset: true)' @onclick:stopPropagation="true">
             close

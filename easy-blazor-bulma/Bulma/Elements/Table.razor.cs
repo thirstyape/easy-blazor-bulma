@@ -6,6 +6,7 @@ namespace easy_blazor_bulma;
 /// The inevitable HTML table, with special case cells.
 /// </summary>
 /// <remarks>
+/// There are 2 additional attributes that can be used: thead-class and tbody-class. Each of which apply CSS classes to the resulting elements as per their names.
 /// <see href="https://bulma.io/documentation/elements/table/">Bulma Documentation</see>
 /// </remarks>
 public partial class Table : ComponentBase
@@ -40,7 +41,7 @@ public partial class Table : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private readonly string[] Filter = new[] { "class" };
+	private readonly string[] Filter = new[] { "class", "thead-class", "tbody-class" };
 
 	private string MainCssClass
 	{

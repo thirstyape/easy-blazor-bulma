@@ -99,8 +99,6 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	private readonly string[] DefaultKeys = new[] { "Escape", "ArrowDown", "ArrowUp" };
 	private bool OnBlurPreventDefault;
 
-	private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
-
 	private string MainCssClass
 	{
 		get
@@ -124,7 +122,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 		{
 			var css = "dropdown dropdown-block";
 
-			if (IsPopoutDisplayed && Inactive == false)
+			if (IsPopoutDisplayed && AdditionalAttributes.IsDisabled() == false)
 				css += " is-active";
 
 			if (Options.HasFlag(InputAutocompleteOptions.PopoutTop))

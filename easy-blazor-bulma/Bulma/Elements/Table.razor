@@ -4,11 +4,11 @@
 <table class="@MainCssClass" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
 	@if (TableHead != null)
 	{
-		<thead>
+		<thead class='@AdditionalAttributes.GetClass("thead-class")'>
 			@TableHead
 		</thead>
 	}
-	<tbody>
+	<tbody class='@AdditionalAttributes.GetClass("tbody-class")'>
 		@(TableBody ?? ChildContent)
 	</tbody>
 </table>

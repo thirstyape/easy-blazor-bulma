@@ -88,8 +88,6 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
     private ElementReference? Element;
 	private ILogger<InputDuration<TValue>>? Logger;
 
-	private bool Inactive => AdditionalAttributes != null && AdditionalAttributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
-
     private string MainCssClass
     {
         get
@@ -116,7 +114,7 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
             if (Options.HasFlag(InputDurationOptions.HoverPopout))
                 css += " is-hoverable";
 
-            if (IsPopoutDisplayed && Inactive == false)
+            if (IsPopoutDisplayed && AdditionalAttributes.IsDisabled() == false)
                 css += " is-active";
 
             if (Options.HasFlag(InputDurationOptions.PopoutBottom))

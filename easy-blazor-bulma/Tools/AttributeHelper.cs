@@ -70,4 +70,10 @@ public static class AttributeHelper
         else
             return attributes.Where(x => x.Key.StartsWith(prefix) == false).ToDictionary(x => x.Key, x => x.Value);
     }
+
+	/// <summary>
+	/// Checks to see whether the provided collection contains any readonly or disabled attributes.
+	/// </summary>
+	/// <param name="attributes">The collection containing HTML attribute data.</param>
+	public static bool IsDisabled(this IReadOnlyDictionary<string, object>? attributes) => attributes != null && attributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
 }

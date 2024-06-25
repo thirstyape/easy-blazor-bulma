@@ -122,7 +122,9 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 	{
 		var current = CurrentValueAsString?.FirstOrDefault();
 
-		if (IsNullable == false && current != null && current != '\0' && char.ToUpper(character) == char.ToUpper(current.Value))
+		if (AdditionalAttributes.IsDisabled())
+			return;
+		else if (IsNullable == false && current != null && current != '\0' && char.ToUpper(character) == char.ToUpper(current.Value))
 			return;
 		else if (character == '\0' || (current != null && current != '\0' && char.ToUpper(character) == char.ToUpper(current.Value)))
 			CurrentValueAsString = null;
@@ -138,7 +140,9 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 	{
 		OnKeyDownPreventDefault = DefaultKeys.Contains(args.Code) == false;
 
-		if (args.Code != "ArrowDown" && args.Code != "ArrowUp" && args.Code != "ArrowLeft" && args.Code != "ArrowRight")
+        if (AdditionalAttributes.IsDisabled())
+            return;
+        else if (args.Code != "ArrowDown" && args.Code != "ArrowUp" && args.Code != "ArrowLeft" && args.Code != "ArrowRight")
 			return;
 
 		var current = CurrentValueAsString?.FirstOrDefault();
@@ -207,7 +211,9 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 
 		var current = CurrentValueAsString?.FirstOrDefault();
 
-		if (current == null || current == '\0')
+        if (AdditionalAttributes.IsDisabled())
+            return;
+        else if (current == null || current == '\0')
 			return;
 		else if (IsUpperCase && char.IsLower(current.Value))
 			CurrentValueAsString = char.ToUpper(current.Value).ToString();
@@ -219,6 +225,9 @@ public partial class InputCharacter<[DynamicallyAccessedMembers(DynamicallyAcces
 	{
 		var current = CurrentValueAsString?.FirstOrDefault();
 		var css = "button is-fullwidth mb-3";
+
+		if (AdditionalAttributes.IsDisabled())
+			css += " is-disabled";
 
 		if (ActiveColor != BulmaColors.Default && character != '\0' && current != null && char.ToUpper(current.Value) == char.ToUpper(character))
 			css += ' ' + BulmaColorHelper.GetColorCss(ActiveColor);
