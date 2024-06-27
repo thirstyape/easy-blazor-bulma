@@ -82,6 +82,15 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	[Parameter]
 	public Func<string?, Task>? OnItemsRequested { get; set; }
 
+	/// <summary>
+	/// Gets or sets the associated <see cref="ElementReference"/>.
+	/// <para>
+	/// May be <see langword="null"/> if accessed before the component is rendered.
+	/// </para>
+	/// </summary>
+	[DisallowNull]
+	public ElementReference? Element { get; private set; }
+
 	private readonly string[] Filter = new[] { "class", "dropdown-class", "dropdown-trigger-class", "dropdown-menu-class", "dropdown-item-class", "tag-class" };
 
 	[Inject]
@@ -92,7 +101,6 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	private string? InputValue;
 
 	private readonly Type UnderlyingType;
-	private ElementReference? Element;
 	private ILogger<InputAutocomplete<TValue>>? Logger;
 
 	private bool OnKeyDownPreventDefault;
@@ -184,14 +192,6 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 
 		// Set starting values
 		HighlightedValue = CurrentValue;
-	}
-
-	/// <inheritdoc />
-	protected async override Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (firstRender)
-			if (Element != null && AdditionalAttributes != null && AdditionalAttributes.TryGetValue("autofocus", out var _))
-				await Element.Value.FocusAsync();
 	}
 
 	/// <inheritdoc />

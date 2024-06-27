@@ -31,11 +31,19 @@ public partial class InputPassword<[DynamicallyAccessedMembers(DynamicallyAccess
 	[Parameter]
 	public bool UseAutomaticStatusColors { get; set; } = true;
 
+	/// <summary>
+	/// Gets or sets the associated <see cref="ElementReference"/>.
+	/// <para>
+	/// May be <see langword="null"/> if accessed before the component is rendered.
+	/// </para>
+	/// </summary>
+	[DisallowNull]
+	public ElementReference? Element { get; private set; }
+
 	private readonly string[] Filter = new string[] { "class", "icon-class" };
 
 	private readonly bool IsNullable;
 	private readonly Type UnderlyingType;
-	private ElementReference? Element;
 
     private string? Message = null;
 	private BulmaColors MessageColor = BulmaColors.Default;
@@ -94,14 +102,6 @@ public partial class InputPassword<[DynamicallyAccessedMembers(DynamicallyAccess
 
 		if (UnderlyingType != typeof(string))
 			throw new InvalidOperationException($"Unsupported type param '{UnderlyingType.Name}'. Must be of type string.");
-	}
-
-	/// <inheritdoc />
-	protected async override Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (firstRender)
-			if (Element != null && AdditionalAttributes != null && AdditionalAttributes.TryGetValue("autofocus", out var _))
-				await Element.Value.FocusAsync();
 	}
 
 	/// <inheritdoc />

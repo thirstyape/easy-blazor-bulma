@@ -82,6 +82,15 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
         InputDateTimeOptions.CloseOnDateClicked |
         InputDateTimeOptions.ValidateTextInput;
 
+	/// <summary>
+	/// Gets or sets the associated <see cref="ElementReference"/>.
+	/// <para>
+	/// May be <see langword="null"/> if accessed before the component is rendered.
+	/// </para>
+	/// </summary>
+	[DisallowNull]
+	public ElementReference? Element { get; private set; }
+
 	private readonly string[] Filter = new string[] { "class", "datetimepicker-class", "icon-class" };
 
 	[Inject]
@@ -94,7 +103,6 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 
 	private readonly bool IsNullable;
 	private readonly Type UnderlyingType;
-	private ElementReference? Element;
 	private ILogger<InputDateTime<TValue>>? Logger;
 
     private string MainCssClass
@@ -220,14 +228,6 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 		InitialValue = ValueAsDateTime;
         PopoutValue = ValueAsDateTime;
 	}
-
-    /// <inheritdoc />
-    protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-            if (Element != null && AdditionalAttributes != null && AdditionalAttributes.TryGetValue("autofocus", out var _))
-                await Element.Value.FocusAsync();
-    }
 
     /// <inheritdoc />
     protected override bool TryParseValueFromString(string? value, [MaybeNullWhen(false)] out TValue result, [NotNullWhen(false)] out string? validationErrorMessage)

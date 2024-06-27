@@ -74,6 +74,15 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         InputDurationOptions.ShowSeconds |
         InputDurationOptions.ValidateTextInput;
 
+	/// <summary>
+	/// Gets or sets the associated <see cref="ElementReference"/>.
+	/// <para>
+	/// May be <see langword="null"/> if accessed before the component is rendered.
+	/// </para>
+	/// </summary>
+	[DisallowNull]
+	public ElementReference? Element { get; private set; }
+
 	private readonly string[] Filter = new string[] { "class", "datetimepicker-class", "icon-class" };
 
 	[Inject]
@@ -85,7 +94,6 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
 
     private readonly bool IsNullable;
     private readonly Type UnderlyingType;
-    private ElementReference? Element;
 	private ILogger<InputDuration<TValue>>? Logger;
 
     private string MainCssClass
@@ -210,14 +218,6 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         // Set starting values
         InitialValue = ValueAsTimeSpan;
         PopoutValue = ValueAsTimeSpan;
-    }
-
-    /// <inheritdoc />
-    protected async override Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-            if (Element != null && AdditionalAttributes != null && AdditionalAttributes.TryGetValue("autofocus", out var _))
-                await Element.Value.FocusAsync();
     }
 
     /// <inheritdoc/>

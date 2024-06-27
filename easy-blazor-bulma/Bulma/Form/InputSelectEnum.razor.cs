@@ -48,6 +48,15 @@ public partial class InputSelectEnum<[DynamicallyAccessedMembers(DynamicallyAcce
     [Parameter]
     public bool HideZeroOption { get; set; }
 
+	/// <summary>
+	/// Gets or sets the associated <see cref="ElementReference"/>.
+	/// <para>
+	/// May be <see langword="null"/> if accessed before the component is rendered.
+	/// </para>
+	/// </summary>
+	[DisallowNull]
+	public ElementReference? Element { get; private set; }
+
 	private readonly string[] Filter = new[] { "class" };
 
 	private readonly bool IsNullable;

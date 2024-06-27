@@ -48,7 +48,7 @@ public partial class ThemeSelector : ComponentBase
 	private readonly string[] Filter = new[] { "class" };
 
 	[Inject]
-	private IServiceProvider ServiceProvider { get; init; }
+	private IServiceProvider ServiceProvider { get; init; } = default!;
 
 	private IJSRuntime? JsRuntime;
 
