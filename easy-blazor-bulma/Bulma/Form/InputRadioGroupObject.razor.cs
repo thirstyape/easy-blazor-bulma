@@ -27,7 +27,7 @@ public partial class InputRadioGroupObject<[DynamicallyAccessedMembers(Dynamical
 
     private readonly string[] Filter = new[] { "class", "item-class" };
 
-	private readonly string PropertyName = Guid.NewGuid().ToString();
+	private readonly string PropertyName = Guid.NewGuid().ToString("N");
 
 	private string MainCssClass => CssClass;
 

@@ -31,7 +31,7 @@ public partial class InputFlaggedEnum<[DynamicallyAccessedMembers(DynamicallyAcc
 
 	private readonly bool IsNullable;
     private readonly Type UnderlyingType;
-    private readonly string PropertyName = Guid.NewGuid().ToString();
+    private readonly string PropertyName = Guid.NewGuid().ToString("N");
 
     private string MainCssClass
     {

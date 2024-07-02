@@ -118,7 +118,7 @@ public partial class InputSwitch<[DynamicallyAccessedMembers(DynamicallyAccessed
     protected override void OnInitialized()
 	{
 		if (string.IsNullOrWhiteSpace(Id))
-			Id = AdditionalAttributes.GetValue("id") ?? Guid.NewGuid().ToString();
+			Id = AdditionalAttributes.GetValue("id") ?? Guid.NewGuid().ToString("N");
 
 		DisplayAttribute? attribute = null;
 
