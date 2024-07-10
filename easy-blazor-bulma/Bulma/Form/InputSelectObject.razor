@@ -3,7 +3,7 @@
 @inherits InputBase<TValue>
 
 <div class='@MainCssClass'>
-    <select class='input' @onchange=OnSelectionChanged @ref=Element @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
+    <select class='input' @onchange=OnSelectionChanged @ref=Element @attributes='AdditionalAttributes.ConvertReadonlyToDisabled().GetFilteredAttributes(Filter)'>
         @if (IsNullable)
         {
             <option value="" selected='@(CurrentValue == null)'>@NullText</option>

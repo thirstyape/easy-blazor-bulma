@@ -13,10 +13,10 @@
 		<Company>NF Software Inc.</Company>
 		<Product>Easy Logger Parser</Product>
 		<Copyright>Copyright 2024 $(Company)</Copyright>
-		<AssemblyVersion>1.0.13.0</AssemblyVersion>
-		<FileVersion>1.0.13.0</FileVersion>
-		<Version>1.0.13</Version>
-		<MauiVersion>8.0.40</MauiVersion>
+		<AssemblyVersion>1.1.0.0</AssemblyVersion>
+		<FileVersion>1.1.0.0</FileVersion>
+		<Version>1.1.0</Version>
+		<MauiVersion>8.0.70</MauiVersion>
 
         <!-- Display name -->
         <ApplicationTitle>Easy Blazor Bulma</ApplicationTitle>
@@ -26,7 +26,7 @@
 		<ApplicationIdGuid>033431F0-FF8E-466E-ACE0-C8C426AE0242</ApplicationIdGuid>
 
         <!-- Versions -->
-        <ApplicationDisplayVersion>1.0.13</ApplicationDisplayVersion>
+        <ApplicationDisplayVersion>1.1.0</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
@@ -51,7 +51,7 @@
 	</ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Easy.Log.Writer.Blazor" Version="2.0.*" />
+        <PackageReference Include="Easy.Log.Writer.Blazor" Version="2.1.*" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />

@@ -23,13 +23,6 @@ public partial class Tab : ComponentBase, IAsyncDisposable
 	public string? Icon { get; set; }
 
 	/// <summary>
-	/// Obsolete, will be removed.
-	/// </summary>
-	[Parameter]
-	[Obsolete("This parameter is no longer used, add a disabled attribute for the same effect.")]
-	public bool IsEnabled { get; set; }
-
-	/// <summary>
 	/// The content to display within the tab.
 	/// </summary>
 	[Parameter]

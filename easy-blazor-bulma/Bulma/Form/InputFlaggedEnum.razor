@@ -7,7 +7,7 @@
 @foreach (var value in Enum.GetValues(UnderlyingType).Cast<TEnum>().Where(x => HideZeroOption == false || (int)(object)x! > 0))
 {
     <div class="@MainCssClass">
-        <input type="checkbox" class="@SwitchCssClass" checked='@IsFlagChecked(value)' @onclick="() => OnValueChanged(value)" id='@GetEnumSwitchId(value)' @attributes='GetFilteredAttributes()' />
+        <input type="checkbox" class="@SwitchCssClass" checked='@IsFlagChecked(value)' @onclick="() => OnValueChanged(value)" id='@GetEnumSwitchId(value)' @attributes='AdditionalAttributes.ConvertReadonlyToDisabled().GetFilteredAttributes(Filter)' />
         <label class="@LabelCssClass" for='@GetEnumSwitchId(value)'>@(value.GetValueAttribute<TEnum, DisplayAttribute>()?.GetName() ?? value!.ToString())</label>
     </div>
 }

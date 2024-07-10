@@ -64,6 +64,12 @@ public partial class TitleBlock : ComponentBase
 	public TooltipOptions TooltipMode { get; set; } = TooltipOptions.Default;
 
 	/// <summary>
+	/// Additional content to display in the body section of the title block.
+	/// </summary>
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+
+	/// <summary>
 	/// Any additional attributes applied directly to the component.
 	/// </summary>
 	[Parameter(CaptureUnmatchedValues = true)]

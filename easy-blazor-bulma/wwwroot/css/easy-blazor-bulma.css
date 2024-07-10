@@ -19239,10 +19239,6 @@ span[data-tooltip].has-tooltip-danger {
   width: 100%;
 }
 
-.is-word-break {
-  word-break: break-all;
-}
-
 .navbar-item.is-mega {
   position: static;
 }
@@ -19252,6 +19248,10 @@ span[data-tooltip].has-tooltip-danger {
 }
 .navbar-item.is-mega .navbar-item {
   font-size: 1.25rem;
+}
+
+.is-word-break {
+  word-break: break-all;
 }
 
 .is-cursor-default {
@@ -19276,6 +19276,52 @@ span[data-tooltip].has-tooltip-danger {
 
 .is-fullheight-minus-2 {
   min-height: calc(100vh - 6.5rem);
+}
+
+.is-overflow-x {
+  overflow-x: auto;
+}
+
+.is-overflow-y {
+  overflow-y: auto;
+}
+
+.is-overflow-both {
+  overflow: auto;
+}
+
+.is-whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.loading-progress {
+  position: relative;
+  display: block;
+  width: 8rem;
+  height: 8rem;
+  margin: 20vh auto 1rem auto;
+}
+.loading-progress circle {
+  fill: none;
+  stroke: #e0e0e0;
+  stroke-width: 0.6rem;
+  transform-origin: 50% 50%;
+  transform: rotate(-90deg);
+}
+.loading-progress circle:last-child {
+  stroke: #1b6ec2;
+  stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
+  transition: stroke-dasharray 0.05s ease-in-out;
+}
+
+.loading-progress-text {
+  position: absolute;
+  text-align: center;
+  font-weight: bold;
+  inset: calc(20vh + 3.25rem) 0 auto 0.2rem;
+}
+.loading-progress-text:after {
+  content: var(--blazor-load-percentage-text, "Loading");
 }
 
 .panel {

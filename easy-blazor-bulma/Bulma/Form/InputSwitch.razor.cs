@@ -143,14 +143,4 @@ public partial class InputSwitch<[DynamicallyAccessedMembers(DynamicallyAccessed
 		bool boolValue => boolValue.ToString(),
 		_ => string.Empty
 	};
-
-	public IReadOnlyDictionary<string, object>? GetFilteredAttributes()
-	{
-		if (AdditionalAttributes == null)
-			return null;
-		else if (AdditionalAttributes.Any(x => x.Key == "readonly"))
-			return AdditionalAttributes.Append(new KeyValuePair<string, object>("disabled", "true")).Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
-		else
-			return AdditionalAttributes.Where(x => Filter.Contains(x.Key) == false).ToDictionary(x => x.Key, x => x.Value);
-	}
 }

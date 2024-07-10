@@ -48,7 +48,8 @@ public partial class InputRadioGroupObject<[DynamicallyAccessedMembers(Dynamical
 
 	private void OnCurrentChanged(TValue? current)
 	{
-		CurrentValue = current;
+		if (AdditionalAttributes.IsDisabled() == false)
+			CurrentValue = current;
 	}
 
 	private string CurrentValueDisplay

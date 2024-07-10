@@ -12,6 +12,11 @@ else if (UpdatePageTitle)
 
 <section class="@MainCssClass" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
 	<div class="@BodyCssClass">
+		@if (ChildContent != null)
+		{
+			@ChildContent
+		}
+
 		<h1 class="@TitleCssClass">
 			@if (string.IsNullOrWhiteSpace(Icon) == false && string.IsNullOrWhiteSpace(IconUrl) == false)
 			{

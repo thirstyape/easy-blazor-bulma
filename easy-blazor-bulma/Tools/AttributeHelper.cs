@@ -71,9 +71,23 @@ public static class AttributeHelper
             return attributes.Where(x => x.Key.StartsWith(prefix) == false).ToDictionary(x => x.Key, x => x.Value);
     }
 
-	/// <summary>
-	/// Checks to see whether the provided collection contains any readonly or disabled attributes.
-	/// </summary>
-	/// <param name="attributes">The collection containing HTML attribute data.</param>
-	public static bool IsDisabled(this IReadOnlyDictionary<string, object>? attributes) => attributes != null && attributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
+    /// <summary>
+    /// Returns all values in the provided collection and replaces any instances of readonly with disabled.
+    /// </summary>
+    /// <param name="attributes">The collection containing HTML attribute data.</param>
+    public static IReadOnlyDictionary<string, object>? ConvertReadonlyToDisabled(this IReadOnlyDictionary<string, object>? attributes)
+    {
+        if (attributes == null)
+            return null;
+        else if (attributes.Any(x => x.Key == "readonly"))
+            return attributes.Append(new KeyValuePair<string, object>("disabled", "disabled")).Where(x => x.Key != "readonly").ToDictionary(x => x.Key, x => x.Value);
+        else
+            return attributes;
+    }
+
+    /// <summary>
+    /// Checks to see whether the provided collection contains any readonly or disabled attributes.
+    /// </summary>
+    /// <param name="attributes">The collection containing HTML attribute data.</param>
+    public static bool IsDisabled(this IReadOnlyDictionary<string, object>? attributes) => attributes != null && attributes.Any(x => x.Key == "readonly" || (x.Key == "disabled" && (x.Value.ToString() == "disabled" || x.Value.ToString() == "true")));
 }
