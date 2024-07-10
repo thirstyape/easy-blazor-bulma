@@ -3,14 +3,29 @@
 
 <TitleBlock Title="Modal Test" />
 
-<div class="container pt-3">
-	<Panel Title="Modal Controls">
-		<label class="label">First Modal</label>
-		<button type="button" class="button is-info" @onclick='OpenModal1'>Open Modal 1</button>
+<div class="columns p-3">
+	<div class="column is-4">
+		<Message Title="Information" Color="BulmaColors.Cyan">
+			<p class="block">There are several additional attributes that can apply customization to the component:</p>
+			<div class="content">
+				<ul class="content">
+					<li>header-class</li>
+					<li>card-class</li>
+					<li>body-class</li>
+					<li>foot-class</li>
+				</ul>
+			</div>
+		</Message>
+	</div>
+	<div class="column is-8">
+		<Panel Title="Modal Controls">
+			<label class="label">First Modal</label>
+			<button type="button" class="button is-info" @onclick='OpenModal1'>Open Modal 1</button>
 
-		<label class="label mt-3">Second Modal</label>
-		<button type="button" class="button is-info" @onclick='OpenModal2'>Open Modal 2</button>
-	</Panel>
+			<label class="label mt-3">Second Modal</label>
+			<button type="button" class="button is-info" @onclick='OpenModal2'>Open Modal 2</button>
+		</Panel>
+	</div>
 </div>
 
 <Modal Title="Open Sesame" @bind-IsDisplayed=Modal1Displayed>
@@ -39,7 +54,7 @@
 	{
 		Modal1Displayed = true;
 	}
-	
+
 	private void OpenModal2()
 	{
 		Modal2Displayed = true;
@@ -49,7 +64,7 @@
 	{
 		Modal1Displayed = false;
 	}
-	
+
 	private void CloseModal2()
 	{
 		Modal2Displayed = false;

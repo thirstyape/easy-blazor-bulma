@@ -1,0 +1,39 @@
+﻿@page "/card"
+@inherits ComponentBase
+
+<TitleBlock Title="Card Test" />
+
+<div class="columns p-3">
+	<div class="column is-4">
+		<Message Title="Information" Color="BulmaColors.Cyan">
+			<p class="block">There are several additional attributes that can apply customization to the component:</p>
+			<div class="content">
+				<ul class="content">
+					<li>header-class</li>
+					<li>title-class</li>
+					<li>content-class</li>
+					<li>footer-class</li>
+				</ul>
+			</div>
+		</Message>
+	</div>
+	<div class="column is-8">
+		<div class="columns">
+			<div class="column">
+				<Card class="m-1" Title="Sample Card" Icon="search">
+					<div class="content">Some text to display in the card.</div>
+				</Card>
+			</div>
+			<div class="column">
+				<Card class="m-1" Title="Another Card">
+					<CardContent>
+						<div class="content">Some text to display in the card.</div>
+					</CardContent>
+					<CardFooter>
+						<p class="block">Some text to display in the footer.</p>
+					</CardFooter>
+				</Card>
+			</div>
+		</div>
+	</div>
+</div>

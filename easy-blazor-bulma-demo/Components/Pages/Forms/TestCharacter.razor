@@ -20,6 +20,15 @@
 					<li>Esc</li>
 				</ul>
 			</div>
+
+			<p class="block">There are several additional attributes that can apply customization to the component:</p>
+			<div class="content">
+				<ul class="content">
+					<li>columns-class</li>
+					<li>column-class</li>
+					<li>button-class</li>
+				</ul>
+			</div>
 		</Message>
 	</div>
 	<div class="column is-8">
@@ -44,7 +53,7 @@
 	private readonly TooltipOptions TooltipDisplayMode = TooltipOptions.Right | TooltipOptions.HasArrow | TooltipOptions.Multiline;
 	private readonly char[] Charset = ['!', '@', '#', '%', '^', '&', '*', '(', ')', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 
-	private class PageModel 
+	private class PageModel
 	{
 		public char CharacterTest { get; set; } = 'A';
 

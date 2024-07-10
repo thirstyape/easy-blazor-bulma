@@ -3,20 +3,33 @@
 
 <TitleBlock Title="Panel Test" />
 
-<div class="container pt-3">
-	<Panel class="is-size-4 is-tiny" Title="Tiny Panel" Color="BulmaColors.Cyan">
-		<p class="block">Here's a super small panel</p>
-	</Panel>
+<div class="columns p-3">
+	<div class="column is-4">
+		<Message Title="Information" Color="BulmaColors.Cyan">
+			<p class="block">There are several additional attributes that can apply customization to the component:</p>
+			<div class="content">
+				<ul class="content">
+					<li>header-class</li>
+					<li>content-class</li>
+				</ul>
+			</div>
+		</Message>
+	</div>
+	<div class="column is-8">
+		<Panel class="is-size-4 is-tiny" Title="Tiny Panel" Color="BulmaColors.Cyan">
+			<p class="block">Here's a super small panel</p>
+		</Panel>
 
-	<Panel Title="Regular Panel" Color="BulmaColors.Yellow" Icon="history" OnTitleClicked="OnTitleClicked">
-		<p class="block">Here's a regular sized panel</p>
-		<p class="block">This one has a custom icon</p>
-		<p>@ChangeableMessage</p>
-	</Panel>
+		<Panel Title="Regular Panel" Color="BulmaColors.Yellow" Icon="history" OnTitleClicked="OnTitleClicked">
+			<p class="block">Here's a regular sized panel</p>
+			<p class="block">This one has a custom icon</p>
+			<p>@ChangeableMessage</p>
+		</Panel>
 
-	<Panel class="is-size-4 is-jumbo" Title="Jumbo Panel" Color="BulmaColors.Purple" ShowCollapseIcons=false>
-		<p class="block">Big panel!</p>
-	</Panel>
+		<Panel class="is-size-4 is-jumbo" Title="Jumbo Panel" Color="BulmaColors.Purple" ShowCollapseIcons=false>
+			<p class="block">Big panel!</p>
+		</Panel>
+	</div>
 </div>
 
 @code {

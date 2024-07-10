@@ -20,11 +20,20 @@
 					<li>Esc</li>
 				</ul>
 			</div>
-		</Message>
 
-		<Message Title="Usage" Color="BulmaColors.Cyan">
+			<p class="block">There are several additional attributes that can apply customization to the component:</p>
+			<div class="content">
+				<ul class="content">
+					<li>dropdown-class</li>
+					<li>dropdown-trigger-class</li>
+					<li>dropdown-menu-class</li>
+					<li>dropdown-item-class</li>
+					<li>tag-class</li>
+				</ul>
+			</div>
+
 			<p class="block">The first input displays a generic implementation.</p>
-			<p class="block">The second input displays a more customized implementation. By using the OnItemsRequested method, the collection can be filtered before the value gets changed. Additionally, typing More will add a new element to the list and typing Less will remove an element from the list.</p>
+			<p class="block">The second input displays a more customized implementation. By using the OnItemsRequested method, the collection can be filtered before the value gets changed. In this case, typing More will add a new element to the list and typing Less will remove an element from the list.</p>
 		</Message>
 	</div>
 	<div class="column is-8">
@@ -38,7 +47,7 @@
 			<div class="field">
 				<Label For="() => InputModel.SelectedItem2" TooltipMode="TooltipDisplayMode" />
 				<div class="control has-icons-left is-expanded">
-					<InputAutocomplete dropdown-class="is-fullwidth" @bind-Value="InputModel.SelectedItem2" DisplayValue='x => x?.Name' Items="GetAutocompleteItems()" OnItemsRequested=OnItemsRequested DisplayCount="5" Options="Options" />
+					<InputAutocomplete dropdown-class="is-fullwidth" tag-class="is-warning" @bind-Value="InputModel.SelectedItem2" DisplayValue='x => x?.Name' Items="GetAutocompleteItems()" OnItemsRequested=OnItemsRequested DisplayCount="5" Options="Options" />
 				</div>
 			</div>
 		</EditForm>
