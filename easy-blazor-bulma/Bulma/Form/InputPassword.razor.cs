@@ -40,7 +40,7 @@ public partial class InputPassword<[DynamicallyAccessedMembers(DynamicallyAccess
 	[DisallowNull]
 	public ElementReference? Element { get; private set; }
 
-	private readonly string[] Filter = new string[] { "class", "icon-class" };
+	private readonly string[] Filter = new string[] { "class", "icon-class", "message-class" };
 
 	private readonly bool IsNullable;
 	private readonly Type UnderlyingType;

@@ -1,0 +1,23 @@
+﻿@namespace easy_blazor_bulma
+@inherits HttpErrorBase
+
+<TitleBlock Title="@Title" class="@BulmaColorHelper.GetColorCss(Color)" Icon="@Icon" UpdatePageTitle=false />
+
+@if (string.IsNullOrWhiteSpace(Message) == false)
+{
+	<div class="columns is-centered">
+		<div class="@MainCssClass">
+			@foreach (var line in Message.ToLines())
+			{
+				<p>@line</p>
+			}
+		</div>
+	</div>
+}
+
+@if (ChildContent != null)
+{
+	<div>
+		@ChildContent
+	</div>
+}

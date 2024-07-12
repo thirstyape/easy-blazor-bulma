@@ -42,12 +42,6 @@ public partial class BreadCrumb : ComponentBase
 
     internal void AddChild(BreadCrumbItem item)
     {
-        if (Children.Any(x => x.DisplayText == item.DisplayText))
-        {
-            Logger?.LogError("Breadcrumb items must have a unique name. Duplicate is {name}.", item.DisplayText);
-            return;
-        }
-
         item.Index = Children.Count != 0 ? Children.Max(x => x.Index) + 1 : 0;
 
         Children.Add(item);
