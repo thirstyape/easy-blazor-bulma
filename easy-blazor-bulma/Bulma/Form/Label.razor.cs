@@ -31,6 +31,12 @@ public partial class Label<TValue> : ComponentBase
 	public string? DisplayText { get; set; }
 
 	/// <summary>
+	/// Sets the for attribute text. Should be the same as the id attribute of the matching input.
+	/// </summary>
+	[Parameter]
+	public string? ForInputId { get; set; }
+
+	/// <summary>
 	/// Sets the display mode for a tooltip when present.
 	/// </summary>
 	/// <remarks>
@@ -94,6 +100,9 @@ public partial class Label<TValue> : ComponentBase
 
 		if (string.IsNullOrWhiteSpace(DisplayText))
 			DisplayText = attribute?.GetName();
+
+		if (string.IsNullOrWhiteSpace(ForInputId))
+			ForInputId = DisplayText;
 
 		Tooltip = AdditionalAttributes.GetValue("data-tooltip") ?? attribute?.GetDescription();
 	}

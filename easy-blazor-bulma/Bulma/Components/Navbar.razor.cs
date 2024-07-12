@@ -6,7 +6,7 @@ namespace easy_blazor_bulma;
 /// A navigation menu to use at the top of the screen.
 /// </summary>
 /// <remarks>
-/// There are 3 additional attributes that can be used: brand-class, burger-class, and menu-class. Each of which apply CSS classes to the resulting elements as per their names.
+/// There are 5 additional attributes that can be used: brand-class, burger-class, menu-class, a-class, and img-class. Each of which apply CSS classes to the resulting elements as per their names.
 /// <see href="https://bulma.io/documentation/components/navbar/">Bulma Documentation</see>
 /// </remarks>
 public partial class Navbar : ComponentBase
@@ -53,7 +53,7 @@ public partial class Navbar : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
 	public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-	private readonly string[] Filter = new[] { "class", "id", "role", "aria-label", "href", "brand-class", "burger-class", "menu-class" };
+	private readonly string[] Filter = new[] { "class", "id", "role", "aria-label", "href", "brand-class", "burger-class", "menu-class", "a-class", "img-class" };
 
 	private bool IsActive;
 	private string? Id;
@@ -88,6 +88,10 @@ public partial class Navbar : ComponentBase
             return string.Join(' ', css, AdditionalAttributes.GetClass("menu-class"));
         }
 	}
+
+	private string LinkCssClass => string.Join(' ', "navbar-item", AdditionalAttributes.GetClass("a-class"));
+
+	private string ImageCssClass => AdditionalAttributes.GetClass("img-class") ?? "mr-2";
 
 	/// <inheritdoc />
 	protected override void OnInitialized()

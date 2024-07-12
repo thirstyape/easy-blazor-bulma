@@ -43,15 +43,13 @@ public partial class BreadCrumb : ComponentBase
     internal void AddChild(BreadCrumbItem item)
     {
         item.Index = Children.Count != 0 ? Children.Max(x => x.Index) + 1 : 0;
+		item.IsLast = true;
 
-        Children.Add(item);
-
-        foreach (var child in Children)
+		foreach (var child in Children)
             child.IsLast = false;
 
-        item.IsLast = true;
-
-        StateHasChanged();
+		Children.Add(item);
+		StateHasChanged();
     }
 
     internal void RemoveChild(BreadCrumbItem item)
@@ -81,6 +79,4 @@ public partial class BreadCrumb : ComponentBase
 
         StateHasChanged();
     }
-
-    private string GetItemCssClass(BreadCrumbItem item) => item.IsLast ? "is-active" : "";
 }

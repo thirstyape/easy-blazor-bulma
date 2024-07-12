@@ -5,13 +5,16 @@
     <ul>
         @foreach (var item in Children)
         {
-            <li class="@GetItemCssClass(item)">
-                <a href="@item.Url">
+            <li class="@item.MainCssClass">
+                <a href="@item.Url" class="@item.LinkCssClass">
                     @if (string.IsNullOrWhiteSpace(item.Icon) == false)
                     {
-                        <span class="material-icons icon">@item.Icon</span>
+                        <span class="@item.IconCssClass">@item.Icon</span>
                     }
-                    <span>@item.DisplayText</span>
+                    @if (string.IsNullOrWhiteSpace(item.Icon) == false)
+                    {
+                        <span>@item.DisplayText</span>
+                    }
                 </a>
             </li>
         }

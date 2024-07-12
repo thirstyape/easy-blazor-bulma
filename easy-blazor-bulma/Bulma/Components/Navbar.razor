@@ -9,14 +9,17 @@
 		<div class="@BrandCssClass">
 			@if (string.IsNullOrWhiteSpace(DisplayText) == false || string.IsNullOrWhiteSpace(DisplayImageUrl) == false)
 			{
-				<NavLink ActiveClass="is-active" href="@Href" class="navbar-item" Match="NavLinkMatch.All">
+				<NavLink ActiveClass="is-active" href="@Href" class="@LinkCssClass" Match="NavLinkMatch.All">
 					@if (string.IsNullOrWhiteSpace(DisplayImageUrl) == false)
 					{
-						<span class="mr-2">
+						<span class='@ImageCssClass'>
 							<img src="@DisplayImageUrl" />
 						</span>
 					}
-					<span>@DisplayText</span>
+					@if (string.IsNullOrWhiteSpace(DisplayText) == false)
+					{
+						<span>@DisplayText</span>
+					}
 				</NavLink>
 			}
 			@if (UseBurger)

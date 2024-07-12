@@ -5,13 +5,16 @@ namespace easy_blazor_bulma;
 /// <summary>
 /// Use to create a single item within a <see cref="BreadCrumb"/> component.
 /// </summary>
+/// /// <remarks>
+/// There are 2 additional attributes that can be used: icon-class and a-class. Each of which apply CSS classes to the resulting elements as per their names.
+/// </remarks>
 public partial class BreadCrumbItem : ComponentBase, IDisposable
 {
     /// <summary>
     /// The text to show for this item.
     /// </summary>
     [Parameter]
-    public string DisplayText { get; set; } = string.Empty;
+    public string? DisplayText { get; set; }
 
     /// <summary>
     /// The URL to redirect to when clicking this item.
@@ -28,8 +31,33 @@ public partial class BreadCrumbItem : ComponentBase, IDisposable
     [CascadingParameter]
     private BreadCrumb Parent { get; set; } = default!;
 
-	internal int Index;
+    /// <summary>
+	/// Any additional attributes applied directly to the component.
+	/// </summary>
+	[Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    internal readonly string[] Filter = new[] { "class", "a-class", "icon-class" };
+
+    internal int Index;
 	internal bool IsLast;
+
+    internal string MainCssClass
+    {
+        get
+        {
+			var css = "";
+
+			if (IsLast)
+				css += " is-active";
+
+			return string.Join(' ', css, AdditionalAttributes.GetClass("class"));
+		}
+    }
+
+    internal string? LinkCssClass => AdditionalAttributes.GetClass("a-class");
+
+    internal string IconCssClass => string.Join(' ', "material-icons", AdditionalAttributes.GetClass("icon-class"));
 
     /// <inheritdoc/>
 	protected override void OnInitialized()
