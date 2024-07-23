@@ -13,7 +13,12 @@ Finally, you can use any of the pre-built components here to simplify use of the
 
 ### Installation
 
-To use this library either clone a copy of the repository or check out the [NuGet package](https://www.nuget.org/packages/Easy.Blazor.Bulma/)
+To use this library: 
+
+* Clone a copy of the repository
+* Reference the [NuGet package](https://www.nuget.org/packages/Easy.Blazor.Bulma/)
+* Try it on Android with the APK file (see releases)
+* Try it on Windows with the [Microsoft Store App](https://apps.microsoft.com/detail/9p09hv890mh2) or MSIX package (see releases)
 
 ### Features
 
