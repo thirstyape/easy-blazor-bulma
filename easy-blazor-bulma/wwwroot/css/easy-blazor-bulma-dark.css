@@ -19250,6 +19250,11 @@ span[data-tooltip].has-tooltip-danger {
   font-size: 1.25rem;
 }
 
+.tag.is-multiline {
+  white-space: break-spaces;
+  height: auto;
+}
+
 .is-word-break {
   word-break: break-all;
 }
@@ -19292,6 +19297,10 @@ span[data-tooltip].has-tooltip-danger {
 
 .is-whitespace-nowrap {
   white-space: nowrap;
+}
+
+.is-whitespace-break {
+  white-space: break-spaces;
 }
 
 .loading-progress {
