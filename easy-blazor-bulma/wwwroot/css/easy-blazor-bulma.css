@@ -10076,6 +10076,49 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
     page-break-inside: avoid;
     break-inside: avoid;
   }
+  .is-fullwidth-print {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+  .is-0-print {
+    width: 0% !important;
+  }
+  .is-1-print {
+    width: 8.33333337% !important;
+  }
+  .is-2-print {
+    width: 16.66666674% !important;
+  }
+  .is-3-print {
+    width: 25% !important;
+  }
+  .is-4-print {
+    width: 33.33333337% !important;
+  }
+  .is-5-print {
+    width: 41.66666674% !important;
+  }
+  .is-6-print {
+    width: 50% !important;
+  }
+  .is-7-print {
+    width: 58.33333337% !important;
+  }
+  .is-8-print {
+    width: 66.66666674% !important;
+  }
+  .is-9-print {
+    width: 75% !important;
+  }
+  .is-10-print {
+    width: 83.33333337% !important;
+  }
+  .is-11-print {
+    width: 91.66666674% !important;
+  }
+  .is-12-print {
+    width: 100% !important;
+  }
   @page {
     margin: 1cm;
   }

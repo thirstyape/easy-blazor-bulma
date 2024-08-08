@@ -38,16 +38,22 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	[Parameter]
 	public Func<TValue, string> DisplayValue { get; set; }
 
-    /// <summary>
-    /// A function to determine whether two items are equal.
-    /// </summary>
-    [Parameter]
-    public Func<TValue, TValue?, bool> AreEqual { get; set; } = EqualityComparer<TValue>.Default.Equals;
+	/// <summary>
+	/// A function to filter the display items.
+	/// </summary>
+	[Parameter]
+	public Func<TValue, string?, bool>? DisplayFilter { get; set; }
 
-    /// <summary>
-    /// An icon to display within the input.
-    /// </summary>
-    [Parameter]
+	/// <summary>
+	/// A function to determine whether two items are equal.
+	/// </summary>
+	[Parameter]
+	public Func<TValue, TValue?, bool> AreEqual { get; set; } = EqualityComparer<TValue>.Default.Equals;
+
+	/// <summary>
+	/// An icon to display within the input.
+	/// </summary>
+	[Parameter]
 	public string? Icon { get; set; } = "search";
 
 	/// <summary>
@@ -56,25 +62,22 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	[Parameter]
 	public InputStatus DisplayStatus { get; set; }
 
-    /// <summary>
-    /// Specifies whether to allow null values to be selected.
-    /// </summary>
-    [Parameter]
-    public bool IsNullable { get; set; } = true;
+	/// <summary>
+	/// Specifies whether to allow null values to be selected.
+	/// </summary>
+	[Parameter]
+	public bool IsNullable { get; set; } = true;
 
-    /// <summary>
-    /// The configuration options to apply to the component.
-    /// </summary>
-    [Parameter]
+	/// <summary>
+	/// The configuration options to apply to the component.
+	/// </summary>
+	[Parameter]
 	public InputAutocompleteOptions Options { get; set; } =
 		InputAutocompleteOptions.TypePopout |
 		InputAutocompleteOptions.ClickPopout |
 		InputAutocompleteOptions.PopoutBottom |
 		InputAutocompleteOptions.PopoutLeft |
-		InputAutocompleteOptions.UseAutomaticStatusColors |
-		InputAutocompleteOptions.AutoSelectOnExit |
-		InputAutocompleteOptions.AutoSelectOnInput |
-		InputAutocompleteOptions.AutoSelectExact;
+		InputAutocompleteOptions.UseAutomaticStatusColors;
 
 	/// <summary>
 	/// Fires with the oninput event just before updating the value of the input.
@@ -94,7 +97,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	private readonly string[] Filter = new[] { "class", "dropdown-class", "dropdown-trigger-class", "dropdown-menu-class", "dropdown-item-class", "tag-class" };
 
 	[Inject]
-	private IServiceProvider ServiceProvider { get; init; }
+	private IServiceProvider ServiceProvider { get; init; } = default!;
 
 	private bool IsPopoutDisplayed;
 	private TValue? HighlightedValue;
@@ -104,7 +107,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	private ILogger<InputAutocomplete<TValue>>? Logger;
 
 	private bool OnKeyDownPreventDefault;
-	private readonly string[] DefaultKeys = new[] { "Escape", "ArrowDown", "ArrowUp" };
+	private readonly string[] DefaultKeys = new[] { "Escape", "ArrowDown", "ArrowUp", "Enter" };
 	private bool OnBlurPreventDefault;
 
 	private string MainCssClass
@@ -251,12 +254,12 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 		}
 		else if (matchType == InputAutocompleteOptions.AutoSelectExact)
 		{
-			var match = Items.FirstOrDefault(x => string.Equals(DisplayValue(x), value, StringComparison.OrdinalIgnoreCase));
+			var match = GetDisplayItems().FirstOrDefault(x => string.Equals(DisplayValue(x), value, StringComparison.OrdinalIgnoreCase));
 			return (match != null || (IsNullable && string.IsNullOrWhiteSpace(value)), match);
 		}
 		else if (matchType == InputAutocompleteOptions.AutoSelectClosest)
 		{
-			return (true, Items.OrderBy(x => string.Compare(DisplayValue(x), value, StringComparison.OrdinalIgnoreCase)).FirstOrDefault());
+			return (true, GetDisplayItems().OrderBy(x => string.Compare(DisplayValue(x), value, StringComparison.OrdinalIgnoreCase)).FirstOrDefault());
 		}
 		else
 		{
@@ -302,6 +305,8 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 
 		if (Options.HasFlag(InputAutocompleteOptions.AutoSelectOnInput))
 			CurrentValueAsString = changed;
+
+		InputValue = changed;
 	}
 
 	private void OnKeyUp(KeyboardEventArgs args)
@@ -339,11 +344,38 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 		OnBlurPreventDefault = false;
 	}
 
+	private void OnItemSelected(TValue? value, bool close = true, bool success = true)
+	{
+		CurrentValue = value;
+		InputValue = null;
+
+		if (close)
+			IsPopoutDisplayed = false;
+
+		if (Options.HasFlag(InputAutocompleteOptions.UseAutomaticStatusColors))
+		{
+			ResetStatus();
+			DisplayStatus |= success ? InputStatus.BackgroundSuccess : InputStatus.BackgroundDanger;
+		}
+	}
+
+	private IEnumerable<TValue> GetDisplayItems()
+	{
+		if (DisplayFilter != null && InputValue != null && DisplayCount > 0)
+			return Items.Where(x => DisplayFilter.Invoke(x, InputValue)).Take(DisplayCount.Value);
+		else if (DisplayFilter != null && InputValue != null)
+			return Items.Where(x => DisplayFilter.Invoke(x, InputValue));
+		else if (DisplayCount > 0)
+			return Items.Take(DisplayCount.Value);
+		else
+			return Items;
+	}
+
 	private void HighlightNext()
 	{
 		if (HighlightedValue == null)
 		{
-			HighlightedValue = Items.FirstOrDefault();
+			HighlightedValue = GetDisplayItems().FirstOrDefault();
 			return;
 		}
 
@@ -351,7 +383,7 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 		TValue? first = default;
 		bool takeNext = false;
 
-		foreach (var item in Items)
+		foreach (var item in GetDisplayItems())
 		{
 			first ??= item;
 
@@ -373,13 +405,13 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	{
 		if (HighlightedValue == null)
 		{
-			HighlightedValue = Items.LastOrDefault();
+			HighlightedValue = GetDisplayItems().LastOrDefault();
 			return;
 		}
 
 		TValue? previous = default;
 
-		foreach (var item in Items)
+		foreach (var item in GetDisplayItems())
 		{
 			if (previous != null && AreEqual(item, HighlightedValue))
 				break;
@@ -388,21 +420,6 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 		}
 
 		HighlightedValue = previous;
-	}
-
-	private void OnItemSelected(TValue? value, bool close = true, bool success = true)
-	{
-		CurrentValue = value;
-		InputValue = null;
-
-		if (close)
-			IsPopoutDisplayed = false;
-
-		if (Options.HasFlag(InputAutocompleteOptions.UseAutomaticStatusColors))
-		{
-			ResetStatus();
-			DisplayStatus |= success ? InputStatus.BackgroundSuccess : InputStatus.BackgroundDanger;
-		}
 	}
 
 	private void ResetStatus()
