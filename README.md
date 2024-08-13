@@ -175,7 +175,6 @@ To use an icon just add a `<span>` with the desired icon text and the `.material
 ### Frameworks
 
 - .NET 6.0
-- .NET 7.0
 - .NET 8.0
 
 ### External Libraries

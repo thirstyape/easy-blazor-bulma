@@ -46,6 +46,12 @@ public enum BulmaColors
     [Display(Name = "Purple", ShortName = "secondary")]
     Purple,
 
+	/// <summary>
+	/// Orange or tertiary.
+	/// </summary>
+	[Display(Name = "Orange", ShortName = "tertiary")]
+	Orange,
+
     /// <summary>
     /// Blue or link.
     /// </summary>
