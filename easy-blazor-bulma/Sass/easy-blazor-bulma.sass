@@ -117,6 +117,17 @@
 .is-whitespace-break
   white-space: break-spaces
 
+.is-hoverable
+  &.ishoverable-default
+    background-color: $background
+    color: $scheme-invert
+  @each $name, $components in $colors
+    $color: nth($components, 1)
+    $color-invert: nth($components, 2)
+    &.ishoverable-#{$name}
+      background-color: $color
+      color: $color-invert
+
 ///////////////////
 // Blazor Loader //
 ///////////////////
