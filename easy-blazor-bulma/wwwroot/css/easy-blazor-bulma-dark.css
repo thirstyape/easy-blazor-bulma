@@ -22117,55 +22117,55 @@ span[data-tooltip].has-tooltip-danger {
   white-space: break-spaces;
 }
 
-.is-hoverable.ishoverable-default {
+.is-hoverable.is-hoverable-default:hover {
   background-color: hsl(0deg, 0%, 14%);
   color: hsl(0deg, 0%, 100%);
 }
-.is-hoverable.ishoverable-white {
+.is-hoverable.is-hoverable-white:hover {
   background-color: hsl(0deg, 0%, 100%);
   color: hsl(0deg, 0%, 4%);
 }
-.is-hoverable.ishoverable-black {
+.is-hoverable.is-hoverable-black:hover {
   background-color: hsl(0deg, 0%, 4%);
   color: hsl(0deg, 0%, 100%);
 }
-.is-hoverable.ishoverable-light {
+.is-hoverable.is-hoverable-light:hover {
   background-color: hsl(0deg, 0%, 96%);
   color: rgba(0, 0, 0, 0.7);
 }
-.is-hoverable.ishoverable-dark {
+.is-hoverable.is-hoverable-dark:hover {
   background-color: hsl(0deg, 0%, 21%);
   color: #fff;
 }
-.is-hoverable.ishoverable-primary {
+.is-hoverable.is-hoverable-primary:hover {
   background-color: hsl(171deg, 100%, 41%);
   color: #fff;
 }
-.is-hoverable.ishoverable-secondary {
+.is-hoverable.is-hoverable-secondary:hover {
   background-color: hsl(271deg, 100%, 71%);
   color: #fff;
 }
-.is-hoverable.ishoverable-tertiary {
+.is-hoverable.is-hoverable-tertiary:hover {
   background-color: hsl(14deg, 100%, 53%);
   color: #fff;
 }
-.is-hoverable.ishoverable-link {
+.is-hoverable.is-hoverable-link:hover {
   background-color: hsl(229deg, 53%, 53%);
   color: #fff;
 }
-.is-hoverable.ishoverable-info {
+.is-hoverable.is-hoverable-info:hover {
   background-color: hsl(207deg, 61%, 53%);
   color: #fff;
 }
-.is-hoverable.ishoverable-success {
+.is-hoverable.is-hoverable-success:hover {
   background-color: hsl(153deg, 53%, 53%);
   color: #fff;
 }
-.is-hoverable.ishoverable-warning {
+.is-hoverable.is-hoverable-warning:hover {
   background-color: hsl(44deg, 100%, 77%);
   color: rgba(0, 0, 0, 0.7);
 }
-.is-hoverable.ishoverable-danger {
+.is-hoverable.is-hoverable-danger:hover {
   background-color: hsl(348deg, 86%, 61%);
   color: #fff;
 }
