@@ -2079,6 +2079,14 @@ div.icon-text {
 .image.is-fullwidth {
   width: 100%;
 }
+.image.is-inline {
+  display: inline;
+}
+.image.is-inline img {
+  max-height: 100%;
+  margin: 0 auto;
+  width: unset;
+}
 .image.is-square img,
 .image.is-square .has-ratio, .image.is-1by1 img,
 .image.is-1by1 .has-ratio, .image.is-5by4 img,
@@ -2153,6 +2161,14 @@ div.icon-text {
   max-height: 16px;
   width: auto;
 }
+.image.is-16x16-min {
+  min-height: 16px;
+  min-width: 16px;
+}
+.image.is-16x16-max {
+  max-height: 16px;
+  max-width: 16px;
+}
 .image.is-24x24 {
   height: 24px;
   width: 24px;
@@ -2161,6 +2177,14 @@ div.icon-text {
   max-width: 24px;
   max-height: 24px;
   width: auto;
+}
+.image.is-24x24-min {
+  min-height: 24px;
+  min-width: 24px;
+}
+.image.is-24x24-max {
+  max-height: 24px;
+  max-width: 24px;
 }
 .image.is-32x32 {
   height: 32px;
@@ -2171,6 +2195,14 @@ div.icon-text {
   max-height: 32px;
   width: auto;
 }
+.image.is-32x32-min {
+  min-height: 32px;
+  min-width: 32px;
+}
+.image.is-32x32-max {
+  max-height: 32px;
+  max-width: 32px;
+}
 .image.is-48x48 {
   height: 48px;
   width: 48px;
@@ -2179,6 +2211,14 @@ div.icon-text {
   max-width: 48px;
   max-height: 48px;
   width: auto;
+}
+.image.is-48x48-min {
+  min-height: 48px;
+  min-width: 48px;
+}
+.image.is-48x48-max {
+  max-height: 48px;
+  max-width: 48px;
 }
 .image.is-64x64 {
   height: 64px;
@@ -2189,6 +2229,14 @@ div.icon-text {
   max-height: 64px;
   width: auto;
 }
+.image.is-64x64-min {
+  min-height: 64px;
+  min-width: 64px;
+}
+.image.is-64x64-max {
+  max-height: 64px;
+  max-width: 64px;
+}
 .image.is-96x96 {
   height: 96px;
   width: 96px;
@@ -2197,6 +2245,14 @@ div.icon-text {
   max-width: 96px;
   max-height: 96px;
   width: auto;
+}
+.image.is-96x96-min {
+  min-height: 96px;
+  min-width: 96px;
+}
+.image.is-96x96-max {
+  max-height: 96px;
+  max-width: 96px;
 }
 .image.is-128x128 {
   height: 128px;
@@ -2207,6 +2263,14 @@ div.icon-text {
   max-height: 128px;
   width: auto;
 }
+.image.is-128x128-min {
+  min-height: 128px;
+  min-width: 128px;
+}
+.image.is-128x128-max {
+  max-height: 128px;
+  max-width: 128px;
+}
 .image.is-192x192 {
   height: 192px;
   width: 192px;
@@ -2215,6 +2279,14 @@ div.icon-text {
   max-width: 192px;
   max-height: 192px;
   width: auto;
+}
+.image.is-192x192-min {
+  min-height: 192px;
+  min-width: 192px;
+}
+.image.is-192x192-max {
+  max-height: 192px;
+  max-width: 192px;
 }
 .image.is-256x256 {
   height: 256px;
@@ -2225,6 +2297,14 @@ div.icon-text {
   max-height: 256px;
   width: auto;
 }
+.image.is-256x256-min {
+  min-height: 256px;
+  min-width: 256px;
+}
+.image.is-256x256-max {
+  max-height: 256px;
+  max-width: 256px;
+}
 .image.is-384x384 {
   height: 384px;
   width: 384px;
@@ -2233,6 +2313,14 @@ div.icon-text {
   max-width: 384px;
   max-height: 384px;
   width: auto;
+}
+.image.is-384x384-min {
+  min-height: 384px;
+  min-width: 384px;
+}
+.image.is-384x384-max {
+  max-height: 384px;
+  max-width: 384px;
 }
 .image.is-512x512 {
   height: 512px;
@@ -2243,6 +2331,14 @@ div.icon-text {
   max-height: 512px;
   width: auto;
 }
+.image.is-512x512-min {
+  min-height: 512px;
+  min-width: 512px;
+}
+.image.is-512x512-max {
+  max-height: 512px;
+  max-width: 512px;
+}
 .image.is-768x768 {
   height: 768px;
   width: 768px;
@@ -2252,6 +2348,14 @@ div.icon-text {
   max-height: 768px;
   width: auto;
 }
+.image.is-768x768-min {
+  min-height: 768px;
+  min-width: 768px;
+}
+.image.is-768x768-max {
+  max-height: 768px;
+  max-width: 768px;
+}
 .image.is-1024x1024 {
   height: 1024px;
   width: 1024px;
@@ -2260,6 +2364,14 @@ div.icon-text {
   max-width: 1024px;
   max-height: 1024px;
   width: auto;
+}
+.image.is-1024x1024-min {
+  min-height: 1024px;
+  min-width: 1024px;
+}
+.image.is-1024x1024-max {
+  max-height: 1024px;
+  max-width: 1024px;
 }
 
 .notification {
@@ -22087,6 +22199,26 @@ span[data-tooltip].has-tooltip-danger {
 
 .is-cursor-grab {
   cursor: grab !important;
+}
+
+.is-height-100 {
+  height: 100%;
+}
+
+.is-height-75 {
+  height: 75%;
+}
+
+.is-height-50 {
+  height: 50%;
+}
+
+.is-height-25 {
+  height: 25%;
+}
+
+.is-height-0 {
+  height: 0%;
 }
 
 .is-fullheight-minus-1 {

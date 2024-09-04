@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Reflection;
 
 namespace easy_blazor_bulma;
 
@@ -103,7 +102,6 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	private TValue? HighlightedValue;
 	private string? InputValue;
 
-	private readonly Type UnderlyingType;
 	private ILogger<InputAutocomplete<TValue>>? Logger;
 
 	private bool OnKeyDownPreventDefault;
@@ -154,14 +152,6 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	private string DropDownMenuCssClass => string.Join(' ', "dropdown-menu p-0", AdditionalAttributes.GetClass("dropdown-menu-class"));
 
 	private string TagCssClass => string.Join(' ', "tag is-success mt-1", AdditionalAttributes.GetClass("tag-class"));
-
-	public InputAutocomplete()
-	{
-		UnderlyingType = typeof(TValue);
-
-		if (UnderlyingType.GetTypeInfo().IsClass == false)
-			throw new InvalidOperationException($"Unsupported type param '{UnderlyingType.Name}'. Must be a class.");
-	}
 
 	/// <inheritdoc />
 	protected override void OnInitialized()
@@ -348,6 +338,9 @@ public partial class InputAutocomplete<[DynamicallyAccessedMembers(DynamicallyAc
 	{
 		CurrentValue = value;
 		InputValue = null;
+
+		EditContext.Validate();
+		EditContext.NotifyFieldChanged(FieldIdentifier);
 
 		if (close)
 			IsPopoutDisplayed = false;

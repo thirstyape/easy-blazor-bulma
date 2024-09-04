@@ -8,7 +8,7 @@ namespace easy_blazor_bulma;
 /// Displays a loading screen with a progress meter and message. This component will not cause child components to re-render when switching between loading and loaded modes.
 /// </summary>
 /// <remarks>
-/// There are 3 additional attributes that can be used: container-class, progress-class, and icon-class. Each of which apply CSS classes to the resulting elements as per their names.
+/// There are 5 additional attributes that can be used: container-class, progress-class, icon-class, loading-class, and content-class. Each of which apply CSS classes to the resulting elements as per their names.
 /// </remarks>
 public partial class Loader : ComponentBase
 {
@@ -91,7 +91,7 @@ public partial class Loader : ComponentBase
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    private readonly string[] Filter = new[] { "class", "container-class", "progress-class", "icon-class" };
+    private readonly string[] Filter = new[] { "class", "container-class", "progress-class", "icon-class", "loading-class", "content-class" };
 
     private string MainCssClass
     {
@@ -148,8 +148,8 @@ public partial class Loader : ComponentBase
             if (Status == null || Status.Value == LoadingStatus.NotStarted)
                 css += " is-hidden";
 
-            return css;
-        }
+			return string.Join(' ', css, AdditionalAttributes.GetClass("loading-class"));
+		}
     }
 
     private string ContentCssClass
@@ -161,8 +161,8 @@ public partial class Loader : ComponentBase
             if (Status != null && Status.Value != LoadingStatus.NotStarted)
                 css += " is-hidden";
 
-            return css;
-        }
+			return string.Join(' ', css, AdditionalAttributes.GetClass("content-class"));
+		}
     }
 
     private string Icon => Status != null && Status.Value.HasFlag(LoadingStatus.Failed) ? "error_outline" : "check_circle";
