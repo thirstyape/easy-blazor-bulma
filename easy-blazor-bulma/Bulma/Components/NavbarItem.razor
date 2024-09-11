@@ -6,7 +6,7 @@
 <NavLink class="@MainCssClass" ActiveClass="is-active" Match="@Match" @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)'>
 	@if (string.IsNullOrWhiteSpace(Icon) == false)
 	{
-		<span class="material-icons">@Icon</span>
+		<span class="@IconCssClass">@Icon</span>
 	}
 	<span class="@LinkCssClass">
 		@ChildContent

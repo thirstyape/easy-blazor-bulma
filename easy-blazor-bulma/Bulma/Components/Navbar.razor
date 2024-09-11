@@ -7,14 +7,18 @@
 	@if (UseBurger || string.IsNullOrWhiteSpace(DisplayText) == false)
 	{
 		<div class="@BrandCssClass">
-			@if (string.IsNullOrWhiteSpace(DisplayText) == false || string.IsNullOrWhiteSpace(DisplayImageUrl) == false)
+			@if (string.IsNullOrWhiteSpace(DisplayText) == false || string.IsNullOrWhiteSpace(LogoUrl) == false || string.IsNullOrWhiteSpace(LogoIcon) == false)
 			{
 				<NavLink ActiveClass="is-active" href="@Href" class="@LinkCssClass" Match="NavLinkMatch.All">
-					@if (string.IsNullOrWhiteSpace(DisplayImageUrl) == false)
+					@if (string.IsNullOrWhiteSpace(LogoUrl) == false)
 					{
-						<span class='@ImageCssClass'>
-							<img src="@DisplayImageUrl" />
+						<span class='@LogoCssClass'>
+							<img src="@LogoUrl" />
 						</span>
+					}
+					else if (string.IsNullOrWhiteSpace(LogoIcon) == false)
+					{
+						<span class='@LogoCssClass'>@LogoIcon</span>
 					}
 					@if (string.IsNullOrWhiteSpace(DisplayText) == false)
 					{

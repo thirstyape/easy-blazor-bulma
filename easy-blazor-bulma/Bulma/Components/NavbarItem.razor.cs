@@ -7,7 +7,7 @@ namespace easy_blazor_bulma;
 /// A link to use in a Navbar menu.
 /// </summary>
 /// <remarks>
-/// There is 1 additional attribute that can be used: link-class. It will apply CSS classes to the resulting element as per its name.
+/// There are 2 additional attributes that can be used: link-class and icon-class. Each of which will apply CSS classes to the resulting elements as per their names.
 /// <see href="https://bulma.io/documentation/components/navbar/">Bulma Documentation</see>
 /// </remarks>
 public partial class NavbarItem : ComponentBase
@@ -40,7 +40,7 @@ public partial class NavbarItem : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    private readonly string[] Filter = new[] { "class", "link-class" };
+    private readonly string[] Filter = new[] { "class", "link-class", "icon-class" };
 
     private string MainCssClass => string.Join(' ', "navbar-item", AdditionalAttributes.GetClass("class"));
 
@@ -59,4 +59,6 @@ public partial class NavbarItem : ComponentBase
             return string.Join(' ', css.TrimStart(), AdditionalAttributes.GetClass("link-class"));
         }
 	}
+
+	internal string IconCssClass => string.Join(' ', "material-icons", AdditionalAttributes.GetClass("icon-class"));
 }
