@@ -10,6 +10,13 @@
         <span class="@IconCssClass">@Icon</span>
     }
 
+    @if (Options.HasFlag(InputDurationOptions.ShowResetButton) && AdditionalAttributes.IsDisabled() == false)
+    {
+        <span class="material-icons icon is-right is-clickable" @onclick='() => ClosePopout(clear: true)' @onclick:stopPropagation="true">
+            close
+        </span>
+    }
+
     <div class='@TimePickerCssClass'>
         @if (Options.HasFlag(InputDurationOptions.ClickPopout))
         {

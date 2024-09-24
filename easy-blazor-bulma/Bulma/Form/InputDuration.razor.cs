@@ -507,7 +507,7 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
             ResetStatus();
     }
 
-    private void ClosePopout(bool save = false, bool reset = false)
+    private void ClosePopout(bool save = false, bool reset = false, bool clear = false)
     {
         if ((IsPopoutDisplayed == false && Options.HasFlag(InputDurationOptions.HoverPopout) == false) || Options.HasFlag(InputDurationOptions.NoPopout))
             return;
@@ -517,7 +517,10 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         if (reset)
             PopoutValue = InitialValue;
 
-        if (save || reset)
+		if (clear)
+			PopoutValue = default;
+
+		if (save || reset || clear)
             CurrentValueAsString = FormatTimeSpan(PopoutValue);
     }
 

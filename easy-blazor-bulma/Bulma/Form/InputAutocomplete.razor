@@ -25,7 +25,7 @@
 {
 	<span class='@TagCssClass'>
 		@DisplayValue(CurrentValue)
-		@if (IsNullable)
+		@if (IsNullable && AdditionalAttributes.IsDisabled() == false)
 		{
 			<button class="delete is-small" @onclick='() => OnItemSelected(default)'></button>
 		}

@@ -358,7 +358,7 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 			ResetStatus();
 	}
 
-	private void ClosePopout(bool save = false, bool reset = false, DateTime? value = null)
+	private void ClosePopout(bool save = false, bool reset = false, bool clear = false, DateTime? value = null)
 	{
 		if ((IsPopoutDisplayed == false && Options.HasFlag(InputDateTimeOptions.HoverPopout) == false) || Options.HasFlag(InputDateTimeOptions.NoPopout))
 			return;
@@ -372,7 +372,10 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 		if (reset)
 			PopoutValue = InitialValue;
 
-		if (save || reset)
+		if (clear)
+			PopoutValue = default;
+
+		if (save || reset || clear)
 			CurrentValueAsString = FormatDateTime(PopoutValue);
 	}
 
