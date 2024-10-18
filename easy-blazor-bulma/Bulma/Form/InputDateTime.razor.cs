@@ -203,26 +203,31 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
 		Logger = ServiceProvider.GetService<ILogger<InputDateTime<TValue>>>();
 
 		// Validation
-		if (UnderlyingType == typeof(TimeSpan) && Options.HasAnyFlag(InputDateTimeOptions.ShowHours | InputDateTimeOptions.ShowMinutes | InputDateTimeOptions.ShowSeconds) == false)
-            Logger?.LogWarning($"Must set at least one of ShowHours, ShowMinutes, or ShowSeconds flags when using {nameof(TimeSpan)} for InputDateTime to work correctly.");
-
-        if (UnderlyingType == typeof(TimeOnly) && Options.HasAnyFlag(InputDateTimeOptions.ShowHours | InputDateTimeOptions.ShowMinutes | InputDateTimeOptions.ShowSeconds) == false)
-			Logger?.LogWarning($"Must set at least one of ShowHours, ShowMinutes, or ShowSeconds flags when using {nameof(TimeOnly)} for InputDateTime to work correctly.");
+		if ((UnderlyingType == typeof(TimeSpan) || UnderlyingType == typeof(TimeOnly)) && Options.HasAnyFlag(InputDateTimeOptions.ShowHours | InputDateTimeOptions.ShowMinutes | InputDateTimeOptions.ShowSeconds) == false)
+		{
+            Options |= InputDateTimeOptions.ShowHours | InputDateTimeOptions.ShowMinutes | InputDateTimeOptions.ShowSeconds;
+            Logger?.LogWarning("Must set at least one of ShowHours, ShowMinutes, or ShowSeconds flags when using {type} for InputDateTime to work correctly.", UnderlyingType.Name);
+        }
 
         // Set required options
-        if (UnderlyingType == typeof(DateOnly))
-			Options |= InputDateTimeOptions.ShowDate;
+        if (UnderlyingType == typeof(DateOnly) && Options.HasFlag(InputDateTimeOptions.ShowDate) == false)
+		{
+            Options |= InputDateTimeOptions.ShowDate;
+            Logger?.LogWarning("Must set ShowDate flag when using {type} for InputDateTime to work correctly.", nameof(DateOnly));
+        }
 
         // Unset invalid options
-        if (UnderlyingType == typeof(DateOnly))
-		{
-			Options &= ~InputDateTimeOptions.ShowHours;
-			Options &= ~InputDateTimeOptions.ShowMinutes;
-			Options &= ~InputDateTimeOptions.ShowSeconds;
-		}
+        if (UnderlyingType == typeof(DateOnly) && Options.HasAnyFlag(InputDateTimeOptions.ShowHours | InputDateTimeOptions.ShowMinutes | InputDateTimeOptions.ShowSeconds))
+        {
+			Options &= ~(InputDateTimeOptions.ShowHours | InputDateTimeOptions.ShowMinutes | InputDateTimeOptions.ShowSeconds);
+            Logger?.LogWarning("Cannot set ShowHours, ShowMinutes, or ShowSeconds flags when using {type} with InputDateTime.", nameof(DateOnly));
+        }
 
-        if (UnderlyingType == typeof(TimeSpan) || UnderlyingType == typeof(TimeOnly))
-			Options &= ~InputDateTimeOptions.ShowDate;
+        if ((UnderlyingType == typeof(TimeSpan) || UnderlyingType == typeof(TimeOnly)) && Options.HasFlag(InputDateTimeOptions.ShowDate))
+		{
+            Options &= ~InputDateTimeOptions.ShowDate;
+            Logger?.LogWarning("Cannot set ShowDate flag when using {type} with InputDateTime.", UnderlyingType.Name);
+        }
 
 		// Set starting values
 		InitialValue = ValueAsDateTime;
@@ -266,6 +271,16 @@ public partial class InputDateTime<[DynamicallyAccessedMembers(DynamicallyAccess
         // Try parse
         try
 		{
+			if (string.IsNullOrWhiteSpace(value) == false && Options.HasFlag(InputDateTimeOptions.ConvertDecimals) && value.Count(x => x == '.') == 1)
+			{
+				var parts = value.Split('.');
+
+				if (float.TryParse($"0.{parts[1]}", out var parsed) && (parsed * 60.0) < 59.5)
+					value = $"{parts[0]}:{((int)Math.Round(parsed * 60.0)).ToString().PadLeft(2, '0')}";
+				else
+					throw new FormatException("Failed converting decimal to minutes or seconds.");
+            }
+
             if (IsNullable == false && string.IsNullOrWhiteSpace(value))
             {
                 result = default!;

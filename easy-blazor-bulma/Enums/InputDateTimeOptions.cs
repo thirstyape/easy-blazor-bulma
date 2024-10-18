@@ -80,7 +80,7 @@ public enum InputDateTimeOptions
 	/// Specifies whether the popout will display the date picker section.
 	/// </summary>
 	ShowDate = 0b_00000000_00000000_00100000_00000000,
-	
+
 	/// <summary>
 	/// Specifies whether the popout will display the hours column.
 	/// </summary>
@@ -104,5 +104,10 @@ public enum InputDateTimeOptions
 	/// <summary>
 	/// Checks for common input errors when the text field is used.
 	/// </summary>
-    ValidateTextInput = 0b_00000000_00000100_00000000_00000000
+    ValidateTextInput = 0b_00000000_00000100_00000000_00000000,
+
+	/// <summary>
+	/// Parses decimal values as minutes or seconds. The portion after the decimal will become a percentage of 60 minutes or 60 seconds based on the input string.
+	/// </summary>
+    ConvertDecimals = 0b_00000000_00001000_00000000_00000000
 }

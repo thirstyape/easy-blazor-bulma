@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using easy_core;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
@@ -190,29 +191,53 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
 		Logger = ServiceProvider.GetService<ILogger<InputDuration<TValue>>>();
 
 		// Validation
-		if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours | InputDurationOptions.ShowDays))
-			Logger?.LogWarning("Cannot set both DisplayDaysAsHours and ShowDays for InputDuration.");
+		if (Options.HasAllFlags(InputDurationOptions.DisplayDaysAsHours | InputDurationOptions.ShowDays))
+        {
+            Options &= ~InputDurationOptions.DisplayDaysAsHours;
+            Logger?.LogWarning("Cannot set both DisplayDaysAsHours and ShowDays for InputDuration.");
+        }
 
-        if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes | InputDurationOptions.ShowHours))
-			Logger?.LogWarning("Cannot set both DisplayHoursAsMinutes and ShowHours for InputDuration.");
+        if (Options.HasAllFlags(InputDurationOptions.DisplayHoursAsMinutes | InputDurationOptions.ShowHours))
+        {
+            Options &= ~InputDurationOptions.DisplayHoursAsMinutes;
+            Logger?.LogWarning("Cannot set both DisplayHoursAsMinutes and ShowHours for InputDuration.");
+        }
 
-        if (Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds | InputDurationOptions.ShowMinutes))
-			Logger?.LogWarning("Cannot set both DisplayMinutesAsSeconds and ShowMinutes for InputDuration.");
+        if (Options.HasAllFlags(InputDurationOptions.DisplayMinutesAsSeconds | InputDurationOptions.ShowMinutes))
+        {
+            Options &= ~InputDurationOptions.DisplayMinutesAsSeconds;
+            Logger?.LogWarning("Cannot set both DisplayMinutesAsSeconds and ShowMinutes for InputDuration.");
+        }
 
-        if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours | InputDurationOptions.DisplayHoursAsMinutes))
-			Logger?.LogWarning("Cannot set both DisplayDaysAsHours and DisplayHoursAsMinutes for InputDuration.");
+        if (Options.HasAllFlags(InputDurationOptions.DisplayDaysAsHours | InputDurationOptions.DisplayHoursAsMinutes))
+        {
+            Options &= ~InputDurationOptions.DisplayDaysAsHours;
+            Logger?.LogWarning("Cannot set both DisplayDaysAsHours and DisplayHoursAsMinutes for InputDuration.");
+        }
 
-        if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours | InputDurationOptions.DisplayMinutesAsSeconds))
-			Logger?.LogWarning("Cannot set both DisplayDaysAsHours and DisplayMinutesAsSeconds for InputDuration.");
+        if (Options.HasAllFlags(InputDurationOptions.DisplayDaysAsHours | InputDurationOptions.DisplayMinutesAsSeconds))
+        {
+            Options &= ~InputDurationOptions.DisplayDaysAsHours;
+            Logger?.LogWarning("Cannot set both DisplayDaysAsHours and DisplayMinutesAsSeconds for InputDuration.");
+        }
 
-        if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes | InputDurationOptions.DisplayMinutesAsSeconds))
-			Logger?.LogWarning("Cannot set both DisplayHoursAsMinutes and DisplayMinutesAsSeconds for InputDuration.");
+        if (Options.HasAllFlags(InputDurationOptions.DisplayHoursAsMinutes | InputDurationOptions.DisplayMinutesAsSeconds))
+        {
+            Options &= ~InputDurationOptions.DisplayHoursAsMinutes;
+            Logger?.LogWarning("Cannot set both DisplayHoursAsMinutes and DisplayMinutesAsSeconds for InputDuration.");
+        }
+
+        if (Options.HasAnyFlag(InputDurationOptions.DisplayDaysAsHours | InputDurationOptions.DisplayHoursAsMinutes | InputDurationOptions.DisplayMinutesAsSeconds) && Options.HasFlag(InputDurationOptions.ConvertDecimals))
+        {
+            Options &= ~InputDurationOptions.ConvertDecimals;
+            Logger?.LogWarning("Cannot combine ConvertDecimals with any of DisplayDaysAsHours, DisplayHoursAsMinutes, or DisplayMinutesAsSeconds for InputDuration.");
+        }
 
         // Unset invalid options
-        if (UnderlyingType == typeof(TimeOnly))
+        if (UnderlyingType == typeof(TimeOnly) && Options.HasAnyFlag(InputDurationOptions.AllowNegative | InputDurationOptions.AllowGreaterThan24Hours))
         {
-            Options &= ~InputDurationOptions.AllowNegative;
-            Options &= ~InputDurationOptions.AllowGreaterThan24Hours;
+            Options &= ~(InputDurationOptions.AllowNegative | InputDurationOptions.AllowGreaterThan24Hours);
+            Logger?.LogWarning("Cannot set AllowNegative or AllowGreaterThan24Hours flags when using {type} with InputDuration.", nameof(TimeOnly));
         }
 
         // Set starting values
@@ -294,6 +319,16 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         // Try parse
         try
         {
+            if (string.IsNullOrWhiteSpace(value) == false && Options.HasFlag(InputDurationOptions.ConvertDecimals) && value.Count(x => x == '.') == 1)
+            {
+                var parts = value.Split('.');
+
+                if (float.TryParse($"0.{parts[1]}", out var parsed) && (parsed * 60.0) < 59.5)
+                    value = $"{parts[0]}:{((int)Math.Round(parsed * 60.0)).ToString().PadLeft(2, '0')}";
+                else
+                    throw new FormatException("Failed converting decimal to minutes or seconds.");
+            }
+
             if (IsNullable == false && string.IsNullOrWhiteSpace(value))
             {
                 result = default!;
@@ -355,23 +390,19 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         {
             if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours))
             {
-                var start = value.Split('.')[0];
-                var partial = decimal.Parse($"0.{value.Split('.')[1]}") * 60;
-                var end = partial.ToString().Split('.')[0].PadLeft(2, '0');
+                var parts = value.Split('.');
+                var partial = float.Parse($"0.{parts[1]}") * 60.0;
+                var end = partial < 59.5 ? ((int)Math.Round(partial)).ToString().PadLeft(2, '0') : "59";
 
-                value = $"{start}:{end}:00";
+                value = $"{parts[0]}:{end}:00";
             }
             else if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes))
             {
-                var start = value.Split('.')[0];
-                var partial = decimal.Parse($"0.{value.Split('.')[1]}") * 60;
-                var end = partial.ToString().Split('.')[0].PadLeft(2, '0');
+                var parts = value.Split('.');
+                var partial = float.Parse($"0.{parts[1]}") * 60.0;
+                var end = partial < 59.5 ? ((int)Math.Round(partial)).ToString().PadLeft(2, '0') : "59";
 
-                value = $"{start}:{end}";
-            }
-            else
-            {
-                value = $"{value}:00:00";
+                value = $"{parts[0]}:{end}";
             }
         }
 
@@ -393,32 +424,32 @@ public partial class InputDuration<[DynamicallyAccessedMembers(DynamicallyAccess
         // Custom display parsing
         if (Options.HasFlag(InputDurationOptions.DisplayDaysAsHours))
         {
-            var totalHours = Math.Abs(int.Parse(value.Split(':')[0]));
-            var rest = value.Split(':').Skip(1);
+            var parts = value.Split(':');
+            var totalHours = Math.Abs(int.Parse(parts[0]));
 
-            var days = (int)Math.Floor(totalHours / 24.0M);
+            var days = (int)Math.Floor(totalHours / 24.0F);
             var hours = (totalHours % 24).ToString();
 
-            value = $"{days}.{hours.PadLeft(2, '0')}:{string.Join(':', rest)}";
+            value = $"{days}.{hours.PadLeft(2, '0')}:{string.Join(':', parts.Skip(1))}";
         }
         else if (Options.HasFlag(InputDurationOptions.DisplayHoursAsMinutes))
         {
-            var totalMinutes = Math.Abs(int.Parse(value.Split(':')[0]));
-            var seconds = value.Split(':').Skip(1);
+            var parts = value.Split(':');
+            var totalMinutes = Math.Abs(int.Parse(parts[0]));
 
-            var days = (int)Math.Floor(totalMinutes / 1_440.0M);
-            var hours = (int)Math.Floor((totalMinutes - (days * 1_440)) / 60.0M);
+            var days = (int)Math.Floor(totalMinutes / 1_440.0F);
+            var hours = (int)Math.Floor((totalMinutes - (days * 1_440)) / 60.0F);
             var minutes = ((totalMinutes - (days * 1_440)) % 60).ToString();
 
-            value = $"{days}.{hours.ToString().PadLeft(2, '0')}:{minutes.PadLeft(2, '0')}:" + seconds.First();
+            value = $"{days}.{hours.ToString().PadLeft(2, '0')}:{minutes.PadLeft(2, '0')}:" + parts.Skip(1).First();
         }
         else if (Options.HasFlag(InputDurationOptions.DisplayMinutesAsSeconds))
         {
             var totalSeconds = Math.Abs(int.Parse(value));
 
-            var days = (int)Math.Floor(totalSeconds / 86_400.0M);
-            var hours = (int)Math.Floor((totalSeconds - (days * 86_400)) / 3_600.0M);
-            var minutes = (int)Math.Floor((totalSeconds - (days * 86_400) - (hours * 3_600)) / 60.0M);
+            var days = (int)Math.Floor(totalSeconds / 86_400.0F);
+            var hours = (int)Math.Floor((totalSeconds - (days * 86_400)) / 3_600.0F);
+            var minutes = (int)Math.Floor((totalSeconds - (days * 86_400) - (hours * 3_600)) / 60.0F);
             var seconds = ((totalSeconds - (days * 86_400) - (hours * 3_600)) % 60).ToString();
 
             value = $"{days}.{hours.ToString().PadLeft(2, '0')}:{minutes.ToString().PadLeft(2, '0')}:{seconds.PadLeft(2, '0')}";

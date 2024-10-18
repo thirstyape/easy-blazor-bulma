@@ -3,7 +3,13 @@
 @inherits InputBase<TValue>
 
 <div class="datetimepicker-parent">
-    <input type="text" class="@MainCssClass" value='@CurrentValueAsString' @onchange='OnChange' @onclick='OpenPopout' @onfocus='OpenPopout' @onkeydown='CheckKeyPress' @ref=Element @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)' />
+    <input type="text" class="@MainCssClass" value='@CurrentValueAsString' onfocusin="this.select();"
+        @onchange='OnChange'
+        @onclick='OpenPopout'
+        @onfocus='OpenPopout'
+        @onkeydown='CheckKeyPress'
+        @ref=Element
+        @attributes='AdditionalAttributes.GetFilteredAttributes(Filter)' />
 
     @if (string.IsNullOrWhiteSpace(Icon) == false)
     {
