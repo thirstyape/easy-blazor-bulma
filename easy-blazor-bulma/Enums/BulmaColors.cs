@@ -74,5 +74,11 @@ public enum BulmaColors
     /// Light.
     /// </summary>
     [Display(Name = "Light", ShortName = "light")]
-    Light
+    Light,
+
+	/// <summary>
+	/// Pink or highlight.
+	/// </summary>
+	[Display(Name = "Pink", ShortName = "highlight")]
+	Pink
 }

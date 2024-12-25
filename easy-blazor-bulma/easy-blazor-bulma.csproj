@@ -20,6 +20,9 @@
 			This project was created to provide a standard implementation of Bulma with Blazor components.
 		</Description>
 		<PackageReleaseNotes>
+			1.1.14
+			Update icon font, fix Orange failing in BulmaColorHelper.GetHexColor, add border CSS classes
+
 			1.1.13
 			Improvements to InputDateTime and InputDuration components
 

@@ -7,6 +7,13 @@
 		{
 			@ChildContent
 		}
+		else if (string.IsNullOrWhiteSpace(Url) == false)
+		{
+			<a class="@UrlCssClass" href="@Url">
+				<p class="heading">@Heading</p>
+				<p class="title">@Title</p>
+			</a>
+		}
 		else
 		{
 			<p class="heading">@Heading</p>
