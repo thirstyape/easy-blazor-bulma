@@ -9,9 +9,9 @@
 		<Authors>NF Software Inc.</Authors>
 		<Company>NF Software Inc.</Company>
 		<Copyright>Copyright 2023 $(Company)</Copyright>
-		<Version>1.1.13</Version>
-		<AssemblyVersion>1.1.13.0</AssemblyVersion>
-		<FileVersion>1.1.13.0</FileVersion>
+		<Version>1.1.14</Version>
+		<AssemblyVersion>1.1.14.0</AssemblyVersion>
+		<FileVersion>1.1.14.0</FileVersion>
 		<PackageId>Easy.Blazor.Bulma</PackageId>
 		<PackageTags>blazor bulma components inputs layout forms icons</PackageTags>
 		<RepositoryUrl>https://github.com/thirstyape/Easy-Blazor-Bulma</RepositoryUrl>
